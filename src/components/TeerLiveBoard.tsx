@@ -1,0 +1,152 @@
+import React, { useState, useEffect } from 'react';
+
+interface GameResult {
+  name: string;
+  location: string;
+  status: string;
+  fr_time: string;
+  sr_time: string;
+  fr: string;
+  sr: string;
+}
+
+interface TeerData {
+  date: string;
+  updated_at: string;
+  games: Record<string, GameResult>;
+}
+
+export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
+  const [data, setData] = useState<TeerData>(initialData);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastCheck, setLastCheck] = useState<string>('');
+
+  const fetchLatest = async () => {
+    setIsRefreshing(true);
+    try {
+      const res = await fetch(`/api/teer/latest?t=${Date.now()}`);
+      if (res.ok) {
+        const fresh = await res.json();
+        setData(fresh);
+      }
+    } catch (e) {
+      console.warn('Auto-refresh failed, retrying on next tick');
+    } finally {
+      setIsRefreshing(false);
+      setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }
+  };
+
+  // Zero-Refresh Live Poller every 15 seconds
+  useEffect(() => {
+    setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    const timer = setInterval(fetchLatest, 15000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const games = [
+    { key: 'shillong', title: 'SHILLONG TEER', highlight: true },
+    { key: 'khanapara', title: 'KHANAPARA TEER', highlight: false },
+    { key: 'juwai', title: 'JUWAI TEER', highlight: false },
+    { key: 'night', title: 'NIGHT TEER', highlight: false }
+  ];
+
+  return (
+    <div className="space-y-3">
+      
+      {/* Top Status & Manual Refresh Bar */}
+      <div className="flex items-center justify-between text-xs px-1 text-slate-400">
+        <div className="flex items-center gap-1.5 font-bold">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="text-slate-200">Date: {data.date.split('-').reverse().join('/')}</span>
+          <span className="text-slate-500">•</span>
+          <span className="text-slate-400 text-[11px]">Auto-Sync Active</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={fetchLatest}
+          disabled={isRefreshing}
+          className="inline-flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs border border-slate-700"
+        >
+          <span className={isRefreshing ? 'animate-spin' : ''}>🔄</span>
+          <span>{isRefreshing ? 'Updating...' : 'Refresh'}</span>
+        </button>
+      </div>
+
+      {/* 4 Teer Game Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {games.map(({ key, title, highlight }) => {
+          const game = data.games[key] || {
+            name: title,
+            location: '',
+            status: 'UPCOMING',
+            fr_time: '',
+            sr_time: '',
+            fr: '??',
+            sr: '??'
+          };
+
+          return (
+            <div
+              key={key}
+              className={`rounded-2xl border p-4 transition-all relative overflow-hidden shadow-sm ${
+                highlight
+                  ? 'bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 border-amber-500/50 ring-1 ring-amber-500/20'
+                  : 'bg-slate-900/90 border-slate-800'
+              }`}
+            >
+              {/* Header: Title & Time */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+                <div>
+                  <h3 className="text-sm font-black text-white flex items-center gap-1.5">
+                    <span>🎯</span>
+                    <span>{game.name}</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-medium">
+                    {game.location || 'Official Meghalaya Archery Ground'}
+                  </p>
+                </div>
+
+                <span className="text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                  {game.status}
+                </span>
+              </div>
+
+              {/* 2 Rounds (FR & SR) Display */}
+              <div className="grid grid-cols-2 gap-2 text-center">
+                
+                {/* First Round (FR) */}
+                <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5">
+                  <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">
+                    1st Round ({game.fr_time})
+                  </span>
+                  <span className={`text-3xl font-black font-mono block mt-1 ${game.fr !== '??' ? 'text-amber-400' : 'text-slate-600'}`}>
+                    {game.fr}
+                  </span>
+                </div>
+
+                {/* Second Round (SR) */}
+                <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5">
+                  <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">
+                    2nd Round ({game.sr_time})
+                  </span>
+                  <span className={`text-3xl font-black font-mono block mt-1 ${game.sr !== '??' ? 'text-emerald-400' : 'text-slate-600'}`}>
+                    {game.sr}
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="text-center text-[11px] text-slate-500 pt-1">
+        <span>⏱️ Last checked: {lastCheck || 'Just now'} • Updates stream automatically without refreshing page</span>
+      </div>
+
+    </div>
+  );
+}

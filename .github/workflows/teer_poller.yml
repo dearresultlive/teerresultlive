@@ -1,0 +1,43 @@
+name: Teer Live Results Poller
+
+on:
+  schedule:
+    # 07:00 UTC to 12:30 UTC = 12:30 PM to 6:00 PM IST (Mon-Sat)
+    - cron: '*/15 7-12 * * 1-6'
+    # 16:30 UTC to 18:30 UTC = 10:00 PM to 12:00 AM IST (Night Teer Mon-Sat)
+    - cron: '*/15 16-18 * * 1-6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  poll-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Teer Poller
+        run: npm run poll
+
+      - name: Commit & Push If Changed
+        run: |
+          git config --global user.name "Teer Result Bot"
+          git config --global user.email "bot@teerresultlive.in"
+          if [ -n "$(git status --porcelain src/data/)" ]; then
+            git add src/data/
+            git commit -m "Auto-update Teer live numbers [skip ci]"
+            git push
+          else
+            echo "No data changes detected."
+          fi

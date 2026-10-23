@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-23",
+  "updated_at": "2026-10-23T23:50:00.000Z",
+  "games": {
+    "shillong": {
+      "name": "Shillong Teer",
+      "location": "Polo Ground, Shillong (Meghalaya)",
+      "status": "DECLARED",
+      "fr_time": "3:45 PM",
+      "sr_time": "4:45 PM",
+      "fr": "20",
+      "sr": "96",
+      "common_numbers": {
+        "direct": ["20", "96", "41", "78", "03", "55"],
+        "house": [2, 9, 4],
+        "ending": [0, 6, 1]
+      }
+    },
+    "khanapara": {
+      "name": "Khanapara Teer",
+      "location": "Khanapara, Ri-Bhoi / Guwahati",
+      "status": "DECLARED",
+      "fr_time": "4:00 PM",
+      "sr_time": "4:30 PM",
+      "fr": "64",
+      "sr": "17",
+      "common_numbers": {
+        "direct": ["64", "17", "39", "82", "50", "91"],
+        "house": [6, 1, 3],
+        "ending": [4, 7, 9]
+      }
+    },
+    "juwai": {
+      "name": "Juwai Teer",
+      "location": "Juwai, West Jaintia Hills",
+      "status": "DECLARED",
+      "fr_time": "1:45 PM",
+      "sr_time": "2:30 PM",
+      "fr": "83",
+      "sr": "49",
+      "common_numbers": {
+        "direct": ["83", "49", "12", "76", "28", "65"],
+        "house": [8, 4, 1],
+        "ending": [3, 9, 2]
+      }
+    },
+    "night": {
+      "name": "Shillong Night Teer",
+      "location": "Shillong Club Night Event",
+      "status": "DECLARED",
+      "fr_time": "10:30 PM",
+      "sr_time": "11:30 PM",
+      "fr": "31",
+      "sr": "75",
+      "common_numbers": {
+        "direct": ["31", "75", "08", "42", "69", "14"],
+        "house": [3, 7, 0],
+        "ending": [1, 5, 8]
+      }
+    }
+  }
+}

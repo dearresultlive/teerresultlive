@@ -1,0 +1,17 @@
+{
+  "name": "Teer Result Live",
+  "short_name": "Teer Live",
+  "description": "Fastest Shillong, Khanapara, Juwai Teer live results, dream numbers, and common numbers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

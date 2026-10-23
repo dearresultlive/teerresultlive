@@ -1,0 +1,61 @@
+import React from 'react';
+import archive from '../data/previous_teer_archive.json';
+
+export default function PreviousResultsTable() {
+  return (
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 text-white shadow-sm space-y-3">
+      
+      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-1.5">
+            <span>📊</span>
+            <span>Previous Teer Hit Numbers (অতীত ফলাফল তালিকা)</span>
+          </h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Verified First Round (FR) &amp; Second Round (SR) results for the past 10 draws.
+          </p>
+        </div>
+
+        <a
+          href="/previous-results"
+          className="text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1"
+        >
+          <span>Full Archive</span>
+          <span>➔</span>
+        </a>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-xs border border-slate-800 rounded-xl overflow-hidden font-mono">
+          <thead className="bg-slate-950 text-slate-300 font-bold uppercase tracking-wider text-[11px]">
+            <tr>
+              <th className="p-2.5 sm:p-3 border-b border-slate-800">Date</th>
+              <th className="p-2.5 sm:p-3 border-b border-slate-800 text-amber-400">Shillong (FR / SR)</th>
+              <th className="p-2.5 sm:p-3 border-b border-slate-800 text-emerald-400">Khanapara (FR / SR)</th>
+              <th className="p-2.5 sm:p-3 border-b border-slate-800 text-blue-400">Juwai (FR / SR)</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-800 text-slate-200">
+            {archive.map((row) => (
+              <tr key={row.date} className="hover:bg-slate-800/40 transition-colors">
+                <td className="p-2.5 sm:p-3 font-bold text-slate-400">
+                  {row.date.split('-').reverse().join('/')}
+                </td>
+                <td className="p-2.5 sm:p-3 font-black text-amber-300">
+                  {row.shillong_fr} / {row.shillong_sr}
+                </td>
+                <td className="p-2.5 sm:p-3 font-black text-emerald-300">
+                  {row.khanapara_fr} / {row.khanapara_sr}
+                </td>
+                <td className="p-2.5 sm:p-3 font-black text-blue-300">
+                  {row.juwai_fr} / {row.juwai_sr}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  );
+}

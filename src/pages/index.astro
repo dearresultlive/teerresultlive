@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TeerLiveBoard from '../components/TeerLiveBoard';
+import CommonNumbersCard from '../components/CommonNumbersCard';
+import DreamNumberSearch from '../components/DreamNumberSearch';
+import PreviousResultsTable from '../components/PreviousResultsTable';
+import liveData from '../data/teer_live_results.json';
+
+const todayDateStr = liveData.date.split('-').reverse().join('/');
+---
+
+<Layout
+  title={`Shillong Teer Result Today Live • Khanapara, Juwai Teer Hit Numbers (${todayDateStr}) | Teer Result Live`}
+  description={`Check fastest Shillong Teer result today live (${todayDateStr}) for First Round (3:45 PM) and Second Round (4:45 PM), Khanapara Teer, Juwai Teer, target common numbers, house ending, and dream number list.`}
+>
+  <div class="space-y-6">
+
+    <!-- 1. Real-Time Zero-Refresh Teer Live Results Board -->
+    <section id="live-results">
+      <TeerLiveBoard client:load initialData={liveData} />
+    </section>
+
+    <!-- 2. Today's Target Common Numbers (Direct, House, Ending) -->
+    <section id="common-numbers">
+      <CommonNumbersCard client:visible />
+    </section>
+
+    <!-- 3. Interactive Teer Dream Number Calculator -->
+    <section id="dream-numbers">
+      <DreamNumberSearch client:visible />
+    </section>
+
+    <!-- 4. Previous Hit Numbers Table -->
+    <section id="archive">
+      <PreviousResultsTable client:visible />
+    </section>
+
+    <!-- 5. In-Depth SEO Gazette & Knowledge Section (Boosts Keyword Rankings) -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-7 text-slate-300 space-y-5 text-xs sm:text-sm leading-relaxed">
+      
+      <header class="border-b border-slate-800 pb-3">
+        <h1 class="text-base sm:text-xl font-black text-white leading-snug">
+          Shillong Teer Result Today Live • Khanapara &amp; Juwai Teer Hit Numbers
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">
+          Welcome to Teer Result Live, India's premier fast-reporting portal for Meghalaya archery traditional sports.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h2 class="text-sm sm:text-base font-bold text-amber-400">
+          What is Shillong Teer?
+        </h2>
+        <p class="text-slate-400">
+          Shillong Teer is a legal, regulated traditional archery contest conducted daily at Polo Ground in Shillong by the Khasi Hills Archery Sports Association (consisting of 12 traditional archery clubs). Each afternoon, registered traditional archers shoot arrows at cylindrical targets. The total number of arrows hitting the target is counted, and the last two digits of the count determine the winning number for that round.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+          <h3 class="font-bold text-white text-xs uppercase tracking-wide flex items-center gap-1.5">
+            <span>⏰</span>
+            <span>Official Daily Schedule</span>
+          </h3>
+          <ul class="text-xs space-y-1 text-slate-400">
+            <li>• <strong>Juwai Teer 1st Round:</strong> 1:45 PM</li>
+            <li>• <strong>Juwai Teer 2nd Round:</strong> 2:30 PM</li>
+            <li>• <strong>Shillong Teer 1st Round (FR):</strong> 3:45 PM</li>
+            <li>• <strong>Khanapara Teer 1st Round:</strong> 4:00 PM</li>
+            <li>• <strong>Khanapara Teer 2nd Round:</strong> 4:30 PM</li>
+            <li>• <strong>Shillong Teer 2nd Round (SR):</strong> 4:45 PM</li>
+            <li>• <strong>Shillong Night Teer:</strong> 10:30 PM &amp; 11:30 PM</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+          <h3 class="font-bold text-white text-xs uppercase tracking-wide flex items-center gap-1.5">
+            <span>💡</span>
+            <span>How Common Numbers Work</span>
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Common numbers (House &amp; Ending) are mathematical predictions calculated from previous hit patterns, statistical ending frequencies, and traditional Khasi dream interpretations. These are intended solely for educational analysis by archery enthusiasts.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</Layout>
