@@ -1,15 +1,15 @@
 {
   "date": "2026-10-24",
-  "updated_at": "2026-10-24T10:54:06.963Z",
+  "updated_at": "2026-10-24T11:16:47.534Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, Shillong (Meghalaya)",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
       "fr": "68",
-      "sr": "xx",
+      "sr": "08",
       "common_numbers": {
         "direct": [
           "20",
@@ -34,11 +34,11 @@
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara, Ri-Bhoi / Guwahati",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
       "fr": "97",
-      "sr": "xx",
+      "sr": "21",
       "common_numbers": {
         "direct": [
           "64",
