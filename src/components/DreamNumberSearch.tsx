@@ -45,26 +45,53 @@ export default function DreamNumberSearch() {
       </div>
 
       {/* Instant Search Bar */}
-      <div className="relative">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type your dream (e.g. Snake, Water, Fish, River, Money)..."
-          className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 pl-10 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-hidden focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-medium"
-        />
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
-          🔍
-        </span>
-        {query && (
-          <button
-            type="button"
-            onClick={() => setQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs cursor-pointer p-1"
-          >
-            ✕
-          </button>
-        )}
+      <div className="space-y-2">
+        <div className="relative">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Type your dream (e.g. Snake, Water, Fish, River, Money)..."
+            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 pl-10 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-hidden focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-medium"
+          />
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+            🔍
+          </span>
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs cursor-pointer p-1"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Multilingual Support & Quick Preset Pills */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500 px-0.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="font-bold text-slate-600">Popular:</span>
+            {['Snake', 'Water', 'Money', 'Fish', 'Fire', 'Dog', 'Tiger'].map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setQuery(p)}
+                className={`px-2 py-0.5 rounded-md border text-[10px] font-semibold transition-colors cursor-pointer ${
+                  query.toLowerCase() === p.toLowerCase()
+                    ? 'bg-amber-500 text-slate-950 border-amber-500 font-bold'
+                    : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+
+          <span className="text-[10px] text-slate-400 font-medium">
+            Search in: English • অসমীয়া • বাংলা • हिंदी
+          </span>
+        </div>
       </div>
 
       {/* Results List */}

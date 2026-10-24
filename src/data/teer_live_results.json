@@ -4,7 +4,7 @@
   "games": {
     "shillong": {
       "name": "Shillong Teer",
-      "location": "Polo Ground, Shillong (Meghalaya)",
+      "location": "Polo Ground, East Khasi Hills (KHASA Official)",
       "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
@@ -33,7 +33,7 @@
     },
     "khanapara": {
       "name": "Khanapara Teer",
-      "location": "Khanapara, Ri-Bhoi / Guwahati",
+      "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
       "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
@@ -62,7 +62,7 @@
     },
     "juwai": {
       "name": "Juwai Teer",
-      "location": "Juwai, West Jaintia Hills",
+      "location": "Juwai, West Jaintia Hills Traditional Ground",
       "status": "DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
@@ -91,7 +91,7 @@
     },
     "night": {
       "name": "Shillong Night Teer",
-      "location": "Shillong Club Night Event",
+      "location": "Shillong Club Night Archery Ground",
       "status": "UPCOMING",
       "fr_time": "10:30 PM",
       "sr_time": "11:30 PM",
