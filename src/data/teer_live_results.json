@@ -1,6 +1,6 @@
 {
   "date": "2026-10-24",
-  "updated_at": "2026-10-24T09:21:15.938Z",
+  "updated_at": "2026-10-24T09:55:34.007Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -63,11 +63,11 @@
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
       "fr": "94",
-      "sr": "xx",
+      "sr": "58",
       "common_numbers": {
         "direct": [
           "83",
