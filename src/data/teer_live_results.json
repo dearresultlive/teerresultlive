@@ -1,14 +1,14 @@
 {
   "date": "2026-10-24",
-  "updated_at": "2026-10-24T09:55:34.007Z",
+  "updated_at": "2026-10-24T10:18:28.465Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, Shillong (Meghalaya)",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "xx",
+      "fr": "68",
       "sr": "xx",
       "common_numbers": {
         "direct": [
