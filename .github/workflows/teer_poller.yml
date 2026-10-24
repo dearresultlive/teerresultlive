@@ -35,7 +35,7 @@ jobs:
       - name: Commit & Push If Changed
         run: |
           git config --global user.name "Teer Result Bot"
-          git config --global user.email "bot@teerresultlive.in"
+          git config --global user.email "support@teerresultlive.in"
           if [ -n "$(git status --porcelain src/data/)" ]; then
             git add src/data/
             git commit -m "Auto-update Teer live numbers"
