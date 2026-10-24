@@ -1,16 +1,21 @@
 import type { APIRoute } from 'astro';
 import liveData from '../../../data/teer_live_results.json';
-import { fetchShillongCDN, fetchAggregatorData } from '../../../utils/liveTeerFetcher';
+import {
+  fetchFromGoogleAppsScript,
+  fetchShillongCDN,
+  fetchAggregatorData
+} from '../../../utils/liveTeerFetcher';
 
 export const prerender = false;
 
 let cachedData: any = null;
 let lastFetchTime = 0;
-const CACHE_TTL_MS = 20 * 1000; // 20 seconds cache on Cloudflare edge
+const CACHE_TTL_MS = 15 * 1000; // 15 seconds edge cache
 
 export const GET: APIRoute = async () => {
   const now = Date.now();
 
+  // If cached and fresh within TTL, return edge cache
   if (cachedData && now - lastFetchTime < CACHE_TTL_MS) {
     return new Response(JSON.stringify(cachedData), {
       status: 200,
@@ -26,53 +31,52 @@ export const GET: APIRoute = async () => {
   const result = JSON.parse(JSON.stringify(liveData));
 
   try {
-    const [shillongCDN, aggregator] = await Promise.all([
+    // Multi-tier parallel fetch (Google Apps Script -> Shillong CDN -> Aggregator)
+    const [gasData, shillongCDN, aggregator] = await Promise.all([
+      fetchFromGoogleAppsScript(),
       fetchShillongCDN(),
       fetchAggregatorData()
     ]);
 
-    // Update Shillong from CDN or Aggregator
-    const shillongFR = (shillongCDN?.fr && shillongCDN.fr !== 'xx') ? shillongCDN.fr : aggregator?.shillong?.fr;
-    const shillongSR = (shillongCDN?.sr && shillongCDN.sr !== 'xx') ? shillongCDN.sr : aggregator?.shillong?.sr;
-
-    if (shillongFR && shillongFR !== 'xx') result.games.shillong.fr = shillongFR;
-    if (shillongSR && shillongSR !== 'xx') result.games.shillong.sr = shillongSR;
-    if (result.games.shillong.fr !== 'xx' && result.games.shillong.sr !== 'xx') {
-      result.games.shillong.status = 'DECLARED';
-    } else if (result.games.shillong.fr !== 'xx') {
-      result.games.shillong.status = 'FR DECLARED';
-    }
-
-    // Update Khanapara
-    if (aggregator?.khanapara) {
-      if (aggregator.khanapara.fr && aggregator.khanapara.fr !== 'xx') result.games.khanapara.fr = aggregator.khanapara.fr;
-      if (aggregator.khanapara.sr && aggregator.khanapara.sr !== 'xx') result.games.khanapara.sr = aggregator.khanapara.sr;
-      if (result.games.khanapara.fr !== 'xx' && result.games.khanapara.sr !== 'xx') {
-        result.games.khanapara.status = 'DECLARED';
-      } else if (result.games.khanapara.fr !== 'xx') {
-        result.games.khanapara.status = 'FR DECLARED';
+    // 1. Apply Google Apps Script Data (Highest reliability)
+    if (gasData?.games) {
+      for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+        if (gasData.games[key]) {
+          const g = gasData.games[key];
+          if (g.fr && g.fr !== 'xx') result.games[key].fr = g.fr;
+          if (g.sr && g.sr !== 'xx') result.games[key].sr = g.sr;
+          if (g.status) result.games[key].status = g.status;
+        }
       }
     }
 
-    // Update Juwai
-    if (aggregator?.juwai) {
-      if (aggregator.juwai.fr && aggregator.juwai.fr !== 'xx') result.games.juwai.fr = aggregator.juwai.fr;
-      if (aggregator.juwai.sr && aggregator.juwai.sr !== 'xx') result.games.juwai.sr = aggregator.juwai.sr;
-      if (result.games.juwai.fr !== 'xx' && result.games.juwai.sr !== 'xx') {
-        result.games.juwai.status = 'DECLARED';
-      } else if (result.games.juwai.fr !== 'xx') {
-        result.games.juwai.status = 'FR DECLARED';
+    // 2. Fallback / Augment Shillong from Direct CDN
+    if (result.games.shillong.fr === 'xx' && shillongCDN?.fr && shillongCDN.fr !== 'xx') {
+      result.games.shillong.fr = shillongCDN.fr;
+    }
+    if (result.games.shillong.sr === 'xx' && shillongCDN?.sr && shillongCDN.sr !== 'xx') {
+      result.games.shillong.sr = shillongCDN.sr;
+    }
+
+    // 3. Fallback / Augment Khanapara, Juwai, Night from Aggregator
+    if (aggregator) {
+      for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+        if (result.games[key].fr === 'xx' && aggregator[key]?.fr && aggregator[key].fr !== 'xx') {
+          result.games[key].fr = aggregator[key].fr;
+        }
+        if (result.games[key].sr === 'xx' && aggregator[key]?.sr && aggregator[key].sr !== 'xx') {
+          result.games[key].sr = aggregator[key].sr;
+        }
       }
     }
 
-    // Update Night Teer
-    if (aggregator?.night) {
-      if (aggregator.night.fr && aggregator.night.fr !== 'xx') result.games.night.fr = aggregator.night.fr;
-      if (aggregator.night.sr && aggregator.night.sr !== 'xx') result.games.night.sr = aggregator.night.sr;
-      if (result.games.night.fr !== 'xx' && result.games.night.sr !== 'xx') {
-        result.games.night.status = 'DECLARED';
-      } else if (result.games.night.fr !== 'xx') {
-        result.games.night.status = 'FR DECLARED';
+    // Compute status flags
+    for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+      const g = result.games[key];
+      if (g.fr !== 'xx' && g.sr !== 'xx') {
+        g.status = 'DECLARED';
+      } else if (g.fr !== 'xx') {
+        g.status = 'FR DECLARED';
       }
     }
 

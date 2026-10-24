@@ -58,6 +58,24 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
   }
 }
 
+const GAS_SCRAPER_URL = 'https://script.google.com/macros/s/AKfycbwmWnd4UFGtupP0c_pi1wAUZ1VRifXuor3hG6WUFym2MZ2aaoPBbk4mrm47eAglgKA/exec';
+
+// Source 0: Google Apps Script Scraper (Google Datacenter IP, 0% Cloudflare blocking)
+async function fetchFromGoogleAppsScript() {
+  try {
+    const res = await fetchWithTimeout(GAS_SCRAPER_URL, {
+      headers: { 'Accept': 'application/json' }
+    }, 6000);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.games) return data;
+    }
+  } catch (err) {
+    console.warn(`[GAS Poller] Google Apps Script fetch skipped: ${err.message}`);
+  }
+  return null;
+}
+
 // Source 1: Direct CDN API for Shillong Teer
 async function fetchShillongCDN() {
   try {
@@ -172,8 +190,9 @@ export async function runPoller() {
   const todayIST = getTodayIST();
   let updated = false;
 
-  // 1. Fetch remote data sources
-  const [shillongCDN, aggregatorData] = await Promise.all([
+  // 1. Fetch remote data sources (GAS -> Shillong CDN -> Aggregator)
+  const [gasData, shillongCDN, aggregatorData] = await Promise.all([
+    fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
     fetchAggregatorData()
   ]);
@@ -259,6 +278,13 @@ export async function runPoller() {
 
     let targetFR = game.fr;
     let targetSR = game.sr;
+
+    // Check Google Apps Script (highest priority, Google datacenter IP)
+    if (gasData && gasData.games && gasData.games[key]) {
+      const gasGame = gasData.games[key];
+      if (gasGame.fr && gasGame.fr !== 'xx') targetFR = gasGame.fr;
+      if (gasGame.sr && gasGame.sr !== 'xx') targetSR = gasGame.sr;
+    }
 
     // Check Aggregator for Today's result
     if (aggregatorData && aggregatorData[key]?.today) {
