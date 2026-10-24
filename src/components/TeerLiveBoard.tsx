@@ -22,10 +22,11 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   const [lastCheck, setLastCheck] = useState<string>('');
   const [copied, setCopied] = useState(false);
 
-  const fetchLatest = async () => {
+  const fetchLatest = async (isManual = false) => {
     setIsRefreshing(true);
     try {
-      const res = await fetch(`/api/teer/latest?t=${Date.now()}`);
+      const url = isManual ? `/api/teer/latest?refresh=1&t=${Date.now()}` : '/api/teer/latest';
+      const res = await fetch(url);
       if (res.ok) {
         const fresh = await res.json();
         setData(fresh);
@@ -38,19 +39,68 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     }
   };
 
-  // Zero-Refresh Live Poller every 15 seconds
-  useEffect(() => {
-    setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-    const timer = setInterval(fetchLatest, 15000);
-    return () => clearInterval(timer);
-  }, []);
-
   const games = [
     { key: 'shillong', title: 'SHILLONG TEER', highlight: true },
     { key: 'khanapara', title: 'KHANAPARA TEER', highlight: false },
     { key: 'juwai', title: 'JUWAI TEER', highlight: false },
     { key: 'night', title: 'NIGHT TEER', highlight: false }
   ];
+
+  // Intelligent Zero-Refresh Live Poller
+  useEffect(() => {
+    setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+    // Check whether all results are already declared for today
+    const areAllDeclared = games.every(({ key }) => {
+      const g = data.games[key];
+      return g && g.fr !== 'xx' && g.sr !== 'xx';
+    });
+
+    // 15 seconds during active rounds; 60 seconds if everything is declared or late night
+    const intervalMs = areAllDeclared ? 60000 : 15000;
+
+    let timer: any = null;
+
+    const startTimer = () => {
+      if (!timer) {
+        timer = setInterval(() => {
+          if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+            fetchLatest(false);
+          }
+        }, intervalMs);
+      }
+    };
+
+    const stopTimer = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    const handleVisibility = () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        // Tab brought to foreground: immediately check for fresh numbers
+        fetchLatest(false);
+        startTimer();
+      } else {
+        // Tab in background: stop polling to save CPU, battery, and server bandwidth
+        stopTimer();
+      }
+    };
+
+    startTimer();
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibility);
+    }
+
+    return () => {
+      stopTimer();
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibility);
+      }
+    };
+  }, [data.games]);
 
   // 1-Click WhatsApp Share Generator
   const shareOnWhatsApp = (targetGameKey?: string) => {
@@ -138,7 +188,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           {/* Refresh Button */}
           <button
             type="button"
-            onClick={fetchLatest}
+            onClick={() => fetchLatest(true)}
             disabled={isRefreshing}
             className="inline-flex items-center gap-1 bg-slate-50 hover:bg-slate-100 text-slate-800 px-2.5 py-1 rounded-lg font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs border border-slate-300 active:scale-95"
           >

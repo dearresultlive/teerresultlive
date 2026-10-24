@@ -12,11 +12,14 @@ let cachedData: any = null;
 let lastFetchTime = 0;
 const CACHE_TTL_MS = 15 * 1000; // 15 seconds edge cache
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
   const now = Date.now();
+  const url = new URL(request.url);
+  const isForceRefresh = url.searchParams.has('refresh');
 
-  // If cached and fresh within TTL, return edge cache
-  if (cachedData && now - lastFetchTime < CACHE_TTL_MS) {
+  // If cached and fresh within TTL (or within 3s throttle on manual refresh), return edge cache
+  const ttl = isForceRefresh ? 3000 : CACHE_TTL_MS;
+  if (cachedData && now - lastFetchTime < ttl) {
     return new Response(JSON.stringify(cachedData), {
       status: 200,
       headers: {
@@ -27,7 +30,7 @@ export const GET: APIRoute = async () => {
     });
   }
 
-  // Clone baseline data
+  // Clone baseline data from disk
   const result = JSON.parse(JSON.stringify(liveData));
 
   try {
@@ -38,7 +41,7 @@ export const GET: APIRoute = async () => {
       fetchAggregatorData()
     ]);
 
-    // 1. Apply Google Apps Script Data (Highest reliability)
+    // 1. Apply Google Apps Script Data (Highest reliability, Google Datacenter IP)
     if (gasData?.games) {
       for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
         if (gasData.games[key]) {
@@ -96,3 +99,16 @@ export const GET: APIRoute = async () => {
     }
   });
 };
+
+export const HEAD: APIRoute = async () => {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'public, max-age=10, s-maxage=15, stale-while-revalidate=30',
+      'Access-Control-Allow-Origin': '*'
+    }
+  });
+};
+
+export const ALL: APIRoute = GET;
