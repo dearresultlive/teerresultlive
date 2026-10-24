@@ -12,6 +12,7 @@ export default function PWAInstallBanner() {
 
     const handler = (e: any) => {
       e.preventDefault();
+      (window as any).deferredPWAInstallPrompt = e;
       setDeferredPrompt(e);
       setShowBanner(true);
     };

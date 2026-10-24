@@ -2,7 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
-import MobileBottomNav from '../components/MobileBottomNav.astro';
+import MobileBottomNav from '../components/MobileBottomNav';
 import PWAInstallBanner from '../components/PWAInstallBanner';
 
 interface Props {
@@ -30,7 +30,7 @@ const { title, description, canonicalUrl, publishDate } = Astro.props;
       <slot />
     </main>
     <Footer />
-    <MobileBottomNav />
+    <MobileBottomNav client:load currentPath={Astro.url.pathname} />
 
     <!-- Safe Service Worker Registration -->
     <script is:inline>
