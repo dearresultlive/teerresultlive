@@ -321,7 +321,36 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
                 </span>
               </a>
 
-              {/* Card 3: Khasi Dream Number Directory */}
+              {/* Card 3: Teer Prize & Winnings Calculator */}
+              <a
+                href="/#prize-calculator"
+                onClick={() => setDrawerOpen(false)}
+                className="group flex items-center justify-between p-3 rounded-2xl border border-purple-100 bg-purple-50/40 hover:bg-purple-50 transition-all shadow-2xs active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-purple-600 text-white flex items-center justify-center text-xl shadow-xs shrink-0">
+                    🏆
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-black text-slate-900 text-xs sm:text-sm">
+                        Prize &amp; Payout Calculator
+                      </span>
+                      <span className="bg-purple-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                        80X
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium line-clamp-1 mt-0.5">
+                      Official FR, SR &amp; Forecast winning rates calculator
+                    </p>
+                  </div>
+                </div>
+                <span className="text-purple-600 font-black text-base pl-2 group-hover:translate-x-0.5 transition-transform">
+                  ➔
+                </span>
+              </a>
+
+              {/* Card 4: Khasi Dream Number Directory */}
               <a
                 href="/dream-numbers"
                 onClick={() => setDrawerOpen(false)}

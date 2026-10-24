@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import TeerLiveBoard from '../components/TeerLiveBoard';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
+import TeerPrizeCalculator from '../components/TeerPrizeCalculator';
 import DreamNumberSearch from '../components/DreamNumberSearch';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import liveData from '../data/teer_live_results.json';
@@ -31,17 +32,22 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
       <TeerFormulaCalculator client:visible />
     </section>
 
-    <!-- 4. Interactive Teer Dream Number Calculator -->
+    <!-- 4. Official Teer Prize & Payout Calculator -->
+    <section id="prize-calculator">
+      <TeerPrizeCalculator client:visible />
+    </section>
+
+    <!-- 5. Interactive Teer Dream Number Calculator -->
     <section id="dream-numbers">
       <DreamNumberSearch client:visible />
     </section>
 
-    <!-- 5. Previous Hit Numbers Table -->
+    <!-- 6. Previous Hit Numbers Table -->
     <section id="archive">
       <PreviousResultsTable client:visible />
     </section>
 
-    <!-- 6. In-Depth SEO Gazette & Knowledge Section (Boosts Keyword Rankings) -->
+    <!-- 7. In-Depth SEO Gazette & Knowledge Section (Boosts Keyword Rankings) -->
     <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
       
       <header class="border-b border-slate-100 pb-3">
