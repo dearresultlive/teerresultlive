@@ -13,30 +13,30 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
   description={`Live Shillong Teer result today for First Round and Second Round. Check today's 100% authentic hit numbers, house ending formula, and common numbers direct from Polo Ground.`}
 >
   <div class="space-y-6">
-    <header class="bg-gradient-to-r from-slate-900 to-indigo-950 border border-amber-500/30 rounded-2xl p-5 sm:p-7 text-white space-y-3">
-      <div class="flex items-center justify-between">
-        <h1 class="text-xl sm:text-2xl font-black text-amber-400">
+    <header class="bg-white border-2 border-amber-400 rounded-2xl p-5 sm:p-7 text-slate-900 space-y-3 shadow-xs ring-4 ring-amber-50">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900">
           Shillong Teer Result Today Live • {todayDateStr}
         </h1>
-        <span class="text-xs bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 px-2.5 py-1 rounded-full">
-          Live Update
+        <span class="text-xs bg-emerald-50 text-emerald-700 font-black border border-emerald-300 px-2.5 py-1 rounded-full shadow-2xs">
+          ● Live Update
         </span>
       </div>
-      <p class="text-xs sm:text-sm text-slate-300">
+      <p class="text-xs sm:text-sm text-slate-500 font-medium">
         Conducted officially at Polo Ground, Shillong by the Khasi Hills Archery Sports Association (KHASA).
       </p>
 
       <!-- FR & SR Result Box -->
       <div class="grid grid-cols-2 gap-3 pt-2 max-w-md">
-        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-center">
-          <span class="text-xs font-bold text-slate-400 block uppercase">1st Round (3:45 PM)</span>
-          <span class="text-3xl sm:text-4xl font-black font-mono text-amber-400 mt-1 block">
+        <div class="bg-amber-50/50 border border-amber-200/80 rounded-xl p-3 text-center shadow-2xs">
+          <span class="text-xs font-bold text-amber-800 block uppercase">1st Round (3:45 PM)</span>
+          <span class="text-3xl sm:text-4xl font-black font-mono text-amber-600 mt-1 block">
             {game.fr}
           </span>
         </div>
-        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-center">
-          <span class="text-xs font-bold text-slate-400 block uppercase">2nd Round (4:45 PM)</span>
-          <span class="text-3xl sm:text-4xl font-black font-mono text-emerald-400 mt-1 block">
+        <div class="bg-emerald-50/50 border border-emerald-200/80 rounded-xl p-3 text-center shadow-2xs">
+          <span class="text-xs font-bold text-emerald-800 block uppercase">2nd Round (4:45 PM)</span>
+          <span class="text-3xl sm:text-4xl font-black font-mono text-emerald-600 mt-1 block">
             {game.sr}
           </span>
         </div>

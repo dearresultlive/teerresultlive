@@ -55,27 +55,31 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     <div className="space-y-3">
       
       {/* Top Status & Manual Refresh Bar */}
-      <div className="flex items-center justify-between text-xs px-1 text-slate-400">
-        <div className="flex items-center gap-1.5 font-bold">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="text-slate-200">Date: {data.date.split('-').reverse().join('/')}</span>
-          <span className="text-slate-500">•</span>
-          <span className="text-slate-400 text-[11px]">Auto-Sync Active</span>
+      <div className="flex items-center justify-between text-xs px-1 text-slate-600 bg-white border border-slate-200/80 rounded-xl px-3 py-2 shadow-xs">
+        <div className="flex items-center gap-2 font-bold flex-wrap">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="text-slate-900 font-extrabold">
+            Date: {data.date.split('-').reverse().join('/')}
+          </span>
+          <span className="text-slate-300 hidden sm:inline">•</span>
+          <span className="text-emerald-700 text-[11px] bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-black hidden sm:inline-block">
+            ⚡ AUTO-SYNC ACTIVE
+          </span>
         </div>
 
         <button
           type="button"
           onClick={fetchLatest}
           disabled={isRefreshing}
-          className="inline-flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs border border-slate-700"
+          className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-800 px-3 py-1 rounded-lg font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs border border-slate-300 active:scale-95"
         >
           <span className={isRefreshing ? 'animate-spin' : ''}>🔄</span>
-          <span>{isRefreshing ? 'Updating...' : 'Refresh'}</span>
+          <span>{isRefreshing ? 'Checking...' : 'Refresh'}</span>
         </button>
       </div>
 
       {/* 4 Teer Game Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {games.map(({ key, title, highlight }) => {
           const game = data.games[key] || {
             name: title,
@@ -83,55 +87,68 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             status: 'UPCOMING',
             fr_time: '',
             sr_time: '',
-            fr: '??',
-            sr: '??'
+            fr: 'xx',
+            sr: 'xx'
           };
+
+          const isDeclared = game.fr !== 'xx' && game.sr !== 'xx';
+          const isFrDeclared = game.fr !== 'xx' && game.sr === 'xx';
 
           return (
             <div
               key={key}
-              className={`rounded-2xl border p-4 transition-all relative overflow-hidden shadow-sm ${
+              className={`rounded-2xl p-4 transition-all relative overflow-hidden bg-white shadow-xs ${
                 highlight
-                  ? 'bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 border-amber-500/50 ring-1 ring-amber-500/20'
-                  : 'bg-slate-900/90 border-slate-800'
+                  ? 'border-2 border-amber-400 ring-4 ring-amber-500/10 shadow-sm'
+                  : 'border border-slate-200/90'
               }`}
             >
               {/* Header: Title & Time */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
                 <div>
-                  <h3 className="text-sm font-black text-white flex items-center gap-1.5">
+                  <h3 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
                     <span>🎯</span>
                     <span>{game.name}</span>
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-medium">
+                  <p className="text-[11px] text-slate-500 font-medium">
                     {game.location || 'Official Meghalaya Archery Ground'}
                   </p>
                 </div>
 
-                <span className="text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                <span className={`text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-full border ${
+                  isDeclared
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                    : isFrDeclared
+                    ? 'bg-blue-50 text-blue-700 border-blue-300'
+                    : 'bg-amber-50 text-amber-800 border-amber-300'
+                }`}>
                   {game.status}
                 </span>
               </div>
 
               {/* 2 Rounds (FR & SR) Display */}
-              <div className="grid grid-cols-2 gap-2 text-center">
+              <div className="grid grid-cols-2 gap-2.5 text-center">
                 
                 {/* First Round (FR) */}
-                <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5">
-                  <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">
+                <div className="bg-amber-50/40 border border-amber-200/70 rounded-xl p-3 shadow-2xs">
+                  <span className="text-[10px] font-black uppercase text-amber-800 block tracking-wider">
                     1st Round ({game.fr_time})
                   </span>
-                  <span className={`text-3xl font-black font-mono block mt-1 ${game.fr !== '??' ? 'text-amber-400' : 'text-slate-600'}`}>
+                  <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                    game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
+                  }`}>
                     {game.fr}
                   </span>
                 </div>
 
                 {/* Second Round (SR) */}
-                <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5">
-                  <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">
+                <div className="bg-emerald-50/40 border border-emerald-200/70 rounded-xl p-3 shadow-2xs">
+                  <span className="text-[10px] font-black uppercase text-emerald-800 block tracking-wider">
                     2nd Round ({game.sr_time})
                   </span>
-                  <span className={`text-3xl font-black font-mono block mt-1 ${game.sr !== '??' ? 'text-emerald-400' : 'text-slate-600'}`}>
+                  <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                    game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
+                  }`}>
                     {game.sr}
                   </span>
                 </div>

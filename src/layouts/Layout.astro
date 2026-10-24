@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
+import MobileBottomNav from '../components/MobileBottomNav.astro';
 
 interface Props {
   title?: string;
@@ -14,18 +15,19 @@ const { title, description, canonicalUrl, publishDate } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth bg-slate-950 text-slate-100 antialiased">
+<html lang="en" class="scroll-smooth bg-slate-100 text-slate-900 antialiased">
   <SEOHead
     title={title}
     description={description}
     canonicalUrl={canonicalUrl}
     publishDate={publishDate}
   />
-  <body class="min-h-screen flex flex-col bg-slate-950 font-sans selection:bg-amber-500 selection:text-slate-950">
+  <body class="min-h-screen flex flex-col bg-slate-100 font-sans selection:bg-amber-100 selection:text-amber-900 text-slate-900">
     <Header />
-    <main class="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+    <main class="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-24 md:pb-8">
       <slot />
     </main>
     <Footer />
+    <MobileBottomNav />
   </body>
 </html>

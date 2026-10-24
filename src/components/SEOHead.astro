@@ -93,10 +93,11 @@ const articleSchema = {
   <!-- Icons -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#ffffff" />
 
-  <!-- Robots -->
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <!-- Robots (Locked to noindex until explicitly enabled) -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -104,11 +105,16 @@ const articleSchema = {
   <meta property="og:description" content={description} />
   <meta property="og:url" content={cleanCanonical} />
   <meta property="og:site_name" content="Teer Result Live" />
+  <meta property="og:image" content={`${host}/og-image.jpg`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Shillong and Khanapara Teer Live Results Board" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={`${host}/og-image.jpg`} />
 
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />

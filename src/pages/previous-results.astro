@@ -8,43 +8,43 @@ import archive from '../data/previous_teer_archive.json';
   description="Historical archive of Shillong Teer, Khanapara Teer, and Juwai Teer previous results. Daily First Round (FR) and Second Round (SR) hit numbers table."
 >
   <div class="space-y-6">
-    <header class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 text-white space-y-2">
-      <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+    <header class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 text-slate-900 space-y-2 shadow-xs">
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
         <span>📊</span>
         <span>Previous Teer Results Archive (অতীত ফলাফল তালিকা)</span>
       </h1>
-      <p class="text-xs sm:text-sm text-slate-300">
+      <p class="text-xs sm:text-sm text-slate-600 font-medium">
         Review previous hit numbers for Shillong, Khanapara, Juwai, and Night Teer to identify recurring frequency patterns and formula endings.
       </p>
     </header>
 
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 text-white shadow-sm overflow-x-auto">
-      <table className="w-full text-left text-xs sm:text-sm border border-slate-800 rounded-xl overflow-hidden font-mono">
-        <thead className="bg-slate-950 text-slate-300 font-bold uppercase tracking-wider text-xs">
+    <div class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 text-slate-900 shadow-xs overflow-x-auto">
+      <table class="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl overflow-hidden font-mono">
+        <thead class="bg-slate-50 text-slate-700 font-black uppercase tracking-wider text-xs border-b border-slate-200">
           <tr>
-            <th className="p-3 border-b border-slate-800">Date</th>
-            <th className="p-3 border-b border-slate-800 text-amber-400">Shillong (FR / SR)</th>
-            <th className="p-3 border-b border-slate-800 text-emerald-400">Khanapara (FR / SR)</th>
-            <th className="p-3 border-b border-slate-800 text-blue-400">Juwai (FR / SR)</th>
-            <th className="p-3 border-b border-slate-800 text-purple-400">Night (FR / SR)</th>
+            <th class="p-3">Date</th>
+            <th class="p-3 text-amber-800">Shillong (FR / SR)</th>
+            <th class="p-3 text-emerald-800">Khanapara (FR / SR)</th>
+            <th class="p-3 text-blue-800">Juwai (FR / SR)</th>
+            <th class="p-3 text-purple-800">Night (FR / SR)</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-800 text-slate-200">
+        <tbody class="divide-y divide-slate-100 text-slate-700">
           {archive.map((row) => (
-            <tr key={row.date} className="hover:bg-slate-800/40 transition-colors">
-              <td className="p-3 font-bold text-slate-400">
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="p-3 font-bold text-slate-500">
                 {row.date.split('-').reverse().join('/')}
               </td>
-              <td className="p-3 font-black text-amber-300">
+              <td class="p-3 font-black text-amber-700">
                 {row.shillong_fr} / {row.shillong_sr}
               </td>
-              <td className="p-3 font-black text-emerald-300">
+              <td class="p-3 font-black text-emerald-700">
                 {row.khanapara_fr} / {row.khanapara_sr}
               </td>
-              <td className="p-3 font-black text-blue-300">
+              <td class="p-3 font-black text-blue-700">
                 {row.juwai_fr} / {row.juwai_sr}
               </td>
-              <td className="p-3 font-black text-purple-300">
+              <td class="p-3 font-black text-purple-700">
                 {row.night_fr} / {row.night_sr}
               </td>
             </tr>
