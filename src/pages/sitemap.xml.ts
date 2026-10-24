@@ -14,7 +14,8 @@ export const GET: APIRoute = async () => {
     { path: '/about', changefreq: 'monthly', priority: '0.5' },
     { path: '/privacy-policy', changefreq: 'monthly', priority: '0.5' },
     { path: '/terms', changefreq: 'monthly', priority: '0.5' },
-    { path: '/disclaimer', changefreq: 'monthly', priority: '0.5' }
+    { path: '/disclaimer', changefreq: 'monthly', priority: '0.5' },
+    { path: '/contact', changefreq: 'monthly', priority: '0.5' }
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

@@ -423,6 +423,10 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
               <a href="/about" onClick={() => setDrawerOpen(false)} className="hover:text-slate-900 transition-colors">
                 About
               </a>
+              <span>•</span>
+              <a href="/contact" onClick={() => setDrawerOpen(false)} className="hover:text-slate-900 transition-colors">
+                Contact
+              </a>
             </div>
 
           </div>
