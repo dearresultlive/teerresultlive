@@ -1,9 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="48" fill="#0f172a" stroke="#f59e0b" stroke-width="4"/>
-  <circle cx="50" cy="50" r="32" fill="none" stroke="#ef4444" stroke-width="3"/>
-  <circle cx="50" cy="50" r="16" fill="none" stroke="#10b981" stroke-width="3"/>
-  <circle cx="50" cy="50" r="5" fill="#f59e0b"/>
-  <!-- Archery Arrow -->
-  <line x1="15" y1="85" x2="50" y2="50" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <polygon points="50,50 42,56 46,60" fill="#f59e0b"/>
+
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="goldCenter" cx="45%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </radialGradient>
+    <linearGradient id="redRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+    <linearGradient id="blueRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2.56" stdDeviation="2.56" flood-color="#0F172A" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  
+
+  <!-- Master Disc Base with drop shadow -->
+  <circle cx="64" cy="64" r="56.5248" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.92" filter="url(#dropShadow)"/>
+
+  <!-- Outer Red Ring (Standard FITA Olympic / Traditional Archery) -->
+  <circle cx="64" cy="64" r="50.6368" fill="url(#redRing)"/>
+
+  <!-- Inner White Ring -->
+  <circle cx="64" cy="64" r="37.6832" fill="#FFFFFF"/>
+
+  <!-- Inner Blue Ring -->
+  <circle cx="64" cy="64" r="25.9072" fill="url(#blueRing)"/>
+
+  <!-- Gold Bullseye Core -->
+  <circle cx="64" cy="64" r="14.1312" fill="url(#goldCenter)"/>
+  <circle cx="64" cy="64" r="4.121600000000001" fill="#FFFFFF" opacity="0.9"/>
+
+  <!-- 45-degree Bamboo Arrow Penetrating Center -->
+  <g>
+    <!-- Dark Outline Shaft -->
+    <line x1="19.251199999999997" y1="108.7488" x2="64" y2="64" stroke="#0F172A" stroke-width="7.0656" stroke-linecap="round"/>
+    <!-- Crisp White Shaft Highlight -->
+    <line x1="21.6064" y1="106.39359999999999" x2="61.644800000000004" y2="66.3552" stroke="#FFFFFF" stroke-width="2.9440000000000004" stroke-linecap="round"/>
+    <!-- Golden Fletching Tail -->
+    <path d="M 15.718400000000003 112.2816 L 25.139199999999995 108.7488 L 21.6064 118.1696 Z" fill="#F59E0B"/>
+    <path d="M 15.718400000000003 112.2816 L 19.251199999999997 102.86080000000001 L 9.830399999999997 106.39359999999999 Z" fill="#F43F5E"/>
+    <!-- Impact Point Center Pin -->
+    <circle cx="64" cy="64" r="3.5328" fill="#0F172A"/>
+  </g>
 </svg>
