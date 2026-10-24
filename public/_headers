@@ -1,6 +1,3 @@
-/*
-  X-Robots-Tag: noindex, nofollow, noarchive
-
 /api/*
   X-Robots-Tag: noindex, nofollow
   Access-Control-Allow-Origin: *

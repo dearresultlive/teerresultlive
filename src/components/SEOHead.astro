@@ -173,9 +173,15 @@ const breadcrumbSchema = {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <!-- Search Engine Robots: STRICTLY LOCKED TO NOINDEX UNTIL USER ENABLES INDEXING -->
-  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
-  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
+  <!-- Search Engine Robots: Fully Enabled for Indexing, Discover & Rich Snippets -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+  <!-- Google Search Console Verification Meta Tag (If provided via ENV) -->
+  {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && (
+    <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />
+  )}
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />

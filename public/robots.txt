@@ -1,3 +1,11 @@
-# Staging / Development mode: Disallow all search engine crawlers
+# Teer Result Live - Official Robots Exclusion Standard
+# https://teerresultlive.in
+
 User-agent: *
-Disallow: /
+Allow: /
+
+# Disallow internal API endpoints from appearing as standalone search pages
+Disallow: /api/
+
+# Official XML Sitemap index
+Sitemap: https://teerresultlive.in/sitemap.xml
