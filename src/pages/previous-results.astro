@@ -1,56 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import archive from '../data/previous_teer_archive.json';
+import PreviousResultsTable from '../components/PreviousResultsTable';
 ---
 
 <Layout
   title="Previous Teer Results Archive • Shillong, Khanapara, Juwai Hit Numbers | Teer Result Live"
-  description="Historical archive of Shillong Teer, Khanapara Teer, and Juwai Teer previous results. Daily First Round (FR) and Second Round (SR) hit numbers table."
+  description="Historical archive of Shillong Teer, Khanapara Teer, and Juwai Teer previous results. Search any 2-digit hit number, inspect hit frequencies, and review daily First Round (FR) and Second Round (SR) results."
 >
   <div class="space-y-6">
-    <header class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 text-slate-900 space-y-2 shadow-xs">
-      <h1 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-        <span>📊</span>
-        <span>Previous Teer Results Archive (অতীত ফলাফল তালিকা)</span>
-      </h1>
-      <p class="text-xs sm:text-sm text-slate-600 font-medium">
-        Review previous hit numbers for Shillong, Khanapara, Juwai, and Night Teer to identify recurring frequency patterns and formula endings.
-      </p>
-    </header>
-
-    <div class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 text-slate-900 shadow-xs overflow-x-auto">
-      <table class="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl overflow-hidden font-mono">
-        <thead class="bg-slate-50 text-slate-700 font-black uppercase tracking-wider text-xs border-b border-slate-200">
-          <tr>
-            <th class="p-3">Date</th>
-            <th class="p-3 text-amber-800">Shillong (FR / SR)</th>
-            <th class="p-3 text-emerald-800">Khanapara (FR / SR)</th>
-            <th class="p-3 text-blue-800">Juwai (FR / SR)</th>
-            <th class="p-3 text-purple-800">Night (FR / SR)</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700">
-          {archive.map((row) => (
-            <tr class="hover:bg-slate-50/80 transition-colors">
-              <td class="p-3 font-bold text-slate-500">
-                {row.date.split('-').reverse().join('/')}
-              </td>
-              <td class="p-3 font-black text-amber-700">
-                {row.shillong_fr} / {row.shillong_sr}
-              </td>
-              <td class="p-3 font-black text-emerald-700">
-                {row.khanapara_fr} / {row.khanapara_sr}
-              </td>
-              <td class="p-3 font-black text-blue-700">
-                {row.juwai_fr} / {row.juwai_sr}
-              </td>
-              <td class="p-3 font-black text-purple-700">
-                {row.night_fr} / {row.night_sr}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <PreviousResultsTable client:load />
   </div>
 </Layout>
