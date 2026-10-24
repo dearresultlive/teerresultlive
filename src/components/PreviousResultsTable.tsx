@@ -84,7 +84,7 @@ export default function PreviousResultsTable() {
         <div>
           <h2 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
             <span>📊</span>
-            <span>Previous Teer Hit Numbers (অতীত ফলাফল তালিকা)</span>
+            <span>Previous Teer Hit Numbers</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Filter by game or search any 2-digit number to analyze historical hit frequencies.

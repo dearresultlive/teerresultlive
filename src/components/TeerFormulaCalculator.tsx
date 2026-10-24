@@ -98,7 +98,7 @@ export default function TeerFormulaCalculator() {
         <div>
           <h2 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
             <span>🧮</span>
-            <span>Teer Formula &amp; Target Calculator (টার্গেট হিসাব)</span>
+            <span>Teer Formula &amp; Target Calculator</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Enter previous draw numbers to calculate today's House, Ending, and Direct probabilities.

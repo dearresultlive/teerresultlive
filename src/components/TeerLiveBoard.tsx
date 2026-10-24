@@ -248,7 +248,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           <span className="text-2xl">📲</span>
           <div>
             <span className="text-xs font-black text-emerald-950 block">
-              Share Results Instantly on WhatsApp (হোয়াটসঅ্যাপে শেয়ার)
+              Share Live Results Instantly on WhatsApp
             </span>
             <span className="text-[10px] text-emerald-700 font-medium">
               Forward 100% verified numbers directly to groups with one tap.

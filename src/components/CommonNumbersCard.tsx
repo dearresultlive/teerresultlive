@@ -12,7 +12,7 @@ export default function CommonNumbersCard() {
         <div>
           <h2 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
             <span>🎯</span>
-            <span>Today's Teer Common Numbers (টার্গেট নম্বর)</span>
+            <span>Today's Teer Common Numbers</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Mathematical target numbers derived from previous hit formula (Direct, House, Ending).

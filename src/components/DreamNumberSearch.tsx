@@ -32,10 +32,10 @@ export default function DreamNumberSearch() {
         <div>
           <h2 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
             <span>🌙</span>
-            <span>Teer Dream Number Calculator (সপ্নের নম্বর)</span>
+            <span>Teer Dream Number Calculator</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Search your dream in English, Bengali, or Hindi to find traditional lucky numbers.
+            Search your dream symbols to find traditional lucky Direct, House, and Ending numbers.
           </p>
         </div>
 
@@ -50,7 +50,7 @@ export default function DreamNumberSearch() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type your dream (e.g. Snake, Water, Fish, টাকা, আগুন, सांप)..."
+          placeholder="Type your dream (e.g. Snake, Water, Fish, River, Money)..."
           className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 pl-10 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-hidden focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-medium"
         />
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
