@@ -200,6 +200,16 @@ const breadcrumbSchema = {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Google Analytics 4 (GA4) -->
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-JR3S2ZXES7"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JR3S2ZXES7');
+  </script>
+
   <!-- Pre-configured Structured Data (Rich SERP Cards ready for when indexing is enabled) -->
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
