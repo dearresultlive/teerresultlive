@@ -38,8 +38,9 @@ jobs:
           git config --global user.email "bot@teerresultlive.in"
           if [ -n "$(git status --porcelain src/data/)" ]; then
             git add src/data/
-            git commit -m "Auto-update Teer live numbers [skip ci]"
-            git push
+            git commit -m "Auto-update Teer live numbers"
+            git pull --rebase origin main || true
+            git push origin main
           else
             echo "No data changes detected."
           fi
