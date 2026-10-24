@@ -1,6 +1,6 @@
 {
   "date": "2026-10-24",
-  "updated_at": "2026-10-24T10:18:28.465Z",
+  "updated_at": "2026-10-24T10:54:06.963Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -34,10 +34,10 @@
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara, Ri-Bhoi / Guwahati",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "xx",
+      "fr": "97",
       "sr": "xx",
       "common_numbers": {
         "direct": [
