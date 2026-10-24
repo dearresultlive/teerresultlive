@@ -18,12 +18,12 @@ const cleanPath = currentPath === '/' ? '/' : currentPath.replace(/\/+$/, '');
 const host = 'https://teerresultlive.in';
 const cleanCanonical = canonicalUrl || `${host}${cleanPath}`;
 
-// Structured Data: WebSite & SearchAction
+// 1. Structured Data: WebSite & SearchAction
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Teer Result Live",
-  "alternateName": ["Shillong Teer Result", "Khanapara Teer", "Teer Live", "তিৰ রেজাল্ট লাইভ"],
+  "alternateName": ["Shillong Teer Result", "Khanapara Teer", "Teer Live", "তিৰ রেজাল্ট লাইভ", "शिलांग तीर"],
   "url": host,
   "potentialAction": {
     "@type": "SearchAction",
@@ -32,7 +32,7 @@ const websiteSchema = {
   }
 };
 
-// Structured Data: NewsArticle with Compliant Image Metadata
+// 2. Structured Data: NewsArticle with Compliant Image Metadata
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
@@ -81,6 +81,75 @@ const articleSchema = {
     }
   }
 };
+
+// 3. Structured Data: FAQPage Schema (Search-friendly rich snippet triggers)
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the shooting schedule for Shillong Teer today?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Shillong Teer 1st Round (FR) is declared at 3:45 PM IST and 2nd Round (SR) is declared at 4:45 PM IST from Monday to Saturday at Polo Ground, Shillong."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What time is Khanapara and Juwai Teer result declared?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Juwai Teer 1st Round is announced at 1:45 PM and 2nd Round at 2:30 PM. Khanapara Teer 1st Round is announced at 4:00 PM and 2nd Round at 4:30 PM IST."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is the Teer winning result calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Registered archers shoot arrows at cylindrical targets. The total arrows hitting the target are counted, and the last two digits of the count determine the winning number (e.g. 842 hits = winning number 42)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are House and Ending in Teer common numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In two-digit numbers, 'House' refers to the tens digit (e.g., in 74, House is 7), and 'Ending' refers to the units digit (in 74, Ending is 4). Target common numbers predict probable house and ending frequencies."
+      }
+    }
+  ]
+};
+
+// 4. Structured Data: BreadcrumbList Schema
+const pathSegments = cleanPath.split('/').filter(Boolean);
+const breadcrumbItems = [
+  {
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": host
+  }
+];
+
+if (pathSegments.length > 0) {
+  const pageName = pathSegments[0]
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, l => l.toUpperCase());
+  breadcrumbItems.push({
+    "@type": "ListItem",
+    "position": 2,
+    "name": pageName,
+    "item": cleanCanonical
+  });
+}
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbItems
+};
 ---
 
 <head>
@@ -90,12 +159,19 @@ const articleSchema = {
   <meta name="description" content={description} />
   <link rel="canonical" href={cleanCanonical} />
 
-  <!-- Icons -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <!-- Progressive Web App (PWA) Configuration -->
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#ffffff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Teer Live" />
+  <meta name="application-name" content="Teer Live" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- Robots (Locked to noindex until explicitly enabled) -->
+  <!-- Search Engine Robots: STRICTLY LOCKED TO NOINDEX UNTIL USER ENABLES INDEXING -->
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
 
@@ -105,12 +181,13 @@ const articleSchema = {
   <meta property="og:description" content={description} />
   <meta property="og:url" content={cleanCanonical} />
   <meta property="og:site_name" content="Teer Result Live" />
+  <meta property="og:locale" content="en_IN" />
   <meta property="og:image" content={`${host}/og-image.jpg`} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Shillong and Khanapara Teer Live Results Board" />
 
-  <!-- Twitter -->
+  <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
@@ -121,7 +198,9 @@ const articleSchema = {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- JSON-LD Structured Data -->
+  <!-- Pre-configured Structured Data (Rich SERP Cards ready for when indexing is enabled) -->
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 </head>

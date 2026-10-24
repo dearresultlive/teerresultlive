@@ -1,17 +1,61 @@
 {
-  "name": "Teer Result Live",
+  "name": "Teer Result Live - Shillong & Khanapara Results",
   "short_name": "Teer Live",
-  "description": "Fastest Shillong, Khanapara, Juwai Teer live results, dream numbers, and common numbers.",
-  "start_url": "/",
+  "description": "Fastest Shillong, Khanapara, Juwai Teer live results, dream numbers, and target common numbers.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "background_color": "#f1f5f9",
   "theme_color": "#ffffff",
+  "categories": ["sports", "news", "utilities"],
   "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Live Results",
+      "short_name": "Live",
+      "description": "Check today's live Teer hit numbers",
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dream Numbers",
+      "short_name": "Dreams",
+      "description": "Lookup lucky dream numbers",
+      "url": "/dream-numbers",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Previous Archive",
+      "short_name": "Archive",
+      "description": "Past 10 years hit numbers list",
+      "url": "/previous-results",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
