@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { COMMUNITY_LINKS } from '../config/community';
 
 interface Props {
   currentPath?: string;
@@ -262,6 +263,68 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
 
             {/* Feature Cards Stack */}
             <div className="space-y-2.5">
+
+              {/* Community 1: Official Telegram Channel */}
+              <a
+                href={COMMUNITY_LINKS.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setDrawerOpen(false)}
+                className="group flex items-center justify-between p-3 rounded-2xl border border-sky-200 bg-sky-50/60 hover:bg-sky-100/70 transition-all shadow-2xs active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-[#229ED9] text-white flex items-center justify-center text-xl shadow-xs shrink-0">
+                    ✈️
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-black text-slate-900 text-xs sm:text-sm">
+                        Official Telegram Channel
+                      </span>
+                      <span className="bg-[#229ED9] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                        INSTANT
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 font-medium line-clamp-1 mt-0.5">
+                      0-second alerts &amp; daily target house/ending formula
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#229ED9] font-black text-base pl-2 group-hover:translate-x-0.5 transition-transform">
+                  ➔
+                </span>
+              </a>
+
+              {/* Community 2: Follow WhatsApp Channel */}
+              <a
+                href={COMMUNITY_LINKS.whatsappChannel}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setDrawerOpen(false)}
+                className="group flex items-center justify-between p-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/70 transition-all shadow-2xs active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-[#25D366] text-white flex items-center justify-center text-xl shadow-xs shrink-0">
+                    📢
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-black text-slate-900 text-xs sm:text-sm">
+                        Follow WhatsApp Channel
+                      </span>
+                      <span className="bg-[#25D366] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                        UPDATES
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 font-medium line-clamp-1 mt-0.5">
+                      Get verified winning numbers in your WhatsApp feed
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#25D366] font-black text-base pl-2 group-hover:translate-x-0.5 transition-transform">
+                  ➔
+                </span>
+              </a>
               
               {/* Card 1: 5Y Hit Archive & Digit Frequency */}
               <a
@@ -376,7 +439,7 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
                 </span>
               </a>
 
-              {/* Card 4: Install Mobile App (PWA) Card */}
+              {/* Card 5: Install Mobile App (PWA) Card */}
               <div
                 onClick={handleInstallApp}
                 className="group flex items-center justify-between p-3 rounded-2xl border-2 border-amber-300 bg-amber-50/80 hover:bg-amber-100/80 transition-all shadow-2xs cursor-pointer active:scale-[0.99]"

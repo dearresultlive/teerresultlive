@@ -1,4 +1,5 @@
 ---
+import { COMMUNITY_LINKS } from '../config/community';
 const year = new Date().getFullYear();
 ---
 
@@ -23,6 +24,34 @@ const year = new Date().getFullYear();
         <a href="/dream-numbers" class="hover:text-amber-600 transition-colors">Dream Numbers</a>
         <span>•</span>
         <a href="/previous-results" class="hover:text-amber-600 transition-colors">Archive</a>
+      </div>
+    </div>
+
+    <!-- Official Community Channels -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🔔</span>
+        <span class="font-bold text-slate-800">Official Result Channels:</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a
+          href={COMMUNITY_LINKS.telegram}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 bg-[#229ED9] hover:bg-[#1b8bc2] text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-all shadow-2xs active:scale-95"
+        >
+          <span>✈️</span>
+          <span>Telegram Channel</span>
+        </a>
+        <a
+          href={COMMUNITY_LINKS.whatsappChannel}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-all shadow-2xs active:scale-95"
+        >
+          <span>📢</span>
+          <span>WhatsApp Channel</span>
+        </a>
       </div>
     </div>
 
