@@ -150,6 +150,35 @@ const breadcrumbSchema = {
   "@type": "BreadcrumbList",
   "itemListElement": breadcrumbItems
 };
+
+// 5. Structured Data: SportsEvent Schema for Traditional Archery
+const todayISTDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+const sportsEventSchema = {
+  "@context": "https://schema.org",
+  "@type": "SportsEvent",
+  "name": "Shillong Teer Traditional Archery Competition",
+  "description": "Daily official traditional archery contest conducted by Khasi Hills Archery Sports Association (KHASA) at Polo Ground, Shillong.",
+  "startDate": `${todayISTDate}T15:45:00+05:30`,
+  "endDate": `${todayISTDate}T16:45:00+05:30`,
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "Polo Ground (KHASA Official Archery Grounds)",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Shillong",
+      "addressRegion": "Meghalaya",
+      "postalCode": "793001",
+      "addressCountry": "IN"
+    }
+  },
+  "organizer": {
+    "@type": "SportsOrganization",
+    "name": "Khasi Hills Archery Sports Association (KHASA)",
+    "url": host
+  }
+};
 ---
 
 <head>
@@ -157,6 +186,7 @@ const breadcrumbSchema = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <meta name="keywords" content="Shillong teer result, Shillong teer result today, Khanapara teer result, Juwai teer result, Shillong night teer, teer common numbers, teer house ending, teer dream numbers, শিলং তীর রেজাল্ট, খানাপাড়া তীর, তিৰ ৰিজাল্ট, शिलांग तीर" />
   <link rel="canonical" href={cleanCanonical} />
 
   <!-- Progressive Web App (PWA) Configuration -->
@@ -221,4 +251,5 @@ const breadcrumbSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(sportsEventSchema)} />
 </head>

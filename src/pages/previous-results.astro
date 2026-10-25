@@ -4,10 +4,19 @@ import PreviousResultsTable from '../components/PreviousResultsTable';
 ---
 
 <Layout
-  title="Previous Teer Results Archive • Shillong, Khanapara, Juwai Hit Numbers | Teer Result Live"
+  title="Previous Teer Results Archive • Shillong & Khanapara Hit Numbers"
   description="Historical archive of Shillong Teer, Khanapara Teer, and Juwai Teer previous results. Search any 2-digit hit number, inspect hit frequencies, and review daily First Round (FR) and Second Round (SR) results."
 >
   <div class="space-y-6">
+    <header class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 text-slate-900 shadow-xs space-y-1.5">
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900">
+        Previous Teer Results Archive • Shillong, Khanapara &amp; Juwai Hit Numbers
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 font-medium">
+        Search any 2-digit number to analyze historical frequency patterns, previous 1st and 2nd round winning records, and weekly hit charts.
+      </p>
+    </header>
+
     <PreviousResultsTable client:load />
   </div>
 </Layout>
