@@ -28,7 +28,7 @@ const { title, description, canonicalUrl, publishDate } = Astro.props;
       <slot />
     </main>
     <Footer />
-    <MobileBottomNav client:load currentPath={Astro.url.pathname} />
+    <MobileBottomNav client:idle currentPath={Astro.url.pathname} />
 
     <!-- Safe Service Worker Registration -->
     <script is:inline>

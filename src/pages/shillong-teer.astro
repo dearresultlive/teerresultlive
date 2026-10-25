@@ -4,27 +4,30 @@ import liveData from '../data/teer_live_results.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import PWAInstallBanner from '../components/PWAInstallBanner';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.shillong;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
 ---
 
 <Layout
-  title={`Shillong Teer Result Today • ${todayDateStr} Live (Polo Ground)`}
-  description={`Live Shillong Teer result today for First Round and Second Round. Check today's 100% authentic hit numbers, house ending formula, and common numbers direct from Polo Ground.`}
+  title={`Shillong Teer Result Today Live • ${todayDateStr} | Teer Result Live`}
+  description={`Official Shillong Teer result today live (${todayDateStr}) for 1st Round (3:45 PM) and 2nd Round (4:45 PM) direct from Polo Ground with hit common numbers.`}
 >
   <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Shillong Teer' }]} />
+
     <header class="bg-white border-2 border-amber-400 rounded-2xl p-5 sm:p-7 text-slate-900 space-y-3 shadow-xs ring-4 ring-amber-50">
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <h1 class="text-xl sm:text-2xl font-black text-slate-900">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
           Shillong Teer Result Today Live • {todayDateStr}
         </h1>
         <span class="text-xs bg-emerald-50 text-emerald-700 font-black border border-emerald-300 px-2.5 py-1 rounded-full shadow-2xs">
-          ● Live Update
+          ● Official Polo Ground Feed
         </span>
       </div>
       <p class="text-xs sm:text-sm text-slate-500 font-medium">
-        Conducted officially at Polo Ground, Shillong by the Khasi Hills Archery Sports Association (KHASA).
+        Conducted officially at Polo Ground, Shillong by the Khasi Hills Archery Sports Association (KHASA) under Meghalaya State Government regulations.
       </p>
 
       <!-- FR & SR Result Box -->
@@ -48,5 +51,74 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 
     <CommonNumbersCard client:visible />
     <PreviousResultsTable client:visible />
+
+    <!-- In-Depth SEO Gazette for Shillong Teer -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          Everything You Need to Know About Shillong Teer Results
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          Authorized daily traditional archery competition organized at Polo Ground, Shillong.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Official Shooting Schedule &amp; Timings
+        </h3>
+        <p class="text-slate-600">
+          Shillong Teer is conducted daily from Monday through Saturday at the historic Polo Ground in Shillong. The archery contest takes place in two consecutive rounds:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>First Round (FR):</strong> Shooting commences at 3:30 PM IST, and results are officially declared at approximately <strong>3:45 PM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> Shooting begins at 4:30 PM IST, and winning hit numbers are announced at approximately <strong>4:45 PM IST</strong>.</li>
+          <li><strong>Sundays:</strong> Archery competitions are strictly suspended on Sundays in accordance with KHASA sports regulations.</li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          How the Winning Number is Determined
+        </h3>
+        <p class="text-slate-600">
+          Approximately 50 traditional archers from local clubs affiliated with KHASA participate in each round. Each archer shoots 30 cane/bamboo arrows in the first round and 20 arrows in the second round at a cylindrical straw target set at a standard distance of 45–50 meters.
+        </p>
+        <p class="text-slate-600">
+          After the allotted 5 minutes of shooting, all arrows that firmly struck the target are counted in front of official observers. The <strong>last two digits</strong> of the total hit count determine the winning number. For example, if 874 arrows strike the target, the declared result is <strong>74</strong>.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Common Numbers: Direct, House, and Ending
+        </h3>
+        <p class="text-slate-600">
+          Teer analysts predict target numbers daily using mathematical formulas and historical hit frequencies. In two-digit numbers (00–99):
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>House:</strong> Represents the tens digit (e.g. in 68, the House is 6).</li>
+          <li><strong>Ending:</strong> Represents the units digit (e.g. in 68, the Ending is 8).</li>
+          <li><strong>Direct:</strong> Exact 2-digit predictions matching the full declared number.</li>
+        </ul>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Frequently Asked Questions (FAQs)
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Where can I check the fastest Shillong Teer live result?</summary>
+            <p class="mt-2 text-xs text-slate-600">You can monitor our live results board directly on <a href="https://teerresultlive.in" class="text-amber-700 font-bold hover:underline">teerresultlive.in</a>, where zero-refresh updates stream from Polo Ground observers within seconds of declaration.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Is Shillong Teer legal in Meghalaya?</summary>
+            <p class="mt-2 text-xs text-slate-600">Yes. The traditional sport of archery and its associated activities are regulated by the Meghalaya state government under the <em>Meghalaya Amusements and Betting Tax (Amendment) Act 1982</em>.</p>
+          </details>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>

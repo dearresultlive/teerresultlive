@@ -1,31 +1,41 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 ---
 
 <Layout
   title="About Us • Teer Result Live"
-  description="About Teer Result Live - India's fastest autonomous traditional Meghalaya archery reporting portal."
+  description="About Teer Result Live - India's premier independent digital portal delivering authentic, live traditional Meghalaya archery hit results from Polo Ground."
 >
-  <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 text-slate-700 space-y-4 leading-relaxed text-xs sm:text-sm shadow-xs">
-    <h1 class="text-xl sm:text-2xl font-black text-slate-900">About Teer Result Live</h1>
-    
-    <p>
-      <strong>Teer Result Live (<a href="https://teerresultlive.in" class="text-amber-700 font-semibold hover:underline">teerresultlive.in</a>)</strong> is a dedicated independent news publication portal that reports the outcomes of traditional archery sporting contests conducted in the state of Meghalaya, India.
-    </p>
+  <div class="space-y-4">
+    <Breadcrumbs items={[{ name: 'About Us' }]} />
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">Our Mission</h2>
-    <p>
-      Our mission is to deliver fast, authentic, and accurate First Round (FR) and Second Round (SR) archery numbers to enthusiasts, journalists, and researchers across the globe. Our platform uses edge computing technology to stream results within seconds of verification from the archery grounds.
-    </p>
+    <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 text-slate-700 space-y-4 leading-relaxed text-xs sm:text-sm shadow-xs">
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">About Teer Result Live</h1>
+      
+      <p>
+        <strong>Teer Result Live (<a href="https://teerresultlive.in" class="text-amber-700 font-semibold hover:underline">teerresultlive.in</a>)</strong> is a dedicated independent news publication portal that reports the outcomes of traditional archery sporting contests conducted in the state of Meghalaya, India.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">Traditional Archery in Meghalaya</h2>
-    <p>
-      Teer is an ancient Khasi tradition. Under the <em>Meghalaya Amusements and Betting Tax (Amendment) Act 1982</em>, the game is conducted under state regulatory oversight by the Khasi Hills Archery Sports Association (KHASA) at the Polo Ground in Shillong.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">Our Mission</h2>
+      <p>
+        Our mission is to deliver fast, authentic, and accurate First Round (FR) and Second Round (SR) archery numbers to enthusiasts, journalists, and cultural researchers across the globe. Our platform uses edge computing technology to stream results within seconds of verification from official archery grounds.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">Contact Us</h2>
-    <p>
-      For media inquiries, corrections, or support, you can reach our team at <a href="mailto:support@teerresultlive.in" class="text-amber-700 font-semibold hover:underline">support@teerresultlive.in</a>.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">Traditional Archery in Meghalaya</h2>
+      <p>
+        Teer is an ancient Khasi tradition. Under the <em>Meghalaya Amusements and Betting Tax (Amendment) Act 1982</em>, the game is conducted under state regulatory oversight by the Khasi Hills Archery Sports Association (KHASA) at the Polo Ground in Shillong.
+      </p>
+
+      <h2 class="text-base font-bold text-slate-900 pt-2">Editorial Independence &amp; Integrity</h2>
+      <p>
+        Teer Result Live is strictly an independent informational and journalistic reporting portal. We do not organize, host, or accept wagers of any kind. All hit numbers published on this portal are verified against official announcements made at the respective archery venues.
+      </p>
+
+      <h2 class="text-base font-bold text-slate-900 pt-2">Contact Us</h2>
+      <p>
+        For media inquiries, corrections, or support, you can reach our editorial team directly at <a href="mailto:support@teerresultlive.in" class="text-amber-700 font-semibold hover:underline">support@teerresultlive.in</a>.
+      </p>
+    </div>
   </div>
 </Layout>

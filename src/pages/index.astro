@@ -14,7 +14,7 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 
 <Layout
   title={`Shillong Teer Result Today Live • ${todayDateStr} | Teer Result Live`}
-  description={`Check fastest Shillong Teer result today live (${todayDateStr}) for First Round (3:45 PM) and Second Round (4:45 PM), Khanapara Teer, Juwai Teer, target common numbers, house ending, and dream number list.`}
+  description={`Fastest Shillong Teer result today live (${todayDateStr}) for First Round (3:45 PM) and Second Round (4:45 PM), Khanapara, Juwai, and target common numbers.`}
 >
   <div class="space-y-6">
 
@@ -30,7 +30,7 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 
     <!-- 1. Real-Time Zero-Refresh Teer Live Results Board -->
     <section id="live-results">
-      <TeerLiveBoard client:load initialData={liveData} />
+      <TeerLiveBoard client:idle initialData={liveData} />
     </section>
 
     <!-- App Install Banner (Inline Below Live Board) -->

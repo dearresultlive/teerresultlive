@@ -1,22 +1,74 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PreviousResultsTable from '../components/PreviousResultsTable';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 ---
 
 <Layout
-  title="Previous Teer Results Archive • Shillong & Khanapara Hit Numbers"
-  description="Historical archive of Shillong Teer, Khanapara Teer, and Juwai Teer previous results. Search any 2-digit hit number, inspect hit frequencies, and review daily First Round (FR) and Second Round (SR) results."
+  title="Previous Teer Results Archive • Hit Numbers | Teer Result Live"
+  description="Search historical previous results for Shillong Teer, Khanapara Teer, and Juwai Teer. Filter by 2-digit number, hit frequency, and FR/SR date records."
 >
   <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Previous Results' }]} />
+
     <header class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 text-slate-900 shadow-xs space-y-1.5">
-      <h1 class="text-xl sm:text-2xl font-black text-slate-900">
-        Previous Teer Results Archive • Shillong, Khanapara &amp; Juwai Hit Numbers
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+        Previous Teer Results Archive • Shillong, Khanapara &amp; Juwai
       </h1>
       <p class="text-xs sm:text-sm text-slate-500 font-medium">
         Search any 2-digit number to analyze historical frequency patterns, previous 1st and 2nd round winning records, and weekly hit charts.
       </p>
     </header>
 
-    <PreviousResultsTable client:load />
+    <PreviousResultsTable client:idle />
+
+    <!-- In-Depth Historical Analysis Guide -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          How to Use the Teer Previous Results Archive
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          Historical hit records from Polo Ground, Khanapara, and Juwai traditional archery competitions.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Why Historical Archive Data Matters
+        </h3>
+        <p class="text-slate-600">
+          Archery enthusiasts and statistical analysts study previous results to spot trends in hit distributions. Our comprehensive database records both First Round (FR) and Second Round (SR) scores across months and years.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Key Analysis Methods
+        </h3>
+        <ul class="list-disc pl-5 space-y-1.5 text-slate-600">
+          <li><strong>Frequency Tracking:</strong> By typing any number between 00 and 99 into the search box above, you can immediately identify how many times that exact number has been hit in recent months.</li>
+          <li><strong>House Cycles:</strong> Notice how certain tens-digits (e.g., House 3: 30–39 or House 7: 70–79) cluster over consecutive days before shifting.</li>
+          <li><strong>Ending Repeats:</strong> Tracking units digits helps identify common ending patterns between the First and Second rounds.</li>
+        </ul>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Archive FAQs
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">How often is the previous results archive updated?</summary>
+            <p class="mt-2 text-xs text-slate-600">The archive is automatically updated every day as soon as official First Round and Second Round numbers are declared and verified from Polo Ground.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Can I search numbers for a specific date?</summary>
+            <p class="mt-2 text-xs text-slate-600">Yes, you can search either by number (e.g. "68") or browse by date directly in the table above.</p>
+          </details>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>

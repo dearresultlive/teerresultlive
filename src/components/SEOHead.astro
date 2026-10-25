@@ -32,8 +32,14 @@ const websiteSchema = {
   }
 };
 
-// 2. Structured Data: NewsArticle with Compliant Image Metadata
-const articleSchema = {
+// Determine page category for contextual schemas
+const isSportsPage = ['/', '/shillong-teer', '/khanapara-teer', '/juwai-teer'].includes(cleanPath);
+const isNewsArticle = isSportsPage || ['/previous-results', '/dream-numbers'].includes(cleanPath);
+const isAboutPage = cleanPath === '/about';
+const isContactPage = cleanPath === '/contact';
+
+// 2. Structured Data: NewsArticle (for content / results pages)
+const articleSchema = isNewsArticle ? {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
   "headline": title,
@@ -80,47 +86,111 @@ const articleSchema = {
       "acquireLicensePage": `${host}/terms`
     }
   }
-};
+} : null;
 
-// 3. Structured Data: FAQPage Schema (Search-friendly rich snippet triggers)
-const faqSchema = {
+// 3. Structured Data: Contextual FAQPage Schema
+let pageFaqs: Array<{ q: string; a: string }> = [];
+
+if (cleanPath === '/shillong-teer') {
+  pageFaqs = [
+    {
+      q: "What time is Shillong Teer result declared today?",
+      a: "Shillong Teer 1st Round (FR) is declared at 3:45 PM IST and the 2nd Round (SR) is declared at 4:45 PM IST, Monday to Saturday."
+    },
+    {
+      q: "Where is Shillong Teer conducted?",
+      a: "Shillong Teer is officially conducted at the Polo Ground in Shillong, Meghalaya by the Khasi Hills Archery Sports Association (KHASA)."
+    },
+    {
+      q: "How is the Shillong Teer winning number decided?",
+      a: "50 licensed traditional archers shoot bamboo arrows at a cylindrical target. The arrows that hit are counted, and the last two digits of the total count form the winning number (e.g. 748 hits = winning number 48)."
+    },
+    {
+      q: "Is Shillong Teer held on Sundays?",
+      a: "No, Sunday is an official archery holiday. Shillong Teer operates only from Monday to Saturday."
+    }
+  ];
+} else if (cleanPath === '/khanapara-teer') {
+  pageFaqs = [
+    {
+      q: "What time is Khanapara Teer result declared today?",
+      a: "Khanapara Teer 1st Round is announced at 4:00 PM IST and 2nd Round at 4:30 PM IST from Monday to Saturday."
+    },
+    {
+      q: "Where does Khanapara Teer take place?",
+      a: "Khanapara Teer takes place in Khanapara, Ri-Bhoi district, located on the Assam-Meghalaya border."
+    },
+    {
+      q: "What are Khanapara Teer common numbers?",
+      a: "Common numbers are target predictions calculated based on past frequency charts, house/ending trends, and formula models."
+    }
+  ];
+} else if (cleanPath === '/juwai-teer') {
+  pageFaqs = [
+    {
+      q: "What time is Juwai Teer result declared today?",
+      a: "Juwai Teer 1st Round is declared at 1:45 PM IST and 2nd Round at 2:30 PM IST, Monday to Saturday."
+    },
+    {
+      q: "Where is Juwai Teer conducted?",
+      a: "Juwai Teer is conducted in the historic town of Juwai, West Jaintia Hills district, Meghalaya."
+    }
+  ];
+} else if (cleanPath === '/dream-numbers') {
+  pageFaqs = [
+    {
+      q: "How do Teer dream numbers work?",
+      a: "In traditional Khasi folklore, dreams are believed to correspond to specific numbers. For example, dreaming of a snake often maps to House 9 (ending 09, 19, etc.), while water relates to 4 or 7."
+    },
+    {
+      q: "How can I find my dream number?",
+      a: "Search your dream symbol (e.g., fish, tiger, flying, wedding) in our directory above to see the traditional Direct, House, and Ending numbers."
+    }
+  ];
+} else if (cleanPath === '/previous-results') {
+  pageFaqs = [
+    {
+      q: "Where can I view old Shillong and Khanapara Teer hit records?",
+      a: "Our archive table provides complete historical First Round and Second Round results for Shillong, Khanapara, and Juwai Teer with instant 2-digit number search."
+    },
+    {
+      q: "How often do Teer hit numbers repeat?",
+      a: "While every archery contest is an independent event, players study hit frequency charts and recurring house/ending patterns across the previous 30 to 90 days."
+    }
+  ];
+} else if (cleanPath === '/') {
+  pageFaqs = [
+    {
+      q: "What is the shooting schedule for Shillong Teer today?",
+      a: "Shillong Teer 1st Round (FR) is declared at 3:45 PM IST and 2nd Round (SR) at 4:45 PM IST from Monday to Saturday at Polo Ground, Shillong."
+    },
+    {
+      q: "What time is Khanapara and Juwai Teer result declared?",
+      a: "Juwai Teer 1st Round is announced at 1:45 PM and 2nd Round at 2:30 PM. Khanapara Teer 1st Round is announced at 4:00 PM and 2nd Round at 4:30 PM IST."
+    },
+    {
+      q: "How is the Teer winning result calculated?",
+      a: "Registered archers shoot arrows at cylindrical targets. The total arrows hitting the target are counted, and the last two digits of the count determine the winning number."
+    },
+    {
+      q: "What are House and Ending in Teer common numbers?",
+      a: "In two-digit numbers, 'House' refers to the tens digit (in 74, House is 7), and 'Ending' refers to the units digit (in 74, Ending is 4)."
+    }
+  ];
+}
+
+const faqSchema = pageFaqs.length > 0 ? {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the shooting schedule for Shillong Teer today?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Shillong Teer 1st Round (FR) is declared at 3:45 PM IST and 2nd Round (SR) is declared at 4:45 PM IST from Monday to Saturday at Polo Ground, Shillong."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What time is Khanapara and Juwai Teer result declared?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Juwai Teer 1st Round is announced at 1:45 PM and 2nd Round at 2:30 PM. Khanapara Teer 1st Round is announced at 4:00 PM and 2nd Round at 4:30 PM IST."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How is the Teer winning result calculated?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Registered archers shoot arrows at cylindrical targets. The total arrows hitting the target are counted, and the last two digits of the count determine the winning number (e.g. 842 hits = winning number 42)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are House and Ending in Teer common numbers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "In two-digit numbers, 'House' refers to the tens digit (e.g., in 74, House is 7), and 'Ending' refers to the units digit (in 74, Ending is 4). Target common numbers predict probable house and ending frequencies."
-      }
+  "mainEntity": pageFaqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
     }
-  ]
-};
+  }))
+} : null;
 
 // 4. Structured Data: BreadcrumbList Schema
 const pathSegments = cleanPath.split('/').filter(Boolean);
@@ -151,34 +221,96 @@ const breadcrumbSchema = {
   "itemListElement": breadcrumbItems
 };
 
-// 5. Structured Data: SportsEvent Schema for Traditional Archery
+// 5. Structured Data: Contextual SportsEvent Schema (Only for sports result pages)
 const todayISTDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
-const sportsEventSchema = {
-  "@context": "https://schema.org",
-  "@type": "SportsEvent",
-  "name": "Shillong Teer Traditional Archery Competition",
-  "description": "Daily official traditional archery contest conducted by Khasi Hills Archery Sports Association (KHASA) at Polo Ground, Shillong.",
-  "startDate": `${todayISTDate}T15:45:00+05:30`,
-  "endDate": `${todayISTDate}T16:45:00+05:30`,
-  "eventStatus": "https://schema.org/EventScheduled",
-  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-  "location": {
-    "@type": "Place",
-    "name": "Polo Ground (KHASA Official Archery Grounds)",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Shillong",
-      "addressRegion": "Meghalaya",
-      "postalCode": "793001",
-      "addressCountry": "IN"
-    }
-  },
-  "organizer": {
-    "@type": "SportsOrganization",
-    "name": "Khasi Hills Archery Sports Association (KHASA)",
-    "url": host
+
+let sportsEventSchema = null;
+if (isSportsPage) {
+  let eventName = "Shillong Teer Traditional Archery Competition";
+  let eventDesc = "Daily official traditional archery contest conducted by Khasi Hills Archery Sports Association (KHASA) at Polo Ground, Shillong.";
+  let startTime = `${todayISTDate}T15:45:00+05:30`;
+  let endTime = `${todayISTDate}T16:45:00+05:30`;
+  let locationName = "Polo Ground (KHASA Official Archery Grounds)";
+  let locality = "Shillong";
+  let region = "Meghalaya";
+  let postalCode = "793001";
+
+  if (cleanPath === '/khanapara-teer') {
+    eventName = "Khanapara Teer Traditional Archery Competition";
+    eventDesc = "Daily official traditional archery contest conducted at Khanapara, Ri-Bhoi on the Assam-Meghalaya border.";
+    startTime = `${todayISTDate}T16:00:00+05:30`;
+    endTime = `${todayISTDate}T16:30:00+05:30`;
+    locationName = "Khanapara Archery Grounds";
+    locality = "Ri-Bhoi";
+    region = "Meghalaya";
+    postalCode = "793101";
+  } else if (cleanPath === '/juwai-teer') {
+    eventName = "Juwai Teer Traditional Archery Competition";
+    eventDesc = "Daily official traditional archery contest conducted in Juwai, West Jaintia Hills, Meghalaya.";
+    startTime = `${todayISTDate}T13:45:00+05:30`;
+    endTime = `${todayISTDate}T14:30:00+05:30`;
+    locationName = "Juwai Archery Grounds";
+    locality = "Juwai";
+    region = "Meghalaya";
+    postalCode = "793150";
   }
-};
+
+  sportsEventSchema = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    "name": eventName,
+    "description": eventDesc,
+    "startDate": startTime,
+    "endDate": endTime,
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": locationName,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": locality,
+        "addressRegion": region,
+        "postalCode": postalCode,
+        "addressCountry": "IN"
+      }
+    },
+    "organizer": {
+      "@type": "SportsOrganization",
+      "name": cleanPath === '/khanapara-teer' ? "Khanapara Archery Association" : cleanPath === '/juwai-teer' ? "Juwai Archery Club" : "Khasi Hills Archery Sports Association (KHASA)",
+      "url": host
+    }
+  };
+}
+
+// 6. AboutPage & ContactPage Schemas
+const aboutPageSchema = isAboutPage ? {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About Teer Result Live",
+  "description": description,
+  "url": cleanCanonical,
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Teer Result Live",
+    "url": host,
+    "logo": `${host}/favicon.svg`
+  }
+} : null;
+
+const contactPageSchema = isContactPage ? {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact Teer Result Live",
+  "description": description,
+  "url": cleanCanonical,
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Teer Result Live",
+    "url": host,
+    "email": "support@teerresultlive.in"
+  }
+} : null;
 ---
 
 <head>
@@ -234,14 +366,24 @@ const sportsEventSchema = {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={`${host}/og-image.jpg`} />
 
-  <!-- Google Fonts: Preconnected & Optimized Subset (Inter 400, 700, 900 + JetBrains Mono 700) -->
+  <!-- Non-Blocking Typography: System UI First with Background Web Font Enhancement -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" media="print" onload="this.media='all'" />
-  <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" />
-  </noscript>
+  <script is:inline>
+    (function() {
+      function loadCustomFonts() {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap';
+        document.head.appendChild(link);
+      }
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadCustomFonts);
+      } else {
+        window.addEventListener('load', loadCustomFonts);
+      }
+    })();
+  </script>
 
   <!-- Google Analytics 4 (GA4): Asynchronously deferred for 100/100 Core Web Vitals -->
   <script is:inline>
@@ -266,10 +408,12 @@ const sportsEventSchema = {
     }
   </script>
 
-  <!-- Pre-configured Structured Data (Rich SERP Cards ready for when indexing is enabled) -->
+  <!-- Structured Data Schemas -->
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(sportsEventSchema)} />
+  {articleSchema && <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />}
+  {sportsEventSchema && <script type="application/ld+json" set:html={JSON.stringify(sportsEventSchema)} />}
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  {aboutPageSchema && <script type="application/ld+json" set:html={JSON.stringify(aboutPageSchema)} />}
+  {contactPageSchema && <script type="application/ld+json" set:html={JSON.stringify(contactPageSchema)} />}
 </head>

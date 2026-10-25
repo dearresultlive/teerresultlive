@@ -4,27 +4,30 @@ import liveData from '../data/teer_live_results.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import PWAInstallBanner from '../components/PWAInstallBanner';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.juwai;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
 ---
 
 <Layout
-  title={`Juwai Teer Result Today • ${todayDateStr} Live (West Jaintia)`}
-  description={`Live Juwai Teer result today for First Round and Second Round. Check West Jaintia Hills traditional archery hit numbers and common numbers.`}
+  title={`Juwai Teer Result Today Live • ${todayDateStr} | Teer Live`}
+  description={`Fastest Juwai Teer results today live (${todayDateStr}) for 1st Round (1:45 PM) and 2nd Round (2:30 PM) direct from West Jaintia Hills, Meghalaya.`}
 >
   <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Juwai Teer' }]} />
+
     <header class="bg-white border-2 border-blue-400 rounded-2xl p-5 sm:p-7 text-slate-900 space-y-3 shadow-xs ring-4 ring-blue-50">
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <h1 class="text-xl sm:text-2xl font-black text-slate-900">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
           Juwai Teer Result Today Live • {todayDateStr}
         </h1>
         <span class="text-xs bg-emerald-50 text-emerald-700 font-black border border-emerald-300 px-2.5 py-1 rounded-full shadow-2xs">
-          ● Live Update
+          ● West Jaintia Feed
         </span>
       </div>
       <p class="text-xs sm:text-sm text-slate-500 font-medium">
-        Conducted officially in Juwai, West Jaintia Hills, Meghalaya.
+        Conducted officially in the historic town of Juwai, West Jaintia Hills district, Meghalaya.
       </p>
 
       <!-- FR & SR Result Box -->
@@ -48,5 +51,66 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 
     <CommonNumbersCard client:visible />
     <PreviousResultsTable client:visible />
+
+    <!-- In-Depth SEO Gazette for Juwai Teer -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          Guide to Juwai Teer Results (West Jaintia Hills)
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          The earliest daily traditional archery event in Meghalaya.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Official Shooting Schedule &amp; Early Afternoon Timings
+        </h3>
+        <p class="text-slate-600">
+          Juwai Teer is unique because its shooting rounds take place earlier in the afternoon than Shillong or Khanapara:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>First Round (FR):</strong> Shooting commences at 1:30 PM, with winning numbers declared at <strong>1:45 PM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> The concluding round targets are tallied at <strong>2:30 PM IST</strong>.</li>
+          <li><strong>Days of Operation:</strong> Conducted Monday through Saturday. Sunday is an archery rest day.</li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Cultural Heritage of Jaintia Archery
+        </h3>
+        <p class="text-slate-600">
+          In the Pnar culture of the Jaintia Hills, archery is deeply intertwined with ancient seasonal festivals and rites of passage. Local archers use handcrafted bows fashioned from seasoned hill bamboo and arrows fletched with bird feathers, maintaining indigenous archery mastery passed down across generations.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          How to Use Juwai Results to Find Shillong Common Numbers
+        </h3>
+        <p class="text-slate-600">
+          Because Juwai Teer results are declared at 1:45 PM and 2:30 PM — prior to Shillong Teer (3:45 PM) — many experienced enthusiasts track Juwai winning house and ending digits to evaluate probable numerical shifts for the later afternoon games.
+        </p>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Frequently Asked Questions (FAQs)
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Why does Juwai Teer start earlier than other Teer games?</summary>
+            <p class="mt-2 text-xs text-slate-600">Juwai clubs follow their traditional early afternoon timetable so local archers and observers can finish before late afternoon tribal sporting matches begin.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Where can I see previous Juwai hit results?</summary>
+            <p class="mt-2 text-xs text-slate-600">Browse our <a href="/previous-results" class="text-amber-700 font-bold hover:underline">Previous Results Archive</a> to filter and inspect historical winning hit records across all months.</p>
+          </details>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>

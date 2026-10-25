@@ -1,23 +1,77 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DreamNumberSearch from '../components/DreamNumberSearch';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 ---
 
 <Layout
-  title="Teer Dream Number List (A-Z) • Lucky Target Number Calculator"
-  description="Complete Shillong and Khanapara Teer dream numbers list. Find lucky direct, house, and ending numbers for dreams of snakes, water, money, fish, birds, flying, and more."
+  title="Teer Dream Number List (A-Z) • Target Numbers | Teer Live"
+  description="Complete A-Z Shillong Teer dream number list. Look up dream symbols (snake, money, water, fish) to find traditional Direct, House, and Ending target numbers."
 >
   <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Dream Numbers' }]} />
+
     <header class="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 text-slate-900 space-y-2 shadow-xs">
-      <h1 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
         <span>🌙</span>
         <span>Teer Dream Number Directory &amp; Calculator</span>
       </h1>
       <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-        In Khasi archery tradition, dreams have been correlated with symbolic hit numbers for over a century. Use our interactive search tool below to look up your dream in English, Assamese, Bengali, or Hindi to find the traditional Direct, House, and Ending target numbers.
+        In Khasi archery tradition, dreams have been correlated with symbolic hit numbers for over a century. Use our interactive search tool below to look up your dream in English, Assamese, Bengali, or Hindi to find traditional Direct, House, and Ending target numbers.
       </p>
     </header>
 
-    <DreamNumberSearch client:load />
+    <DreamNumberSearch client:idle />
+
+    <!-- In-Depth Dream Interpretation Guide -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          Understanding Traditional Teer Dream Numbers
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          A century-old folkloric tradition from the hills of Meghalaya.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Cultural Origins of Dream Numbers in Khasi Tradition
+        </h3>
+        <p class="text-slate-600">
+          Long before modern statistical formulas, archery participants in the Khasi and Jaintia Hills relied on symbolic interpretation of overnight dreams. Every object, creature, or event witnessed in a dream is believed to vibrate at specific numerical frequencies.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Most Common Dream Symbols and Their Target Numbers
+        </h3>
+        <ul class="list-disc pl-5 space-y-1.5 text-slate-600">
+          <li><strong>Snake / Bithai (সাপ):</strong> Traditionally mapped to House 9 (09, 19, 29, 39, 49, 59, 69, 79, 89, 99). Direct target: <strong>09, 89</strong>.</li>
+          <li><strong>Clean Water / Um (পানি):</strong> Associated with 4 or 7. Direct target: <strong>04, 07, 74</strong>.</li>
+          <li><strong>Currency / Money (টাকা):</strong> Traditionally represents 00, 10, or 20.</li>
+          <li><strong>Fish / Dohkha (মাছ):</strong> Associated with House 3. Direct targets: <strong>03, 33, 53</strong>.</li>
+          <li><strong>Flying in Sky:</strong> Indicates Ending 1 or 8. Direct targets: <strong>11, 88</strong>.</li>
+        </ul>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Dream Number FAQs
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Can dream numbers guarantee a win?</summary>
+            <p class="mt-2 text-xs text-slate-600">No. Dream interpretations are based strictly on traditional folklore and cultural beliefs. Teer outcomes depend solely on the arrows counted at the archery grounds.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">How do I search for a dream in Bengali or Hindi?</summary>
+            <p class="mt-2 text-xs text-slate-600">You can type either English terms (e.g. "snake"), Hindi (e.g. "सांप"), or Bengali (e.g. "সাপ") in the search box above to instantly filter matching rows.</p>
+          </details>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>

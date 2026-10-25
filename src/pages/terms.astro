@@ -1,47 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 ---
 
 <Layout
   title="Terms & Conditions • Teer Result Live"
-  description="Terms and conditions for using Teer Result Live (teerresultlive.in)."
+  description="Terms and conditions for using Teer Result Live (teerresultlive.in). Understand user rules, journalistic reporting scope, and platform disclaimers."
 >
-  <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 text-slate-700 space-y-4 leading-relaxed text-xs sm:text-sm shadow-xs">
-    <h1 class="text-xl sm:text-2xl font-black text-slate-900">Terms &amp; Conditions</h1>
-    <p class="text-slate-400 text-xs">Last updated: October 2026</p>
+  <div class="space-y-4">
+    <Breadcrumbs items={[{ name: 'Terms & Conditions' }]} />
 
-    <p>
-      Welcome to Teer Result Live (<a href="https://teerresultlive.in" class="text-amber-700 font-semibold hover:underline">teerresultlive.in</a>). By accessing or using this website, you agree to comply with and be bound by the following terms and conditions.
-    </p>
+    <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 text-slate-700 space-y-4 leading-relaxed text-xs sm:text-sm shadow-xs">
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Terms &amp; Conditions</h1>
+      <p class="text-slate-400 text-xs">Last updated: October 2026</p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">1. Informational Purpose Only</h2>
-    <p>
-      Teer Result Live is an independent informational and news aggregation portal. All lottery and archery game results, common numbers, dream numbers, and analytical charts published on this site are collected from official club announcements and public sources solely for the convenience of participants and archery enthusiasts.
-    </p>
+      <p>
+        Welcome to Teer Result Live (<a href="https://teerresultlive.in" class="text-amber-700 font-semibold hover:underline">teerresultlive.in</a>). By accessing or using this website, you agree to comply with and be bound by the following terms and conditions.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">2. No Gambling or Ticket Booking Operations</h2>
-    <p>
-      Teer Result Live does not sell, promote, host, or broker lottery tickets, betting slips, or online gambling activities of any nature. We do not accept bets, collect payments, or promise financial returns. Any attempt to solicit ticket purchases through this site is strictly prohibited.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">1. Informational Purpose Only</h2>
+      <p>
+        Teer Result Live is an independent informational and news aggregation portal. All lottery and archery game results, common numbers, dream numbers, and analytical charts published on this site are collected from official club announcements and public sources solely for the convenience of participants and archery enthusiasts.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">3. Verification with Official Sources</h2>
-    <p>
-      While we take utmost care to ensure live result accuracy through real-time feeds, errors or delays may occasionally occur due to transmission lag. Users are strongly advised to verify all winning numbers with the official Meghalaya Teer archery club gazette before making any financial claims or destroying physical tickets.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">2. No Gambling or Ticket Booking Operations</h2>
+      <p>
+        Teer Result Live does not sell, promote, host, or broker lottery tickets, betting slips, or online gambling activities of any nature. We do not accept bets, collect payments, or promise financial returns. Any attempt to solicit ticket purchases through this site is strictly prohibited.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">4. Intellectual Property</h2>
-    <p>
-      The visual branding, code, layouts, and curated dream number databases on teerresultlive.in are protected under intellectual property laws. Unauthorized scraping or mass redistribution without attribution is prohibited.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">3. Verification with Official Sources</h2>
+      <p>
+        While we take utmost care to ensure live result accuracy through real-time feeds, errors or delays may occasionally occur due to transmission lag. Users are strongly advised to verify all winning numbers with the official Meghalaya Teer archery club gazette before making any financial claims or destroying physical tickets.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">5. Changes to Terms</h2>
-    <p>
-      We reserve the right to modify these terms at any time. Continued use of the website following any modifications constitutes your acceptance of the revised terms.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">4. Intellectual Property</h2>
+      <p>
+        The visual branding, code, layouts, and curated dream number databases on teerresultlive.in are protected under intellectual property laws. Unauthorized scraping or mass redistribution without attribution is prohibited.
+      </p>
 
-    <h2 class="text-base font-bold text-slate-900 pt-2">6. Contact Information</h2>
-    <p>
-      For any questions or inquiries regarding these Terms &amp; Conditions, please contact our administrative desk at <a href="mailto:support@teerresultlive.in" class="text-amber-700 font-semibold hover:underline">support@teerresultlive.in</a>.
-    </p>
+      <h2 class="text-base font-bold text-slate-900 pt-2">5. Changes to Terms</h2>
+      <p>
+        We reserve the right to modify these terms at any time. Continued use of the website following any modifications constitutes your acceptance of the revised terms.
+      </p>
+
+      <h2 class="text-base font-bold text-slate-900 pt-2">6. Contact Information</h2>
+      <p>
+        For any questions or inquiries regarding these Terms &amp; Conditions, please contact our administrative desk at <a href="mailto:support@teerresultlive.in" class="text-amber-700 font-semibold hover:underline">support@teerresultlive.in</a>.
+      </p>
+    </div>
   </div>
 </Layout>

@@ -4,27 +4,30 @@ import liveData from '../data/teer_live_results.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import PWAInstallBanner from '../components/PWAInstallBanner';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.khanapara;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
 ---
 
 <Layout
-  title={`Khanapara Teer Result Today • ${todayDateStr} Live (Assam Border)`}
-  description={`Live Khanapara Teer result today for First Round and Second Round. Check authentic Assam Meghalaya border hit numbers, target common numbers, house and ending.`}
+  title={`Khanapara Teer Result Today Live • ${todayDateStr} | Teer Live`}
+  description={`Live Khanapara Teer results today (${todayDateStr}) for First Round (4:00 PM) and Second Round (4:30 PM). Verified Assam Meghalaya border hit numbers.`}
 >
   <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Khanapara Teer' }]} />
+
     <header class="bg-white border-2 border-emerald-400 rounded-2xl p-5 sm:p-7 text-slate-900 space-y-3 shadow-xs ring-4 ring-emerald-50">
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <h1 class="text-xl sm:text-2xl font-black text-slate-900">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
           Khanapara Teer Result Today Live • {todayDateStr}
         </h1>
         <span class="text-xs bg-emerald-50 text-emerald-700 font-black border border-emerald-300 px-2.5 py-1 rounded-full shadow-2xs">
-          ● Live Update
+          ● Assam Border Live
         </span>
       </div>
       <p class="text-xs sm:text-sm text-slate-500 font-medium">
-        Conducted officially at Khanapara, Ri-Bhoi district on the Assam-Meghalaya border.
+        Conducted officially at Khanapara, Ri-Bhoi district along the Assam-Meghalaya interstate boundary.
       </p>
 
       <!-- FR & SR Result Box -->
@@ -48,5 +51,71 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 
     <CommonNumbersCard client:visible />
     <PreviousResultsTable client:visible />
+
+    <!-- In-Depth SEO Gazette for Khanapara Teer -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          Guide to Khanapara Teer (Assam Teer) Results
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          Historical border archery tournament conducted in the Ri-Bhoi district of Meghalaya.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Official Shooting Schedule &amp; Timings
+        </h3>
+        <p class="text-slate-600">
+          Khanapara Teer (popularly known across the region as <em>Assam Teer</em> due to its proximity to Guwahati) runs six days a week from Monday to Saturday:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>First Round (FR):</strong> Targets are positioned at 3:45 PM, and the official result is declared at <strong>4:00 PM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> The concluding round begins promptly at 4:15 PM, with declared hit numbers announced at <strong>4:30 PM IST</strong>.</li>
+          <li><strong>Sunday Closure:</strong> In line with traditional sporting customs, no archery competitions are held on Sundays.</li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Archery Grounds &amp; Geographic Significance
+        </h3>
+        <p class="text-slate-600">
+          Khanapara is strategically situated in Ri-Bhoi district right across the border from Guwahati, Assam. The competition brings together skilled archers from across Khasi, Jaintia, and neighbouring plains communities, practicing centuries-old indigenous archery craft.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          How to Calculate Khanapara Common Target Numbers
+        </h3>
+        <p class="text-slate-600">
+          Many enthusiasts analyze the relationship between Shillong FR results and Khanapara numbers. Common analytical methods include:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>House Ending Pairs:</strong> Tracking previous week trends for recurring tens and units digits.</li>
+          <li><strong>Previous Hit Analysis:</strong> Checking our <a href="/previous-results" class="text-amber-700 font-bold hover:underline">archive records</a> to spot numbers that haven't appeared in over 30 days.</li>
+          <li><strong>Dream Number Correlation:</strong> Cross-referencing morning dreams with the <a href="/dream-numbers" class="text-amber-700 font-bold hover:underline">Dream Numbers Dictionary</a>.</li>
+        </ul>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Frequently Asked Questions (FAQs)
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Are Khanapara and Assam Teer the same game?</summary>
+            <p class="mt-2 text-xs text-slate-600">Yes. Because Khanapara sits right along the border between Meghalaya and Assam, enthusiasts frequently refer to Khanapara Teer as Assam Teer.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">What happens if rain delays the shooting?</summary>
+            <p class="mt-2 text-xs text-slate-600">Archers shoot in light rain, but severe thunderstorms can delay declared numbers by 10 to 15 minutes until arrow counting finishes under sheltered pavilions.</p>
+          </details>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>
