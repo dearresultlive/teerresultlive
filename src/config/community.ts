@@ -6,5 +6,5 @@ export const COMMUNITY_LINKS = {
   telegram: import.meta.env.PUBLIC_TELEGRAM_URL || 'https://t.me/teerresultlive_official',
 
   // Official WhatsApp Channel URL
-  whatsappChannel: import.meta.env.PUBLIC_WHATSAPP_CHANNEL_URL || 'https://whatsapp.com/channel/0029VaTeerResultLive'
+  whatsappChannel: import.meta.env.PUBLIC_WHATSAPP_CHANNEL_URL || 'https://whatsapp.com/channel/0029Vb9M4Ba90x2pwejTOF3r'
 };
