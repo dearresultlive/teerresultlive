@@ -29,7 +29,10 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run Teer Poller
+      - name: Run Teer Poller & Telegram Broadcaster
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID || '@teerresultlive_in' }}
         run: npm run poll
 
       - name: Commit & Push If Changed

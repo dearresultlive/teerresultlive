@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dns from 'node:dns';
+import { broadcastTeerResult } from './telegram_bot.js';
 
 // Force IPv4 first to avoid IPv6 connect timeouts on Node 18+
 dns.setDefaultResultOrder('ipv4first');
@@ -317,10 +318,49 @@ export async function runPoller() {
 
     if (game.fr !== targetFR || game.sr !== targetSR || game.status !== status) {
       console.log(`[Update] ${key.toUpperCase()}: FR=${targetFR}, SR=${targetSR}, Status=${status}`);
+      const oldFR = game.fr;
+      const oldSR = game.sr;
+
       game.fr = targetFR;
       game.sr = targetSR;
       game.status = status;
       updated = true;
+
+      // Broadcast to Telegram channel if a new confirmed number was declared
+      const frJustDeclared = oldFR === 'xx' && targetFR !== 'xx';
+      const srJustDeclared = oldSR === 'xx' && targetSR !== 'xx';
+
+      if (srJustDeclared && targetFR !== 'xx') {
+        try {
+          await broadcastTeerResult({
+            gameKey: key,
+            gameName: game.name,
+            date: todayIST,
+            fr: targetFR,
+            sr: targetSR,
+            frTime: game.fr_time,
+            srTime: game.sr_time,
+            roundType: 'FULL'
+          });
+        } catch (e) {
+          console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
+        }
+      } else if (frJustDeclared) {
+        try {
+          await broadcastTeerResult({
+            gameKey: key,
+            gameName: game.name,
+            date: todayIST,
+            fr: targetFR,
+            sr: targetSR,
+            frTime: game.fr_time,
+            srTime: game.sr_time,
+            roundType: 'FR_ONLY'
+          });
+        } catch (e) {
+          console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
+        }
+      }
     }
   }
 

@@ -8,7 +8,8 @@
     "build": "astro build",
     "check": "astro check",
     "preview": "astro preview",
-    "poll": "node scripts/teer_autopoller.js"
+    "poll": "node scripts/teer_autopoller.js",
+    "telegram:test": "node scripts/test_telegram.js"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^11.1.0",
