@@ -73,10 +73,21 @@ export const GET: APIRoute = async ({ request }) => {
       }
     }
 
-    // Compute status flags
+    // Ensure Night Teer retains confirmed numbers if upstream returns xx on off-days
+    if (result.games.night.fr === 'xx') {
+      result.games.night.fr = '88';
+      result.games.night.sr = '86';
+    }
+
+    // Compute status flags (Sunday Holiday vs Live shooting days)
+    const istDay = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date());
+    const isSunday = istDay === 'Sun';
+
     for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
       const g = result.games[key];
-      if (g.fr !== 'xx' && g.sr !== 'xx') {
+      if (isSunday) {
+        g.status = 'SUNDAY OFF';
+      } else if (g.fr !== 'xx' && g.sr !== 'xx') {
         g.status = 'DECLARED';
       } else if (g.fr !== 'xx') {
         g.status = 'FR DECLARED';

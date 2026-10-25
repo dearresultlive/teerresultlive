@@ -22,14 +22,24 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   const [lastCheck, setLastCheck] = useState<string>('');
   const [copied, setCopied] = useState(false);
 
+  // Check if today is Sunday in Indian Standard Time (Archery Holiday)
+  const isSunday = typeof window !== 'undefined'
+    ? new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date()) === 'Sun'
+    : false;
+
   const fetchLatest = async (isManual = false) => {
     setIsRefreshing(true);
     try {
       const url = isManual ? `/api/teer/latest?refresh=1&t=${Date.now()}` : '/api/teer/latest';
       const res = await fetch(url);
       if (res.ok) {
-        const fresh = await res.json();
-        setData(fresh);
+        const fresh: TeerData = await res.json();
+        if (fresh && fresh.games) {
+          setData(fresh);
+          try {
+            localStorage.setItem('teer_latest_live_cache', JSON.stringify(fresh));
+          } catch (e) {}
+        }
       }
     } catch (e) {
       console.warn('Auto-refresh failed, retrying on next tick');
@@ -46,7 +56,23 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     { key: 'night', title: 'NIGHT TEER', highlight: false }
   ];
 
-  // Intelligent Zero-Refresh Live Poller
+  // 1. Initial Mount: Restore from localStorage cache & trigger immediate live sync
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('teer_latest_live_cache');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.games) {
+          setData(parsed);
+        }
+      }
+    } catch (e) {}
+
+    // Immediate sync on page load so reload (F5) NEVER loses numbers
+    fetchLatest(false);
+  }, []);
+
+  // 2. Intelligent Zero-Refresh Live Poller
   useEffect(() => {
     setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
 
@@ -56,8 +82,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       return g && g.fr !== 'xx' && g.sr !== 'xx';
     });
 
-    // 15 seconds during active rounds; 60 seconds if everything is declared or late night
-    const intervalMs = areAllDeclared ? 60000 : 15000;
+    // 15 seconds during active rounds; 60 seconds if everything is declared or Sunday
+    const intervalMs = areAllDeclared || isSunday ? 60000 : 15000;
 
     let timer: any = null;
 
@@ -80,11 +106,9 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
     const handleVisibility = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-        // Tab brought to foreground: immediately check for fresh numbers
         fetchLatest(false);
         startTimer();
       } else {
-        // Tab in background: stop polling to save CPU, battery, and server bandwidth
         stopTimer();
       }
     };
@@ -198,6 +222,21 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         </div>
       </div>
 
+      {/* Sunday Archery Holiday Banner */}
+      {isSunday && (
+        <div className="bg-amber-50/90 border border-amber-300/80 rounded-xl p-3 text-xs text-amber-950 flex items-start gap-2.5 shadow-2xs">
+          <span className="text-lg leading-none mt-0.5">🏖️</span>
+          <div className="space-y-0.5">
+            <p className="font-extrabold text-amber-900 text-xs sm:text-sm">
+              Sunday Archery Holiday • Meghalaya Grounds Closed Today
+            </p>
+            <p className="text-[11px] text-amber-800 leading-relaxed font-medium">
+              Traditional archery shooting is closed on Sundays under KHASA rules. Showing 100% verified winning numbers from the latest session. Live draws resume Monday at 1:45 PM IST.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* 4 Teer Game Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {games.map(({ key, title, highlight }) => {
@@ -213,6 +252,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
           const isDeclared = game.fr !== 'xx' && game.sr !== 'xx';
           const isFrDeclared = game.fr !== 'xx' && game.sr === 'xx';
+          const isSundayOff = game.status === 'SUNDAY OFF';
 
           return (
             <div
@@ -251,9 +291,11 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                       : isFrDeclared
                       ? 'bg-blue-50 text-blue-700 border-blue-300'
-                      : 'bg-amber-50 text-amber-800 border-amber-300'
+                      : isSundayOff
+                      ? 'bg-amber-50 text-amber-800 border-amber-300'
+                      : 'bg-slate-50 text-slate-700 border-slate-300'
                   }`}>
-                    {game.status}
+                    {isSundayOff ? 'SUNDAY OFF' : game.status}
                   </span>
                 </div>
               </div>

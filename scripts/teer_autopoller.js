@@ -258,12 +258,18 @@ export async function runPoller() {
 
     // Reset live data for new day
     liveData.date = todayIST;
+    const istDateObj = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+    const isSunday = istDateObj.getDay() === 0;
     const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
     for (const key of gameKeys) {
       if (liveData.games[key]) {
-        liveData.games[key].fr = 'xx';
-        liveData.games[key].sr = 'xx';
-        liveData.games[key].status = 'UPCOMING';
+        if (isSunday) {
+          liveData.games[key].status = 'SUNDAY OFF';
+        } else {
+          liveData.games[key].fr = 'xx';
+          liveData.games[key].sr = 'xx';
+          liveData.games[key].status = 'UPCOMING';
+        }
       }
     }
     updated = true;
