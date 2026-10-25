@@ -234,23 +234,36 @@ const sportsEventSchema = {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={`${host}/og-image.jpg`} />
 
-  <!-- Google Fonts: Preconnected & Non-Render-Blocking Asynchronous Load -->
+  <!-- Google Fonts: Preconnected & Optimized Subset (Inter 400, 700, 900 + JetBrains Mono 700) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" media="print" onload="this.media='all'" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" media="print" onload="this.media='all'" />
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" />
   </noscript>
 
-  <!-- Google Analytics 4 (GA4) -->
-  <link rel="preconnect" href="https://www.googletagmanager.com" />
-  <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-JR3S2ZXES7"></script>
+  <!-- Google Analytics 4 (GA4): Asynchronously deferred for 100/100 Core Web Vitals -->
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-JR3S2ZXES7');
+    gtag('config', 'G-JR3S2ZXES7', { send_page_view: true });
+
+    function loadGA() {
+      if (window.__gaLoaded) return;
+      window.__gaLoaded = true;
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-JR3S2ZXES7';
+      document.head.appendChild(s);
+    }
+
+    if (document.readyState === 'complete') {
+      setTimeout(loadGA, 1200);
+    } else {
+      window.addEventListener('load', () => setTimeout(loadGA, 1200));
+    }
   </script>
 
   <!-- Pre-configured Structured Data (Rich SERP Cards ready for when indexing is enabled) -->
