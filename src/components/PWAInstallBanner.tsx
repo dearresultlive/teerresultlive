@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 
+const DISMISS_COOLDOWN_DAYS = 7;
+const DISMISS_COOLDOWN_MS = DISMISS_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+const STORAGE_KEY = 'teer_pwa_dismissed_until';
+const INSTALLED_KEY = 'teer_pwa_installed';
+
 export default function PWAInstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Check if dismissed in current session
-    if (typeof window !== 'undefined' && sessionStorage.getItem('pwa_dismissed') === 'true') {
+    if (typeof window === 'undefined') return;
+
+    // 1. Never show if user already installed the app
+    if (
+      localStorage.getItem(INSTALLED_KEY) === 'true' ||
+      window.matchMedia('(display-mode: standalone)').matches
+    ) {
+      setShowBanner(false);
       return;
     }
 
-    // Check if already running in standalone PWA mode
-    if (typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches) {
-      setShowBanner(false);
+    // 2. 7-Day Cooldown Check: If cancelled/dismissed, hide for 7 days
+    const dismissedUntil = localStorage.getItem(STORAGE_KEY);
+    if (dismissedUntil && Date.now() < Number(dismissedUntil)) {
       return;
     }
 
@@ -26,7 +37,7 @@ export default function PWAInstallBanner() {
     window.addEventListener('beforeinstallprompt', handler);
 
     // If deferred prompt was already captured before mount
-    if (typeof window !== 'undefined' && (window as any).deferredPWAInstallPrompt) {
+    if ((window as any).deferredPWAInstallPrompt) {
       setDeferredPrompt((window as any).deferredPWAInstallPrompt);
       setShowBanner(true);
     }
@@ -43,6 +54,9 @@ export default function PWAInstallBanner() {
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
       setShowBanner(false);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(INSTALLED_KEY, 'true');
+      }
     }
     setDeferredPrompt(null);
   };
@@ -50,7 +64,9 @@ export default function PWAInstallBanner() {
   const handleDismiss = () => {
     setShowBanner(false);
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('pwa_dismissed', 'true');
+      // Set 7-day expiration timestamp
+      const expireTime = Date.now() + DISMISS_COOLDOWN_MS;
+      localStorage.setItem(STORAGE_KEY, String(expireTime));
     }
   };
 
@@ -93,8 +109,8 @@ export default function PWAInstallBanner() {
           type="button"
           onClick={handleDismiss}
           className="text-slate-400 hover:text-white px-2 py-1.5 text-xs font-bold cursor-pointer rounded-xl hover:bg-slate-800/80 transition-colors"
-          aria-label="Dismiss banner"
-          title="Dismiss"
+          aria-label="Dismiss banner for 7 days"
+          title="Dismiss for 7 days"
         >
           ✕
         </button>
