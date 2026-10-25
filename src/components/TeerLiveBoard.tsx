@@ -24,9 +24,13 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   const [copied, setCopied] = useState(false);
 
   // Check if today is Sunday in Indian Standard Time (Archery Holiday)
-  const isSunday = typeof window !== 'undefined'
-    ? new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date()) === 'Sun'
-    : false;
+  const isSunday = (() => {
+    try {
+      return new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date()) === 'Sun';
+    } catch {
+      return false;
+    }
+  })();
 
   const fetchLatest = async (isManual = false) => {
     setIsRefreshing(true);
@@ -267,10 +271,10 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
               {/* Header: Title, Status & Quick Share */}
               <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
                 <div>
-                  <h3 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
+                  <h2 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
                     <span>🎯</span>
                     <span>{game.name}</span>
-                  </h3>
+                  </h2>
                   <p className="text-[11px] text-slate-500 font-medium">
                     {game.location || 'Official Meghalaya Archery Ground'}
                   </p>
