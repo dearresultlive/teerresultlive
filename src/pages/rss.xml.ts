@@ -111,8 +111,8 @@ export const GET: APIRoute = async () => {
       <url>${host}/icon-192.png</url>
       <title>Teer Result Live</title>
       <link>${host}/</link>
-      <width>192</width>
-      <height>192</height>
+      <width>144</width>
+      <height>144</height>
     </image>
 ${itemsXml}
 ${dreamItem}
