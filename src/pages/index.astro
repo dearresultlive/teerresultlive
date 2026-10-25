@@ -6,6 +6,7 @@ import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import TeerPrizeCalculator from '../components/TeerPrizeCalculator';
 import DreamNumberSearch from '../components/DreamNumberSearch';
 import PreviousResultsTable from '../components/PreviousResultsTable';
+import PWAInstallBanner from '../components/PWAInstallBanner';
 import liveData from '../data/teer_live_results.json';
 
 const todayDateStr = liveData.date.split('-').reverse().join('/');
@@ -21,6 +22,9 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
     <section id="live-results">
       <TeerLiveBoard client:load initialData={liveData} />
     </section>
+
+    <!-- App Install Banner (Inline Below Live Board) -->
+    <PWAInstallBanner client:idle />
 
     <!-- 2. Today's Target Common Numbers (Direct, House, Ending) -->
     <section id="common-numbers">

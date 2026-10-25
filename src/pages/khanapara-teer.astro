@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import liveData from '../data/teer_live_results.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
+import PWAInstallBanner from '../components/PWAInstallBanner';
 
 const game = liveData.games.khanapara;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
@@ -42,6 +43,8 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
         </div>
       </div>
     </header>
+
+    <PWAInstallBanner client:idle />
 
     <CommonNumbersCard client:visible />
     <PreviousResultsTable client:visible />
