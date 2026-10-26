@@ -4,10 +4,10 @@ on:
   schedule:
     # 03:30 UTC = 9:00 AM IST: Morning rollover & archive yesterday
     - cron: '30 3 * * 1-6'
-    # 07:00 UTC to 12:30 UTC = 12:30 PM to 6:00 PM IST (Mon-Sat Day Draws)
-    - cron: '*/15 7-12 * * 1-6'
-    # 16:30 UTC to 19:30 UTC = 10:00 PM to 1:00 AM IST (Night Teer Mon-Sat)
-    - cron: '*/15 16-19 * * 1-6'
+    # 08:00 UTC to 12:45 UTC = 1:30 PM to 6:15 PM IST (Mon-Sat Day Draws: Juwai, Shillong, Khanapara every 5 mins)
+    - cron: '*/5 8-12 * * 1-6'
+    # 16:30 UTC to 18:45 UTC = 10:00 PM to 12:15 AM IST (Night Teer Mon-Sat every 5 mins)
+    - cron: '*/5 16-18 * * 1-6'
   workflow_dispatch:
 
 permissions:
