@@ -100,23 +100,33 @@ export async function fetchAggregatorData(): Promise<Record<string, { fr: string
       }
     }
 
-    // Fallback ticker regex
-    if (Object.keys(extracted).length === 0) {
-      const tickerMapping = [
-        { key: 'shillong', label: 'Shillong Teer' },
-        { key: 'khanapara', label: 'Khanapara Teer' },
-        { key: 'juwai', label: 'Juwai Teer' },
-        { key: 'night', label: 'Night Teer' }
-      ];
+    // 2. Game-by-game ticker fallback if any game is missing or has unannounced rounds in Next.js payload
+    const tickerMapping = [
+      { key: 'shillong', label: 'Shillong Teer' },
+      { key: 'khanapara', label: 'Khanapara Teer' },
+      { key: 'juwai', label: 'Juwai Teer' },
+      { key: 'night', label: 'Night Teer' }
+    ];
 
-      for (const item of tickerMapping) {
+    for (const item of tickerMapping) {
+      const currentEntry = extracted[item.key];
+      const needsFR = !currentEntry || currentEntry.fr === 'xx';
+      const needsSR = !currentEntry || currentEntry.sr === 'xx';
+
+      if (needsFR || needsSR) {
         const reg = new RegExp('>' + item.label + '<\\/span>[\\s\\S]*?FR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>[\\s\\S]*?SR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>', 'i');
         const m = text.match(reg);
         if (m) {
-          extracted[item.key] = {
-            fr: cleanNumber(m[1]),
-            sr: cleanNumber(m[2])
-          };
+          const fr = cleanNumber(m[1]);
+          const sr = cleanNumber(m[2]);
+          if (fr !== 'xx' || sr !== 'xx') {
+            if (!extracted[item.key]) {
+              extracted[item.key] = { fr, sr, isOffDay: false };
+            } else {
+              if (needsFR && fr !== 'xx') extracted[item.key].fr = fr;
+              if (needsSR && sr !== 'xx') extracted[item.key].sr = sr;
+            }
+          }
         }
       }
     }

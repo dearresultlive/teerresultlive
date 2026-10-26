@@ -139,25 +139,35 @@ async function fetchAggregatorData() {
       }
     }
 
-    // 2. Fallback to live ticker if Next.js hydration payload differs
-    if (Object.keys(extracted).length === 0) {
-      const tickerMapping = [
-        { key: 'shillong', label: 'Shillong Teer' },
-        { key: 'khanapara', label: 'Khanapara Teer' },
-        { key: 'juwai', label: 'Juwai Teer' },
-        { key: 'night', label: 'Night Teer' }
-      ];
+    // 2. Game-by-game ticker fallback if any game is missing or has unannounced rounds in Next.js payload
+    const tickerMapping = [
+      { key: 'shillong', label: 'Shillong Teer' },
+      { key: 'khanapara', label: 'Khanapara Teer' },
+      { key: 'juwai', label: 'Juwai Teer' },
+      { key: 'night', label: 'Night Teer' }
+    ];
 
-      for (const item of tickerMapping) {
+    for (const item of tickerMapping) {
+      const currentEntry = extracted[item.key];
+      const needsFR = !currentEntry || !currentEntry.today || currentEntry.today.fr === 'xx';
+      const needsSR = !currentEntry || !currentEntry.today || currentEntry.today.sr === 'xx';
+
+      if (needsFR || needsSR) {
         const reg = new RegExp('>' + item.label + '<\\/span>[\\s\\S]*?FR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>[\\s\\S]*?SR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>', 'i');
         const m = text.match(reg);
         if (m) {
-          extracted[item.key] = {
-            today: {
-              fr: cleanNumber(m[1]),
-              sr: cleanNumber(m[2])
+          const fr = cleanNumber(m[1]);
+          const sr = cleanNumber(m[2]);
+          if (fr !== 'xx' || sr !== 'xx') {
+            if (!extracted[item.key]) {
+              extracted[item.key] = { today: { fr, sr } };
+            } else if (!extracted[item.key].today) {
+              extracted[item.key].today = { fr, sr };
+            } else {
+              if (needsFR && fr !== 'xx') extracted[item.key].today.fr = fr;
+              if (needsSR && sr !== 'xx') extracted[item.key].today.sr = sr;
             }
-          };
+          }
         }
       }
     }
@@ -199,7 +209,15 @@ export async function runPoller() {
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
-  if (liveData.date !== todayIST) {
+  // Day rollover only occurs after 7:00 AM IST (morning rollover)
+  // This preserves Night Teer and yesterday's results through late-night hours (11 PM - 6:59 AM)
+  const currentISTHour = parseInt(
+    new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }).format(new Date()),
+    10
+  );
+  const isMorningRolloverTime = currentISTHour >= 7;
+
+  if (liveData.date !== todayIST && isMorningRolloverTime) {
     console.log(`[Day Rollover] Current data date (${liveData.date}) is not today (${todayIST}). Archiving...`);
 
     // Check if yesterday's confirmed previous data is available from aggregator

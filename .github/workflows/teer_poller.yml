@@ -6,8 +6,8 @@ on:
     - cron: '30 3 * * 1-6'
     # 07:00 UTC to 12:30 UTC = 12:30 PM to 6:00 PM IST (Mon-Sat Day Draws)
     - cron: '*/15 7-12 * * 1-6'
-    # 16:30 UTC to 18:30 UTC = 10:00 PM to 12:00 AM IST (Night Teer Mon-Sat)
-    - cron: '*/15 16-18 * * 1-6'
+    # 16:30 UTC to 19:30 UTC = 10:00 PM to 1:00 AM IST (Night Teer Mon-Sat)
+    - cron: '*/15 16-19 * * 1-6'
   workflow_dispatch:
 
 permissions:
