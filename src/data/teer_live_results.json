@@ -1,6 +1,6 @@
 {
   "date": "2026-10-26",
-  "updated_at": "2026-10-26T09:58:26.476Z",
+  "updated_at": "2026-10-26T10:34:47.920Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -8,7 +8,7 @@
       "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "68",
+      "fr": "47",
       "sr": "08",
       "common_numbers": {
         "direct": [
@@ -67,7 +67,7 @@
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
       "fr": "39",
-      "sr": "58",
+      "sr": "17",
       "common_numbers": {
         "direct": [
           "83",
