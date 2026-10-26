@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { COMMUNITY_LINKS } from '../config/community';
+import archiveData from '../data/previous_teer_archive.json';
 
 interface GameResult {
   name: string;
@@ -15,9 +16,12 @@ interface TeerData {
   date: string;
   updated_at: string;
   games: Record<string, GameResult>;
+  yesterday?: any;
 }
 
 export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
+  const yesterday = initialData.yesterday || (archiveData && archiveData.length > 0 ? archiveData[0] : null);
+  const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const [data, setData] = useState<TeerData>(initialData);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
@@ -333,6 +337,24 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 </div>
 
               </div>
+
+              {/* Previous Match Result (Instant Morning Context) */}
+              {yesterday && (
+                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/80 -mx-4 -mb-4 px-3.5 py-2 rounded-b-2xl">
+                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold text-[11px]">
+                    <span>⏮️</span>
+                    <span>Yesterday ({yesterdayFormattedDate}):</span>
+                  </div>
+                  <div className="font-mono font-bold text-xs flex items-center gap-2">
+                    <span className="text-amber-800 bg-amber-50 border border-amber-200/90 px-1.5 py-0.5 rounded shadow-2xs">
+                      FR: {yesterday[key + '_fr'] || 'xx'}
+                    </span>
+                    <span className="text-emerald-800 bg-emerald-50 border border-emerald-200/90 px-1.5 py-0.5 rounded shadow-2xs">
+                      SR: {yesterday[key + '_sr'] || 'xx'}
+                    </span>
+                  </div>
+                </div>
+              )}
 
             </div>
           );

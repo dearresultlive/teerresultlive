@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import liveData from '../data/teer_live_results.json';
+import archiveData from '../data/previous_teer_archive.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import PWAInstallBanner from '../components/PWAInstallBanner';
@@ -8,6 +9,8 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.khanapara;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
+const yesterday = archiveData && archiveData.length > 0 ? archiveData[0] : null;
+const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/') : '';
 ---
 
 <Layout
@@ -29,6 +32,24 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
       <p class="text-xs sm:text-sm text-slate-500 font-medium">
         Conducted officially at Khanapara, Ri-Bhoi district along the Assam-Meghalaya interstate boundary.
       </p>
+
+      <!-- Previous Match Result Box (Morning Context) -->
+      {yesterday && (
+        <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-2.5 max-w-md flex items-center justify-between text-xs shadow-2xs">
+          <span class="text-slate-600 font-semibold text-xs flex items-center gap-1.5">
+            <span>⏮️</span>
+            <span>Yesterday ({yesterdayDateStr}):</span>
+          </span>
+          <div class="font-mono font-bold text-xs flex items-center gap-2">
+            <span class="text-amber-800 bg-amber-50 border border-amber-200/90 px-2 py-0.5 rounded shadow-2xs">
+              FR: {yesterday.khanapara_fr}
+            </span>
+            <span class="text-emerald-800 bg-emerald-50 border border-emerald-200/90 px-2 py-0.5 rounded shadow-2xs">
+              SR: {yesterday.khanapara_sr}
+            </span>
+          </div>
+        </div>
+      )}
 
       <!-- FR & SR Result Box -->
       <div class="grid grid-cols-2 gap-3 pt-2 max-w-md">

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import liveData from '../../../data/teer_live_results.json';
+import archiveData from '../../../data/previous_teer_archive.json';
 import {
   fetchFromGoogleAppsScript,
   fetchShillongCDN,
@@ -32,6 +33,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Clone baseline data from disk
   const result = JSON.parse(JSON.stringify(liveData));
+  result.yesterday = (archiveData && archiveData.length > 0) ? archiveData[0] : null;
 
   try {
     // Multi-tier parallel fetch (Google Apps Script -> Shillong CDN -> Aggregator)
