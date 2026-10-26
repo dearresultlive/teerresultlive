@@ -23,5 +23,15 @@
   { "keyword": "Wedding / Marriage", "bengali": "বিয়ে / বিবাহ", "hindi": "शादी / विवाह", "direct": ["03", "33", "23"], "house": [3, 2], "ending": [3] },
   { "keyword": "Fight / Argument", "bengali": "মারামারি / ঝগড়া", "hindi": "लड़ाई / झगड़ा", "direct": ["06", "66", "16"], "house": [6, 1], "ending": [6] },
   { "keyword": "Rain / Storm", "bengali": "বৃষ্টি / ঝড়", "hindi": "बारिश / तूफान", "direct": ["04", "44", "84"], "house": [4, 8], "ending": [4] },
-  { "keyword": "Milk", "bengali": "দুধ", "hindi": "दूध", "direct": ["01", "10", "41"], "house": [1], "ending": [1, 0] }
+  { "keyword": "Milk", "bengali": "দুধ", "hindi": "दूध", "direct": ["01", "10", "41"], "house": [1], "ending": [1, 0] },
+  { "keyword": "God / Temple / Puja", "bengali": "ভগবান / ঈশ্বর / মন্দির / পূজা", "hindi": "भगवान / ईश्वर / मंदिर / पूजा", "direct": ["09", "19", "90", "99"], "house": [0, 9], "ending": [9, 0] },
+  { "keyword": "Egg / Eggs", "bengali": "ডিম", "hindi": "अंडा / अंडे", "direct": ["00", "08", "80", "88"], "house": [0, 8], "ending": [0, 8] },
+  { "keyword": "River / Sea / Pond", "bengali": "নদী / সাগর / পুকুর", "hindi": "नदी / समुद्र / तालाब", "direct": ["42", "24", "44", "04"], "house": [4, 2], "ending": [2, 4] },
+  { "keyword": "Moon / Sun / Light", "bengali": "চাঁদ / সূর্য / আলো", "hindi": "चांद / सूरज / रोशनी", "direct": ["01", "10", "11", "07"], "house": [1, 0], "ending": [1, 7] },
+  { "keyword": "Flower / Garden", "bengali": "ফুল / বাগান", "hindi": "फूल / बगीचा", "direct": ["06", "60", "66", "16"], "house": [6], "ending": [6, 0] },
+  { "keyword": "Meat / Flesh", "bengali": "মাংস", "hindi": "मांस / मीट", "direct": ["02", "20", "22", "52"], "house": [2], "ending": [2, 0] },
+  { "keyword": "Coin / Ring / Money", "bengali": "আংটি / মুদ্রা / কয়েন", "hindi": "अंगूठी / सिक्का / मुद्रा", "direct": ["00", "10", "01", "50"], "house": [0, 1], "ending": [0, 1] },
+  { "keyword": "Book / Study / Exam", "bengali": "বই / পরীক্ষা / পড়া", "hindi": "किताब / परीक्षा / पढ़ाई", "direct": ["03", "30", "33", "83"], "house": [3], "ending": [3, 0] },
+  { "keyword": "Boat / Ship", "bengali": "নৌকা / জাহাজ", "hindi": "नाव / जहाज", "direct": ["04", "40", "44", "24"], "house": [4], "ending": [4, 0] },
+  { "keyword": "King / Queen / Leader", "bengali": "রাজা / রানী / নেতা", "hindi": "राजा / रानी / नेता", "direct": ["01", "10", "11", "91"], "house": [1], "ending": [1, 0] }
 ]
