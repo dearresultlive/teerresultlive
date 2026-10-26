@@ -278,7 +278,7 @@ export async function runPoller() {
     let targetSR = game.sr;
 
     // Check Google Apps Script (highest priority, Google datacenter IP)
-    if (gasData && gasData.games && gasData.games[key]) {
+    if (gasData && gasData.date === liveData.date && gasData.games && gasData.games[key]) {
       const gasGame = gasData.games[key];
       if (gasGame.fr && gasGame.fr !== 'xx') targetFR = gasGame.fr;
       if (gasGame.sr && gasGame.sr !== 'xx') targetSR = gasGame.sr;
@@ -300,7 +300,7 @@ export async function runPoller() {
     }
 
     // Check Shillong CDN directly
-    if (key === 'shillong' && shillongCDN && shillongCDN.date === todayIST) {
+    if (key === 'shillong' && shillongCDN && shillongCDN.date === liveData.date) {
       if (shillongCDN.fr !== 'xx') targetFR = shillongCDN.fr;
       if (shillongCDN.sr !== 'xx') targetSR = shillongCDN.sr;
     }

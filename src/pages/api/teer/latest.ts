@@ -42,7 +42,7 @@ export const GET: APIRoute = async ({ request }) => {
     ]);
 
     // 1. Apply Google Apps Script Data (Highest reliability, Google Datacenter IP)
-    if (gasData?.games) {
+    if (gasData?.date === result.date && gasData?.games) {
       for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
         if (gasData.games[key]) {
           const g = gasData.games[key];
@@ -54,10 +54,10 @@ export const GET: APIRoute = async ({ request }) => {
     }
 
     // 2. Fallback / Augment Shillong from Direct CDN
-    if (result.games.shillong.fr === 'xx' && shillongCDN?.fr && shillongCDN.fr !== 'xx') {
+    if (result.games.shillong.fr === 'xx' && shillongCDN?.date === result.date && shillongCDN?.fr && shillongCDN.fr !== 'xx') {
       result.games.shillong.fr = shillongCDN.fr;
     }
-    if (result.games.shillong.sr === 'xx' && shillongCDN?.sr && shillongCDN.sr !== 'xx') {
+    if (result.games.shillong.sr === 'xx' && shillongCDN?.date === result.date && shillongCDN?.sr && shillongCDN.sr !== 'xx') {
       result.games.shillong.sr = shillongCDN.sr;
     }
 
