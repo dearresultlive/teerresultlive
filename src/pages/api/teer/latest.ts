@@ -73,12 +73,6 @@ export const GET: APIRoute = async ({ request }) => {
       }
     }
 
-    // Ensure Night Teer retains confirmed numbers if upstream returns xx on off-days
-    if (result.games.night.fr === 'xx') {
-      result.games.night.fr = '88';
-      result.games.night.sr = '86';
-    }
-
     // Compute status flags (Sunday Holiday vs Live shooting days)
     const istDay = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date());
     const isSunday = istDay === 'Sun';
@@ -91,6 +85,8 @@ export const GET: APIRoute = async ({ request }) => {
         g.status = 'DECLARED';
       } else if (g.fr !== 'xx') {
         g.status = 'FR DECLARED';
+      } else {
+        g.status = 'UPCOMING';
       }
     }
 
