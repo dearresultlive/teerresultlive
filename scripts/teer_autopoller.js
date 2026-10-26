@@ -30,12 +30,18 @@ export function getTodayIST() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
 }
 
-// Clean and normalize 2-digit numbers
+// Strictly validate and clean 2-digit numbers (00-99 only)
 export function cleanNumber(val) {
-  if (!val || val === '—' || val === '-' || val === 'xx' || val === '??') return 'xx';
-  const match = String(val).trim().match(/\b(\d{1,2})\b/);
-  if (!match) return 'xx';
-  return match[1].padStart(2, '0');
+  if (!val) return 'xx';
+  const str = String(val).trim();
+  if (str === '—' || str === '-' || str === 'xx' || str === '??' || str === 'null') return 'xx';
+  
+  // Must be strictly 1 or 2 digits (0 to 99)
+  const match = str.match(/^(\d{1,2})$/);
+  if (match) {
+    return match[1].padStart(2, '0');
+  }
+  return 'xx';
 }
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
@@ -136,39 +142,6 @@ async function fetchAggregatorData() {
             sr: cleanNumber(previous.second_round)
           } : null
         };
-      }
-    }
-
-    // 2. Game-by-game ticker fallback if any game is missing or has unannounced rounds in Next.js payload
-    const tickerMapping = [
-      { key: 'shillong', label: 'Shillong Teer' },
-      { key: 'khanapara', label: 'Khanapara Teer' },
-      { key: 'juwai', label: 'Juwai Teer' },
-      { key: 'night', label: 'Night Teer' }
-    ];
-
-    for (const item of tickerMapping) {
-      const currentEntry = extracted[item.key];
-      const needsFR = !currentEntry || !currentEntry.today || currentEntry.today.fr === 'xx';
-      const needsSR = !currentEntry || !currentEntry.today || currentEntry.today.sr === 'xx';
-
-      if (needsFR || needsSR) {
-        const reg = new RegExp('>' + item.label + '<\\/span>[\\s\\S]*?FR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>[\\s\\S]*?SR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>', 'i');
-        const m = text.match(reg);
-        if (m) {
-          const fr = cleanNumber(m[1]);
-          const sr = cleanNumber(m[2]);
-          if (fr !== 'xx' || sr !== 'xx') {
-            if (!extracted[item.key]) {
-              extracted[item.key] = { today: { fr, sr } };
-            } else if (!extracted[item.key].today) {
-              extracted[item.key].today = { fr, sr };
-            } else {
-              if (needsFR && fr !== 'xx') extracted[item.key].today.fr = fr;
-              if (needsSR && sr !== 'xx') extracted[item.key].today.sr = sr;
-            }
-          }
-        }
       }
     }
 
@@ -311,11 +284,19 @@ export async function runPoller() {
       if (gasGame.sr && gasGame.sr !== 'xx') targetSR = gasGame.sr;
     }
 
-    // Check Aggregator for Today's result
-    if (aggregatorData && aggregatorData[key]?.today) {
-      const todayData = aggregatorData[key].today;
-      if (todayData.fr !== 'xx') targetFR = todayData.fr;
-      if (todayData.sr !== 'xx') targetSR = todayData.sr;
+    // Check Aggregator with strict date verification
+    if (aggregatorData && aggregatorData[key]) {
+      const agg = aggregatorData[key];
+      // 1. Live active round for this date
+      if (agg.currentDate === liveData.date && agg.today) {
+        if (agg.today.fr !== 'xx') targetFR = agg.today.fr;
+        if (agg.today.sr !== 'xx') targetSR = agg.today.sr;
+      }
+      // 2. Concluded round archived for this date (e.g. Night Teer concluding after midnight)
+      else if (agg.previous && agg.previous.date === liveData.date) {
+        if (agg.previous.fr !== 'xx') targetFR = agg.previous.fr;
+        if (agg.previous.sr !== 'xx') targetSR = agg.previous.sr;
+      }
     }
 
     // Check Shillong CDN directly

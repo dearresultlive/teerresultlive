@@ -61,14 +61,29 @@ export const GET: APIRoute = async ({ request }) => {
       result.games.shillong.sr = shillongCDN.sr;
     }
 
-    // 3. Fallback / Augment Khanapara, Juwai, Night from Aggregator
+    // 3. Fallback / Augment results from Aggregator with strict date verification
     if (aggregator) {
       for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
-        if (result.games[key].fr === 'xx' && aggregator[key]?.fr && aggregator[key].fr !== 'xx') {
-          result.games[key].fr = aggregator[key].fr;
+        const agg = aggregator[key];
+        if (!agg) continue;
+
+        // Active round for board's date
+        if (agg.currentDate === result.date && agg.today) {
+          if (result.games[key].fr === 'xx' && agg.today.fr !== 'xx') {
+            result.games[key].fr = agg.today.fr;
+          }
+          if (result.games[key].sr === 'xx' && agg.today.sr !== 'xx') {
+            result.games[key].sr = agg.today.sr;
+          }
         }
-        if (result.games[key].sr === 'xx' && aggregator[key]?.sr && aggregator[key].sr !== 'xx') {
-          result.games[key].sr = aggregator[key].sr;
+        // Concluded round for board's date (e.g. night draw concluding after midnight)
+        else if (agg.previous && agg.previous.date === result.date) {
+          if (result.games[key].fr === 'xx' && agg.previous.fr !== 'xx') {
+            result.games[key].fr = agg.previous.fr;
+          }
+          if (result.games[key].sr === 'xx' && agg.previous.sr !== 'xx') {
+            result.games[key].sr = agg.previous.sr;
+          }
         }
       }
     }

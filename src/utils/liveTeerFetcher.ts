@@ -2,11 +2,18 @@
 
 export const GAS_SCRAPER_URL = 'https://script.google.com/macros/s/AKfycbwmWnd4UFGtupP0c_pi1wAUZ1VRifXuor3hG6WUFym2MZ2aaoPBbk4mrm47eAglgKA/exec';
 
+// Strictly validate and clean 2-digit numbers (00-99 only)
 export function cleanNumber(val: any): string {
-  if (!val || val === '—' || val === '-' || val === 'xx' || val === '??') return 'xx';
-  const match = String(val).trim().match(/\b(\d{1,2})\b/);
-  if (!match) return 'xx';
-  return match[1].padStart(2, '0');
+  if (!val) return 'xx';
+  const str = String(val).trim();
+  if (str === '—' || str === '-' || str === 'xx' || str === '??' || str === 'null') return 'xx';
+  
+  // Must be strictly 1 or 2 digits (0 to 99)
+  const match = str.match(/^(\d{1,2})$/);
+  if (match) {
+    return match[1].padStart(2, '0');
+  }
+  return 'xx';
 }
 
 // Source 1: Google Apps Script Web App (Hosted on Google datacenter, immune to Cloudflare bot blocks)
@@ -63,8 +70,15 @@ export async function fetchShillongCDN(): Promise<{ date: string; fr: string; sr
   return null;
 }
 
+export interface AggregatorGame {
+  currentDate: string;
+  isOffDay: boolean;
+  today: { fr: string; sr: string } | null;
+  previous: { date: string; fr: string; sr: string } | null;
+}
+
 // Source 3: Multi-Game Aggregator for Shillong, Khanapara, Juwai, and Night Teer
-export async function fetchAggregatorData(): Promise<Record<string, { fr: string; sr: string; isOffDay?: boolean }> | null> {
+export async function fetchAggregatorData(): Promise<Record<string, AggregatorGame> | null> {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 6000);
@@ -80,54 +94,32 @@ export async function fetchAggregatorData(): Promise<Record<string, { fr: string
     const text = await res.text();
 
     const games = ['shillong', 'khanapara', 'juwai', 'night'];
-    const extracted: Record<string, { fr: string; sr: string; isOffDay?: boolean }> = {};
+    const extracted: Record<string, AggregatorGame> = {};
 
     for (const g of games) {
       const reg = new RegExp('\\\\"id\\\\":\\\\"(' + g + ')\\\\"[\\s\\S]*?\\\\"current_date\\\\":\\\\"([^\\\\]+)\\\\"[\\s\\S]*?\\\\"is_off_day\\\\":(true|false)[\\s\\S]*?\\\\"today\\\\":(null|\\{[^\\}]+\\})[\\s\\S]*?\\\\"previous\\\\":(\\{[^\\}]+\\})');
       const m = text.match(reg);
       if (m) {
+        const currentDate = m[2];
         const isOffDay = m[3] === 'true';
         const todayStr = m[4].replace(/\\"/g, '"');
+        const prevStr = m[5].replace(/\\"/g, '"');
         const today = todayStr === 'null' ? null : JSON.parse(todayStr);
+        const previous = JSON.parse(prevStr);
 
-        if (today) {
-          extracted[g] = {
+        extracted[g] = {
+          currentDate,
+          isOffDay,
+          today: today ? {
             fr: cleanNumber(today.first_round),
-            sr: cleanNumber(today.second_round),
-            isOffDay
-          };
-        }
-      }
-    }
-
-    // 2. Game-by-game ticker fallback if any game is missing or has unannounced rounds in Next.js payload
-    const tickerMapping = [
-      { key: 'shillong', label: 'Shillong Teer' },
-      { key: 'khanapara', label: 'Khanapara Teer' },
-      { key: 'juwai', label: 'Juwai Teer' },
-      { key: 'night', label: 'Night Teer' }
-    ];
-
-    for (const item of tickerMapping) {
-      const currentEntry = extracted[item.key];
-      const needsFR = !currentEntry || currentEntry.fr === 'xx';
-      const needsSR = !currentEntry || currentEntry.sr === 'xx';
-
-      if (needsFR || needsSR) {
-        const reg = new RegExp('>' + item.label + '<\\/span>[\\s\\S]*?FR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>[\\s\\S]*?SR<\\/span>[\\s\\S]*?tabular-nums[^>]*>([^<]*)<\\/span>', 'i');
-        const m = text.match(reg);
-        if (m) {
-          const fr = cleanNumber(m[1]);
-          const sr = cleanNumber(m[2]);
-          if (fr !== 'xx' || sr !== 'xx') {
-            if (!extracted[item.key]) {
-              extracted[item.key] = { fr, sr, isOffDay: false };
-            } else {
-              if (needsFR && fr !== 'xx') extracted[item.key].fr = fr;
-              if (needsSR && sr !== 'xx') extracted[item.key].sr = sr;
-            }
-          }
-        }
+            sr: cleanNumber(today.second_round)
+          } : null,
+          previous: previous ? {
+            date: previous.date,
+            fr: cleanNumber(previous.first_round),
+            sr: cleanNumber(previous.second_round)
+          } : null
+        };
       }
     }
 
