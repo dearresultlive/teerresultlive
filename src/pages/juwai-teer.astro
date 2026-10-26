@@ -33,19 +33,21 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
         Conducted officially in the historic town of Juwai, West Jaintia Hills district, Meghalaya.
       </p>
 
-      <!-- Previous Match Result Box (Morning Context) -->
+      <!-- Previous Match Result Box (High-Contrast Morning Context) -->
       {yesterday && (
-        <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-2.5 max-w-md flex items-center justify-between text-xs shadow-2xs">
-          <span class="text-slate-600 font-semibold text-xs flex items-center gap-1.5">
-            <span>⏮️</span>
+        <div class="bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 border-2 border-slate-200 rounded-xl p-3 max-w-md flex items-center justify-between text-xs shadow-xs">
+          <span class="text-slate-800 font-black text-xs flex items-center gap-1.5 uppercase tracking-wide">
+            <span class="text-amber-600 text-sm">⏮️</span>
             <span>Yesterday ({yesterdayDateStr}):</span>
           </span>
-          <div class="font-mono font-bold text-xs flex items-center gap-2">
-            <span class="text-amber-800 bg-amber-50 border border-amber-200/90 px-2 py-0.5 rounded shadow-2xs">
-              FR: {yesterday.juwai_fr}
+          <div class="font-mono font-black text-xs flex items-center gap-2">
+            <span class="inline-flex items-center gap-1 bg-amber-500 text-white px-2.5 py-1 rounded-md shadow-xs">
+              <span class="text-[10px] font-bold opacity-90">FR</span>
+              <span class="text-sm font-black">{yesterday.juwai_fr}</span>
             </span>
-            <span class="text-emerald-800 bg-emerald-50 border border-emerald-200/90 px-2 py-0.5 rounded shadow-2xs">
-              SR: {yesterday.juwai_sr}
+            <span class="inline-flex items-center gap-1 bg-emerald-600 text-white px-2.5 py-1 rounded-md shadow-xs">
+              <span class="text-[10px] font-bold opacity-90">SR</span>
+              <span class="text-sm font-black">{yesterday.juwai_sr}</span>
             </span>
           </div>
         </div>

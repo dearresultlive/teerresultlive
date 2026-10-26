@@ -338,19 +338,21 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
               </div>
 
-              {/* Previous Match Result (Instant Morning Context) */}
+              {/* Previous Match Result (High-Contrast Morning Context) */}
               {yesterday && (
-                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/80 -mx-4 -mb-4 px-3.5 py-2 rounded-b-2xl">
-                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold text-[11px]">
-                    <span>⏮️</span>
+                <div className="mt-3.5 border-t-2 border-slate-200/90 flex items-center justify-between text-xs bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 -mx-4 -mb-4 px-3.5 py-2.5 rounded-b-2xl">
+                  <div className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] uppercase tracking-wider">
+                    <span className="text-amber-600 text-xs">⏮️</span>
                     <span>Yesterday ({yesterdayFormattedDate}):</span>
                   </div>
-                  <div className="font-mono font-bold text-xs flex items-center gap-2">
-                    <span className="text-amber-800 bg-amber-50 border border-amber-200/90 px-1.5 py-0.5 rounded shadow-2xs">
-                      FR: {yesterday[key + '_fr'] || 'xx'}
+                  <div className="font-mono font-black text-xs flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 bg-amber-500 text-white px-2 py-0.5 rounded-md shadow-xs">
+                      <span className="text-[10px] font-bold opacity-90">FR</span>
+                      <span className="text-sm font-black tracking-tight">{yesterday[key + '_fr'] || 'xx'}</span>
                     </span>
-                    <span className="text-emerald-800 bg-emerald-50 border border-emerald-200/90 px-1.5 py-0.5 rounded shadow-2xs">
-                      SR: {yesterday[key + '_sr'] || 'xx'}
+                    <span className="inline-flex items-center gap-1 bg-emerald-600 text-white px-2 py-0.5 rounded-md shadow-xs">
+                      <span className="text-[10px] font-bold opacity-90">SR</span>
+                      <span className="text-sm font-black tracking-tight">{yesterday[key + '_sr'] || 'xx'}</span>
                     </span>
                   </div>
                 </div>
