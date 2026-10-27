@@ -254,6 +254,7 @@ if (isSportsPage) {
   let locality = "Shillong";
   let region = "Meghalaya";
   let postalCode = "793001";
+  let performerName = "Khasi Hills Traditional Archery Clubs";
 
   if (cleanPath === '/khanapara-teer') {
     eventName = "Khanapara Teer Traditional Archery Competition";
@@ -264,6 +265,7 @@ if (isSportsPage) {
     locality = "Ri-Bhoi";
     region = "Meghalaya";
     postalCode = "793101";
+    performerName = "Assam-Meghalaya Border Traditional Archery Clubs";
   } else if (cleanPath === '/juwai-teer') {
     eventName = "Juwai Teer Traditional Archery Competition";
     eventDesc = "Daily official traditional archery contest conducted in Juwai, West Jaintia Hills, Meghalaya.";
@@ -273,6 +275,7 @@ if (isSportsPage) {
     locality = "Juwai";
     region = "Meghalaya";
     postalCode = "793150";
+    performerName = "West Jaintia Hills Traditional Archery Clubs";
   }
 
   sportsEventSchema = {
@@ -280,6 +283,9 @@ if (isSportsPage) {
     "@type": "SportsEvent",
     "name": eventName,
     "description": eventDesc,
+    "image": [
+      `${host}/og-image.jpg`
+    ],
     "startDate": startTime,
     "endDate": endTime,
     "eventStatus": "https://schema.org/EventScheduled",
@@ -299,6 +305,18 @@ if (isSportsPage) {
       "@type": "SportsOrganization",
       "name": cleanPath === '/khanapara-teer' ? "Khanapara Archery Association" : cleanPath === '/juwai-teer' ? "Juwai Archery Club" : "Khasi Hills Archery Sports Association (KHASA)",
       "url": host
+    },
+    "performer": {
+      "@type": "SportsTeam",
+      "name": performerName
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock",
+      "url": cleanCanonical,
+      "validFrom": `${todayISTDate}T06:00:00+05:30`
     }
   };
 }
