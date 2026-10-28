@@ -30,6 +30,17 @@ export function getTodayIST() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
 }
 
+// Get current hour in IST (0 to 23) safely avoiding 24-hour midnight formatting anomalies
+export function getISTHour(d = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    hourCycle: 'h23'
+  }).formatToParts(d);
+  const hourPart = parts.find((p) => p.type === 'hour');
+  return parseInt(hourPart ? hourPart.value : '0', 10);
+}
+
 // Strictly validate and clean 2-digit numbers (00-99 only)
 export function cleanNumber(val) {
   if (!val) return 'xx';
@@ -184,10 +195,7 @@ export async function runPoller() {
   // 2. Day rollover check: Archive yesterday and reset for today
   // Day rollover only occurs after 7:00 AM IST (morning rollover)
   // This preserves Night Teer and yesterday's results through late-night hours (11 PM - 6:59 AM)
-  const currentISTHour = parseInt(
-    new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }).format(new Date()),
-    10
-  );
+  const currentISTHour = getISTHour();
   const isMorningRolloverTime = currentISTHour >= 7;
 
   if (liveData.date !== todayIST && isMorningRolloverTime) {
@@ -329,17 +337,17 @@ export async function runPoller() {
       const frJustDeclared = oldFR === 'xx' && targetFR !== 'xx';
       const srJustDeclared = oldSR === 'xx' && targetSR !== 'xx';
 
-      if (srJustDeclared && targetFR !== 'xx') {
+      if (srJustDeclared) {
         try {
           await broadcastTeerResult({
             gameKey: key,
             gameName: game.name,
-            date: todayIST,
+            date: liveData.date || todayIST,
             fr: targetFR,
             sr: targetSR,
             frTime: game.fr_time,
             srTime: game.sr_time,
-            roundType: 'FULL'
+            roundType: targetFR !== 'xx' ? 'FULL' : 'SR_ONLY'
           });
         } catch (e) {
           console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
@@ -349,7 +357,7 @@ export async function runPoller() {
           await broadcastTeerResult({
             gameKey: key,
             gameName: game.name,
-            date: todayIST,
+            date: liveData.date || todayIST,
             fr: targetFR,
             sr: targetSR,
             frTime: game.fr_time,

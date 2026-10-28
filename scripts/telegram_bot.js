@@ -39,11 +39,13 @@ export async function sendTelegramMessage(text) {
   const channelId = process.env.TELEGRAM_CHANNEL_ID || '@teerresultlive_in';
 
   if (!token) {
-    console.log('[Telegram] No TELEGRAM_BOT_TOKEN provided. Skipping Telegram broadcast.');
+    console.warn('⚠️ [Telegram] Missing TELEGRAM_BOT_TOKEN! Broadcast skipped.');
+    console.warn('⚠️ Please add TELEGRAM_BOT_TOKEN in GitHub Settings -> Secrets and variables -> Actions -> Repository secrets.');
     return false;
   }
 
   const endpoint = `https://api.telegram.org/bot${token}/sendMessage`;
+  console.log(`[Telegram] Broadcasting message to ${channelId}...`);
 
   try {
     const res = await fetch(endpoint, {
@@ -62,7 +64,7 @@ export async function sendTelegramMessage(text) {
       console.log(`[Telegram] Successfully broadcasted to ${channelId} (Message ID: ${data.result?.message_id})`);
       return true;
     } else {
-      console.error(`[Telegram] Telegram API error: ${data.description}`);
+      console.error(`[Telegram] Telegram API error: ${data.error_code || res.status} - ${data.description}`);
       return false;
     }
   } catch (err) {
@@ -96,6 +98,15 @@ export async function broadcastTeerResult({
       `⚡ <b>First Round (FR):</b>  <code>${fr}</code>  (${frTime || ''})\n` +
       `⚡ <b>Second Round (SR):</b> <code>${sr}</code>  (${srTime || ''})\n\n` +
       `🎯 <b>Check Target Formula & Common Numbers:</b>\n` +
+      `👉 <a href="${gameUrl}">${gameUrl}</a>\n\n` +
+      `⚡ <b>Fastest 0-Sec Live Ground Results:</b>\n` +
+      `👉 <a href="https://teerresultlive.in/">https://teerresultlive.in/</a>`;
+  } else if (roundType === 'SR_ONLY') {
+    message = `🎯 <b>${displayName} 2ND ROUND RESULT</b> 🎯\n` +
+      `📅 Date: <b>${formattedDate}</b>\n\n` +
+      `⚡ <b>First Round (FR):</b>  <i>Shooting</i>\n` +
+      `⚡ <b>Second Round (SR):</b> <code>${sr}</code>  (${srTime || ''})\n\n` +
+      `🎯 <b>Target Numbers & Dream Chart:</b>\n` +
       `👉 <a href="${gameUrl}">${gameUrl}</a>\n\n` +
       `⚡ <b>Fastest 0-Sec Live Ground Results:</b>\n` +
       `👉 <a href="https://teerresultlive.in/">https://teerresultlive.in/</a>`;

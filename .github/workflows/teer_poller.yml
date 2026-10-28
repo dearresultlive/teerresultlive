@@ -29,6 +29,14 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Check Telegram Secrets
+        run: |
+          if [ -z "${{ secrets.TELEGRAM_BOT_TOKEN }}" ]; then
+            echo "::warning title=Missing Telegram Token::TELEGRAM_BOT_TOKEN is not set in GitHub Secrets. Telegram posts will be skipped until added in Settings -> Secrets and variables -> Actions."
+          else
+            echo "TELEGRAM_BOT_TOKEN is configured."
+          fi
+
       - name: Run Teer Poller & Telegram Broadcaster
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

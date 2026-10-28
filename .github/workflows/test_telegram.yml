@@ -1,0 +1,36 @@
+name: Test Telegram Broadcaster
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-telegram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify Secret & Send Test Message
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID || '@teerresultlive_in' }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+            echo "::error title=Missing Secret::TELEGRAM_BOT_TOKEN is EMPTY in GitHub Secrets!"
+            echo "Please go to: https://github.com/dearresultlive/teerresultlive/settings/secrets/actions"
+            echo "Click 'New repository secret', Name: TELEGRAM_BOT_TOKEN"
+            exit 1
+          fi
+          npm run telegram:test
