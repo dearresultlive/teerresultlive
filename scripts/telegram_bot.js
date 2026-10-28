@@ -55,7 +55,8 @@ export async function sendTelegramMessage(text) {
         chat_id: channelId,
         text,
         parse_mode: 'HTML',
-        disable_web_page_preview: false
+        disable_web_page_preview: true,
+        link_preview_options: { is_disabled: true }
       })
     });
 
@@ -93,28 +94,37 @@ export async function broadcastTeerResult({
   let message = '';
 
   if (roundType === 'FULL') {
-    message = `🎯 <b>${displayName} RESULT DECLARED</b> 🎯\n` +
-      `📅 Date: <b>${formattedDate}</b>\n\n` +
-      `⚡ <b>First Round (FR):</b>  <code>${fr}</code>  (${frTime || ''})\n` +
-      `⚡ <b>Second Round (SR):</b> <code>${sr}</code>  (${srTime || ''})\n\n` +
-      `🎯 <b>Check Target Formula & Common Numbers:</b>\n` +
+    message = `🎯 <b>${displayName} OFFICIAL RESULT</b>\n` +
+      `📅 Date: <b>${formattedDate}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚡ <b>1st Round (FR):</b>  <code>[ ${fr} ]</code>  (${frTime || ''})\n` +
+      `⚡ <b>2nd Round (SR):</b> <code>[ ${sr} ]</code>  (${srTime || ''})\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `✅ <i>Ground Verified • 0-Sec Live Declaration</i>\n\n` +
+      `📊 <b>Target Formula & House-Ending:</b>\n` +
       `👉 <a href="${gameUrl}">${gameUrl}</a>\n\n` +
-      `⚡ <b>Fastest 0-Sec Live Ground Results:</b>\n` +
+      `⚡ <b>Fastest Live Scoreboard:</b>\n` +
       `👉 <a href="https://teerresultlive.in/">https://teerresultlive.in/</a>`;
   } else if (roundType === 'SR_ONLY') {
-    message = `🎯 <b>${displayName} 2ND ROUND RESULT</b> 🎯\n` +
-      `📅 Date: <b>${formattedDate}</b>\n\n` +
-      `⚡ <b>First Round (FR):</b>  <i>Shooting</i>\n` +
-      `⚡ <b>Second Round (SR):</b> <code>${sr}</code>  (${srTime || ''})\n\n` +
+    message = `🎯 <b>${displayName} 2ND ROUND RESULT</b>\n` +
+      `📅 Date: <b>${formattedDate}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚡ <b>1st Round (FR):</b>  <i>Declared Earlier</i>\n` +
+      `⚡ <b>2nd Round (SR):</b> <code>[ ${sr} ]</code>  (${srTime || ''})\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `✅ <i>Ground Verified • 0-Sec Live Declaration</i>\n\n` +
       `🎯 <b>Target Numbers & Dream Chart:</b>\n` +
       `👉 <a href="${gameUrl}">${gameUrl}</a>\n\n` +
-      `⚡ <b>Fastest 0-Sec Live Ground Results:</b>\n` +
+      `⚡ <b>Fastest Live Scoreboard:</b>\n` +
       `👉 <a href="https://teerresultlive.in/">https://teerresultlive.in/</a>`;
   } else {
-    message = `🎯 <b>${displayName} 1ST ROUND RESULT</b> 🎯\n` +
-      `📅 Date: <b>${formattedDate}</b>\n\n` +
-      `⚡ <b>First Round (FR):</b>  <code>${fr}</code>  (${frTime || ''})\n` +
-      `⚡ <b>Second Round (SR):</b> <i>Shooting at ${srTime || 'Ground'}</i>\n\n` +
+    message = `🎯 <b>${displayName} 1ST ROUND RESULT</b>\n` +
+      `📅 Date: <b>${formattedDate}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚡ <b>1st Round (FR):</b>  <code>[ ${fr} ]</code>  (${frTime || ''})\n` +
+      `⚡ <b>2nd Round (SR):</b> <i>Shooting at ${srTime || 'Ground'}</i>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `✅ <i>Ground Verified • 0-Sec Live Declaration</i>\n\n` +
       `🎯 <b>2nd Round Target Numbers:</b>\n` +
       `👉 <a href="${gameUrl}">${gameUrl}</a>\n\n` +
       `⚡ <b>Live Ground Updates:</b>\n` +
