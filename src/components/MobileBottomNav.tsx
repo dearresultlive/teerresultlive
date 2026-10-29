@@ -26,6 +26,13 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
+  // Listen for custom event from Header or other triggers to open drawer
+  useEffect(() => {
+    const handleOpen = () => setDrawerOpen(true);
+    window.addEventListener('open-mobile-drawer', handleOpen);
+    return () => window.removeEventListener('open-mobile-drawer', handleOpen);
+  }, []);
+
   // Lock body scroll when drawer is open
   useEffect(() => {
     if (drawerOpen) {
@@ -197,29 +204,28 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
             </span>
           </a>
 
-          {/* Tab 5: More (Hamburger Menu Button) */}
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            aria-label="Open Features Menu"
-            className={`flex flex-col items-center justify-center gap-0.5 relative py-1 rounded-xl transition-all cursor-pointer ${
-              drawerOpen ? 'text-blue-600 font-black' : 'text-slate-600 font-semibold hover:text-slate-900'
-            }`}
+          {/* Tab 5: Alerts (WhatsApp Channel Direct Join) */}
+          <a
+            href={COMMUNITY_LINKS.whatsappChannel}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Join Official WhatsApp Channel for Instant Teer Alerts"
+            className="flex flex-col items-center justify-center gap-0.5 relative py-1 rounded-xl transition-all group"
           >
-            {drawerOpen && (
-              <span className="absolute top-0 w-8 h-0.5 rounded-full bg-blue-600 shadow-xs"></span>
-            )}
-            <div className="w-6 h-6 flex items-center justify-center transition-transform">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <line x1="4" y1="6" x2="20" y2="6"/>
-                <line x1="4" y1="12" x2="20" y2="12"/>
-                <line x1="4" y1="18" x2="20" y2="18"/>
+            {/* Live pulsing green notification ping badge */}
+            <span className="absolute top-0.5 right-2 sm:right-3 flex h-2 w-2 pointer-events-none">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-80"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]"></span>
+            </span>
+            <div className="w-6 h-6 flex items-center justify-center transition-transform group-hover:scale-110 group-active:scale-95 text-[#25D366]">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.58 20.15 9.13 19.76 7.86 19L7.56 18.82L4.44 19.64L5.27 16.59L5.07 16.27C4.24 14.95 3.8 13.44 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.59 20.15 12.05 20.15ZM16.57 14.33C16.32 14.21 15.11 13.61 14.88 13.53C14.66 13.44 14.49 13.4 14.33 13.65C14.16 13.89 13.69 14.44 13.55 14.61C13.4 14.77 13.26 14.79 13.01 14.67C12.76 14.54 11.96 14.28 11.01 13.43C10.27 12.77 9.77 11.96 9.62 11.71C9.48 11.46 9.61 11.33 9.73 11.21C9.84 11.1 9.98 10.92 10.1 10.78C10.23 10.63 10.27 10.53 10.35 10.36C10.44 10.2 10.39 10.05 10.33 9.93C10.27 9.81 9.77 8.58 9.57 8.08C9.37 7.6 9.17 7.66 9.02 7.65C8.88 7.65 8.71 7.64 8.55 7.64C8.38 7.64 8.11 7.7 7.89 7.95C7.66 8.19 7.03 8.79 7.03 10C7.03 11.21 7.91 12.38 8.03 12.55C8.16 12.71 9.77 15.2 12.23 16.26C12.82 16.51 13.27 16.66 13.63 16.78C14.22 16.97 14.75 16.94 15.18 16.88C15.65 16.81 16.63 16.29 16.84 15.71C17.04 15.13 17.04 14.63 16.98 14.53C16.92 14.43 16.82 14.45 16.57 14.33Z"/>
               </svg>
             </div>
-            <span className="text-[10px] tracking-tight leading-none">
-              More
+            <span className="text-[10px] tracking-tight leading-none text-[#25D366] font-black group-hover:text-[#128C7E]">
+              Alerts
             </span>
-          </button>
+          </a>
 
         </div>
       </nav>

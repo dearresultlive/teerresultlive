@@ -29,6 +29,20 @@ const currentPath = Astro.url.pathname;
         <span>Live Sync</span>
       </div>
 
+      <!-- Mobile Menu Trigger (Opens Features & Community Drawer) -->
+      <button
+        type="button"
+        id="mobile-drawer-trigger"
+        class="md:hidden flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+        aria-label="Open Features Menu"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+        </svg>
+      </button>
+
       <!-- Desktop Only Navigation (Hidden on mobile to avoid duplicate bottom dock) -->
       <nav class="hidden md:flex items-center gap-1 text-xs font-bold text-slate-600 border-l border-slate-200 pl-3 ml-1">
         <a 
@@ -61,3 +75,12 @@ const currentPath = Astro.url.pathname;
 
   </div>
 </header>
+
+<script>
+  const triggerBtn = document.getElementById('mobile-drawer-trigger');
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('open-mobile-drawer'));
+    });
+  }
+</script>
