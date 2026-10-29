@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { COMMUNITY_LINKS } from '../config/community';
 import archiveData from '../data/previous_teer_archive.json';
 
@@ -23,9 +23,71 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   const yesterday = initialData.yesterday || (archiveData && archiveData.length > 0 ? archiveData[0] : null);
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const [data, setData] = useState<TeerData>(initialData);
+  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>('today');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
   const [copied, setCopied] = useState(false);
+
+  // Check URL hash/params on mount for direct tab navigation (e.g., /#yesterday)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (window.location.hash === '#yesterday' || params.get('tab') === 'yesterday' || params.get('view') === 'yesterday') {
+        setViewMode('yesterday');
+      }
+    }
+  }, []);
+
+  const displayedDate = useMemo(() => {
+    if (viewMode === 'yesterday') {
+      return yesterdayFormattedDate || 'Yesterday';
+    }
+    return data.date.split('-').reverse().join('/');
+  }, [viewMode, yesterdayFormattedDate, data.date]);
+
+  const displayedGames = useMemo<Record<string, GameResult>>(() => {
+    if (viewMode === 'yesterday' && yesterday) {
+      return {
+        shillong: {
+          name: 'Shillong Teer',
+          location: 'Polo Ground, Shillong',
+          fr: yesterday.shillong_fr || 'xx',
+          sr: yesterday.shillong_sr || 'xx',
+          fr_time: '3:45 PM',
+          sr_time: '4:45 PM',
+          status: (yesterday.shillong_fr && yesterday.shillong_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+        },
+        khanapara: {
+          name: 'Khanapara Teer',
+          location: 'Them Marwet, Ri-Bhoi',
+          fr: yesterday.khanapara_fr || 'xx',
+          sr: yesterday.khanapara_sr || 'xx',
+          fr_time: '4:00 PM',
+          sr_time: '4:30 PM',
+          status: (yesterday.khanapara_fr && yesterday.khanapara_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+        },
+        juwai: {
+          name: 'Juwai Teer',
+          location: 'Ladrymbai traditional Ground',
+          fr: yesterday.juwai_fr || 'xx',
+          sr: yesterday.juwai_sr || 'xx',
+          fr_time: '1:45 PM',
+          sr_time: '2:30 PM',
+          status: (yesterday.juwai_fr && yesterday.juwai_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+        },
+        night: {
+          name: 'Shillong Night Teer',
+          location: 'Night Archery Ground',
+          fr: yesterday.night_fr || 'xx',
+          sr: yesterday.night_sr || 'xx',
+          fr_time: '10:30 PM',
+          sr_time: '11:30 PM',
+          status: (yesterday.night_fr && yesterday.night_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+        }
+      };
+    }
+    return data.games;
+  }, [viewMode, yesterday, data.games]);
 
   // Check if today is Sunday in Indian Standard Time (Archery Holiday)
   const isSunday = (() => {
@@ -137,17 +199,21 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
   // 1-Click WhatsApp Share Generator
   const shareOnWhatsApp = (targetGameKey?: string) => {
-    const formattedDate = data.date.split('-').reverse().join('/');
-    let shareText = `🎯 *TEER RESULT TODAY LIVE (${formattedDate})*\n`;
+    const isYesterday = viewMode === 'yesterday';
+    let shareText = isYesterday
+      ? `🎯 *TEER RESULT (YESTERDAY - ${displayedDate})*\n`
+      : `🎯 *TEER RESULT TODAY LIVE (${displayedDate})*\n`;
 
-    if (targetGameKey && data.games[targetGameKey]) {
-      const g = data.games[targetGameKey];
+    const activeGames = displayedGames;
+
+    if (targetGameKey && activeGames[targetGameKey]) {
+      const g = activeGames[targetGameKey];
       shareText += `\n🎯 *${g.name.toUpperCase()}*\n`;
       shareText += `▶ 1st Round: *${g.fr}*\n`;
       shareText += `▶ 2nd Round: *${g.sr}*\n`;
     } else {
       for (const { key, title } of games) {
-        const g = data.games[key];
+        const g = activeGames[key];
         if (g) {
           shareText += `\n🎯 *${title}*\n`;
           shareText += `1st: *${g.fr}* | 2nd: *${g.sr}*\n`;
@@ -155,7 +221,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       }
     }
 
-    shareText += `\n⚡ Check fastest live numbers without refresh:\n👉 https://teerresultlive.in`;
+    shareText += `\n⚡ Check official live numbers:\n👉 https://teerresultlive.in`;
 
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
 
@@ -173,10 +239,13 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   };
 
   const copyResults = () => {
-    const formattedDate = data.date.split('-').reverse().join('/');
-    let text = `🎯 TEER RESULT LIVE (${formattedDate})\n`;
+    const isYesterday = viewMode === 'yesterday';
+    let text = isYesterday
+      ? `🎯 TEER RESULT (YESTERDAY - ${displayedDate})\n`
+      : `🎯 TEER RESULT LIVE (${displayedDate})\n`;
+    const activeGames = displayedGames;
     for (const { key, title } of games) {
-      const g = data.games[key];
+      const g = activeGames[key];
       if (g) {
         text += `${title} - 1st: ${g.fr} | 2nd: ${g.sr}\n`;
       }
@@ -193,41 +262,89 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   return (
     <div className="space-y-3">
       
-      {/* Top Status & Quick Action Bar */}
-      <div className="flex items-center justify-between text-xs px-1 text-slate-600 bg-white border border-slate-200/80 rounded-xl px-3 py-2 shadow-xs flex-wrap gap-2">
-        <div className="flex items-center gap-2 font-bold flex-wrap">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="text-slate-900 font-extrabold">
-            Date: {data.date.split('-').reverse().join('/')}
-          </span>
-          <span className="text-slate-300 hidden sm:inline">•</span>
-          <span className="text-emerald-700 text-[11px] bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-black hidden sm:inline-block">
-            ⚡ AUTO-SYNC ACTIVE
-          </span>
+      {/* Top Status & Date Bar + Today/Yesterday Segmented Toggle (KeralaLive Style) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs space-y-2.5">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          
+          {/* Today / Yesterday Toggle Pills (KeralaLive Style) */}
+          <div className="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => setViewMode('today')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                viewMode === 'today'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${viewMode === 'today' ? 'bg-emerald-300 animate-pulse' : 'bg-slate-400'}`}></span>
+              <span>Today</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode('yesterday')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                viewMode === 'yesterday'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span>⏮️</span>
+              <span>Yesterday</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5 ml-auto">
+            {/* WhatsApp Direct Share Button */}
+            <button
+              type="button"
+              onClick={() => shareOnWhatsApp()}
+              className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-lg font-black text-xs transition-all shadow-xs cursor-pointer active:scale-95"
+              title="Share Results on WhatsApp"
+            >
+              <span>💬</span>
+              <span className="hidden xs:inline">WhatsApp</span>
+            </button>
+
+            {/* Refresh Button (only active for today) */}
+            {viewMode === 'today' && (
+              <button
+                type="button"
+                onClick={() => fetchLatest(true)}
+                disabled={isRefreshing}
+                className="inline-flex items-center gap-1 bg-slate-50 hover:bg-slate-100 text-slate-800 px-2.5 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 cursor-pointer shadow-xs border border-slate-300 active:scale-95"
+              >
+                <span className={isRefreshing ? 'animate-spin' : ''}>🔄</span>
+                <span className="hidden xs:inline">{isRefreshing ? '...' : 'Refresh'}</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center gap-1.5 ml-auto">
-          {/* WhatsApp Direct Share Button */}
-          <button
-            type="button"
-            onClick={() => shareOnWhatsApp()}
-            className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg font-black text-xs transition-all shadow-xs cursor-pointer active:scale-95"
-            title="Share All Results on WhatsApp"
-          >
-            <span>💬</span>
-            <span className="hidden xs:inline">WhatsApp</span>
-          </button>
+        {/* Date & Mode Banner */}
+        <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100 flex-wrap gap-2 text-slate-600">
+          <div className="flex items-center gap-2 font-bold flex-wrap">
+            <span className={`w-2.5 h-2.5 rounded-full ${viewMode === 'today' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-500'}`}></span>
+            <span className="text-slate-900 font-extrabold text-xs sm:text-sm">
+              Date: {displayedDate}
+            </span>
+            {viewMode === 'today' ? (
+              <span className="text-emerald-700 text-[10px] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-black">
+                ⚡ LIVE SESSION
+              </span>
+            ) : (
+              <span className="text-slate-700 text-[10px] bg-slate-100 border border-slate-300 px-2 py-0.5 rounded font-black">
+                🏛️ YESTERDAY ARCHIVE
+              </span>
+            )}
+          </div>
 
-          {/* Refresh Button */}
-          <button
-            type="button"
-            onClick={() => fetchLatest(true)}
-            disabled={isRefreshing}
-            className="inline-flex items-center gap-1 bg-slate-50 hover:bg-slate-100 text-slate-800 px-2.5 py-1 rounded-lg font-bold transition-all disabled:opacity-50 cursor-pointer shadow-xs border border-slate-300 active:scale-95"
-          >
-            <span className={isRefreshing ? 'animate-spin' : ''}>🔄</span>
-            <span>{isRefreshing ? '...' : 'Refresh'}</span>
-          </button>
+          {viewMode === 'today' && lastCheck && (
+            <span className="text-[10px] text-slate-600 font-medium ml-auto">
+              Checked: {lastCheck}
+            </span>
+          )}
         </div>
       </div>
 
@@ -249,7 +366,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       {/* 4 Teer Game Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {games.map(({ key, title, highlight }) => {
-          const game = data.games[key] || {
+          const game = displayedGames[key] || {
             name: title,
             location: '',
             status: 'UPCOMING',
@@ -267,7 +384,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             <div
               key={key}
               className={`rounded-2xl p-4 transition-all relative overflow-hidden bg-white shadow-xs ${
-                highlight
+                highlight && viewMode === 'today'
                   ? 'border-2 border-amber-400 ring-4 ring-amber-500/10 shadow-sm'
                   : 'border border-slate-200/90'
               }`}
@@ -337,26 +454,6 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 </div>
 
               </div>
-
-              {/* Previous Match Result (High-Contrast Morning Context) */}
-              {yesterday && (
-                <div className="mt-3.5 border-t-2 border-slate-200/90 flex items-center justify-between text-xs bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 -mx-4 -mb-4 px-3.5 py-2.5 rounded-b-2xl">
-                  <div className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] uppercase tracking-wider">
-                    <span className="text-amber-600 text-xs">⏮️</span>
-                    <span>Yesterday ({yesterdayFormattedDate}):</span>
-                  </div>
-                  <div className="font-mono font-black text-xs flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 bg-amber-500 text-white px-2 py-0.5 rounded-md shadow-xs">
-                      <span className="text-[10px] font-bold opacity-90">FR</span>
-                      <span className="text-sm font-black tracking-tight">{yesterday[key + '_fr'] || 'xx'}</span>
-                    </span>
-                    <span className="inline-flex items-center gap-1 bg-emerald-600 text-white px-2 py-0.5 rounded-md shadow-xs">
-                      <span className="text-[10px] font-bold opacity-90">SR</span>
-                      <span className="text-sm font-black tracking-tight">{yesterday[key + '_sr'] || 'xx'}</span>
-                    </span>
-                  </div>
-                </div>
-              )}
 
             </div>
           );
