@@ -41,6 +41,39 @@ export function getISTHour(d = new Date()) {
   return parseInt(hourPart ? hourPart.value : '0', 10);
 }
 
+// Get current minutes since midnight in Indian Standard Time (IST)
+export function getISTCurrentMinutes(d = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    hourCycle: 'h23'
+  }).formatToParts(d);
+  const hour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
+  const minute = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
+  return hour * 60 + minute;
+}
+
+// Strict time window validator to protect against stale upstream cache declaring rounds early
+export function isRoundWindowOpen(gameKey, round, now = new Date()) {
+  const cur = getISTCurrentMinutes(now);
+  // Early morning guard (12:00 AM - 7:00 AM): Day draws not running; night teer concluded
+  if (cur < 7 * 60) {
+    return gameKey === 'night';
+  }
+  // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
+  const EARLIEST_MINUTES = {
+    juwai: { fr: 13 * 60 + 40, sr: 14 * 60 + 25 },    // 1:40 PM / 2:25 PM
+    shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 }, // 3:40 PM / 4:40 PM
+    khanapara: { fr: 15 * 60 + 55, sr: 16 * 60 + 25 },// 3:55 PM / 4:25 PM
+    night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }     // 10:20 PM / 11:20 PM
+  };
+  const limits = EARLIEST_MINUTES[gameKey];
+  if (!limits) return true;
+  return cur >= limits[round];
+}
+
+
 // Strictly validate and clean 2-digit numbers (00-99 only)
 export function cleanNumber(val) {
   if (!val) return 'xx';
@@ -288,8 +321,8 @@ export async function runPoller() {
     // Check Google Apps Script (highest priority, Google datacenter IP)
     if (gasData && gasData.date === liveData.date && gasData.games && gasData.games[key]) {
       const gasGame = gasData.games[key];
-      if (gasGame.fr && gasGame.fr !== 'xx') targetFR = gasGame.fr;
-      if (gasGame.sr && gasGame.sr !== 'xx') targetSR = gasGame.sr;
+      if (gasGame.fr && gasGame.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = gasGame.fr;
+      if (gasGame.sr && gasGame.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = gasGame.sr;
     }
 
     // Check Aggregator with strict date verification
@@ -297,21 +330,25 @@ export async function runPoller() {
       const agg = aggregatorData[key];
       // 1. Live active round for this date
       if (agg.currentDate === liveData.date && agg.today) {
-        if (agg.today.fr !== 'xx') targetFR = agg.today.fr;
-        if (agg.today.sr !== 'xx') targetSR = agg.today.sr;
+        if (agg.today.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = agg.today.fr;
+        if (agg.today.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = agg.today.sr;
       }
       // 2. Concluded round archived for this date (e.g. Night Teer concluding after midnight)
       else if (agg.previous && agg.previous.date === liveData.date) {
-        if (agg.previous.fr !== 'xx') targetFR = agg.previous.fr;
-        if (agg.previous.sr !== 'xx') targetSR = agg.previous.sr;
+        if (agg.previous.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = agg.previous.fr;
+        if (agg.previous.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = agg.previous.sr;
       }
     }
 
     // Check Shillong CDN directly
     if (key === 'shillong' && shillongCDN && shillongCDN.date === liveData.date) {
-      if (shillongCDN.fr !== 'xx') targetFR = shillongCDN.fr;
-      if (shillongCDN.sr !== 'xx') targetSR = shillongCDN.sr;
+      if (shillongCDN.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) targetFR = shillongCDN.fr;
+      if (shillongCDN.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) targetSR = shillongCDN.sr;
     }
+
+    // Physical safeguard: Enforce xx if the round shooting window is not yet open
+    if (!isRoundWindowOpen(key, 'fr')) targetFR = 'xx';
+    if (!isRoundWindowOpen(key, 'sr')) targetSR = 'xx';
 
     // Update game status
     let status = 'UPCOMING';

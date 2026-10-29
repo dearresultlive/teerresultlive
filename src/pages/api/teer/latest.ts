@@ -4,7 +4,8 @@ import archiveData from '../../../data/previous_teer_archive.json';
 import {
   fetchFromGoogleAppsScript,
   fetchShillongCDN,
-  fetchAggregatorData
+  fetchAggregatorData,
+  isRoundWindowOpen
 } from '../../../utils/liveTeerFetcher';
 
 export const prerender = false;
@@ -48,18 +49,17 @@ export const GET: APIRoute = async ({ request }) => {
       for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
         if (gasData.games[key]) {
           const g = gasData.games[key];
-          if (g.fr && g.fr !== 'xx') result.games[key].fr = g.fr;
-          if (g.sr && g.sr !== 'xx') result.games[key].sr = g.sr;
-          if (g.status) result.games[key].status = g.status;
+          if (g.fr && g.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) result.games[key].fr = g.fr;
+          if (g.sr && g.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) result.games[key].sr = g.sr;
         }
       }
     }
 
     // 2. Fallback / Augment Shillong from Direct CDN
-    if (result.games.shillong.fr === 'xx' && shillongCDN?.date === result.date && shillongCDN?.fr && shillongCDN.fr !== 'xx') {
+    if (result.games.shillong.fr === 'xx' && shillongCDN?.date === result.date && shillongCDN?.fr && shillongCDN.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) {
       result.games.shillong.fr = shillongCDN.fr;
     }
-    if (result.games.shillong.sr === 'xx' && shillongCDN?.date === result.date && shillongCDN?.sr && shillongCDN.sr !== 'xx') {
+    if (result.games.shillong.sr === 'xx' && shillongCDN?.date === result.date && shillongCDN?.sr && shillongCDN.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) {
       result.games.shillong.sr = shillongCDN.sr;
     }
 
@@ -71,19 +71,19 @@ export const GET: APIRoute = async ({ request }) => {
 
         // Active round for board's date
         if (agg.currentDate === result.date && agg.today) {
-          if (result.games[key].fr === 'xx' && agg.today.fr !== 'xx') {
+          if (result.games[key].fr === 'xx' && agg.today.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) {
             result.games[key].fr = agg.today.fr;
           }
-          if (result.games[key].sr === 'xx' && agg.today.sr !== 'xx') {
+          if (result.games[key].sr === 'xx' && agg.today.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) {
             result.games[key].sr = agg.today.sr;
           }
         }
         // Concluded round for board's date (e.g. night draw concluding after midnight)
         else if (agg.previous && agg.previous.date === result.date) {
-          if (result.games[key].fr === 'xx' && agg.previous.fr !== 'xx') {
+          if (result.games[key].fr === 'xx' && agg.previous.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) {
             result.games[key].fr = agg.previous.fr;
           }
-          if (result.games[key].sr === 'xx' && agg.previous.sr !== 'xx') {
+          if (result.games[key].sr === 'xx' && agg.previous.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) {
             result.games[key].sr = agg.previous.sr;
           }
         }

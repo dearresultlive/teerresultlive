@@ -3,6 +3,38 @@
 export const GAS_SCRAPER_URL = 'https://script.google.com/macros/s/AKfycbwmWnd4UFGtupP0c_pi1wAUZ1VRifXuor3hG6WUFym2MZ2aaoPBbk4mrm47eAglgKA/exec';
 
 // Strictly validate and clean 2-digit numbers (00-99 only)
+// Get current minutes since midnight in Indian Standard Time (IST)
+export function getISTCurrentMinutes(d: Date = new Date()): number {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    hourCycle: 'h23'
+  }).formatToParts(d);
+  const hour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
+  const minute = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
+  return hour * 60 + minute;
+}
+
+// Strict time window validator to protect against stale upstream cache declaring rounds early
+export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date = new Date()): boolean {
+  const cur = getISTCurrentMinutes(now);
+  // Early morning guard (12:00 AM - 7:00 AM): Day draws not running; night teer concluded
+  if (cur < 7 * 60) {
+    return gameKey === 'night';
+  }
+  // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
+  const EARLIEST_MINUTES: Record<string, { fr: number; sr: number }> = {
+    juwai: { fr: 13 * 60 + 40, sr: 14 * 60 + 25 },    // 1:40 PM / 2:25 PM
+    shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 }, // 3:40 PM / 4:40 PM
+    khanapara: { fr: 15 * 60 + 55, sr: 16 * 60 + 25 },// 3:55 PM / 4:25 PM
+    night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }     // 10:20 PM / 11:20 PM
+  };
+  const limits = EARLIEST_MINUTES[gameKey];
+  if (!limits) return true;
+  return cur >= limits[round];
+}
+
 export function cleanNumber(val: any): string {
   if (!val) return 'xx';
   const str = String(val).trim();
