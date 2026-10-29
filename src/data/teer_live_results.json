@@ -1,6 +1,6 @@
 {
   "date": "2026-10-29",
-  "updated_at": "2026-10-28T19:08:57.752Z",
+  "updated_at": "2026-10-29T09:38:34.303Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -63,10 +63,10 @@
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
-      "fr": "xx",
+      "fr": "14",
       "sr": "xx",
       "common_numbers": {
         "direct": [
