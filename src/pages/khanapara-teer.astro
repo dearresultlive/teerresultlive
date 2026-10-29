@@ -14,8 +14,8 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
 ---
 
 <Layout
-  title={`Khanapara Teer Result Today Live • ${todayDateStr} | Teer Live`}
-  description={`Live Khanapara Teer results today (${todayDateStr}) for First Round (4:00 PM) and Second Round (4:30 PM). Verified Assam Meghalaya border hit numbers.`}
+  title={`Khanapara Teer Result Today Live • Guwahati & Assam Meghalaya (${todayDateStr})`}
+  description={`Get fastest official Khanapara Teer result today live (${todayDateStr}) for 1st Round (4:00 PM) & 2nd Round (4:30 PM). Verified Guwahati Teer & Assam Meghalaya hit numbers.`}
 >
   <div class="space-y-6">
     <Breadcrumbs items={[{ name: 'Khanapara Teer' }]} />
@@ -26,32 +26,12 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           Khanapara Teer Result Today Live • {todayDateStr}
         </h1>
         <span class="text-xs bg-emerald-50 text-emerald-700 font-black border border-emerald-300 px-2.5 py-1 rounded-full shadow-2xs">
-          ● Assam Border Live
+          ● Guwahati &amp; Assam Border
         </span>
       </div>
       <p class="text-xs sm:text-sm text-slate-500 font-medium">
-        Conducted officially at Khanapara, Ri-Bhoi district along the Assam-Meghalaya interstate boundary.
+        Conducted officially at Khanapara, Ri-Bhoi district along the Assam-Meghalaya interstate boundary. Also widely followed as <strong>Guwahati Teer</strong> and <strong>Assam Meghalaya Teer</strong>.
       </p>
-
-      <!-- Previous Match Result Box (High-Contrast Morning Context) -->
-      {yesterday && (
-        <div class="bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 border-2 border-slate-200 rounded-xl p-3 max-w-md flex items-center justify-between text-xs shadow-xs">
-          <span class="text-slate-800 font-black text-xs flex items-center gap-1.5 uppercase tracking-wide">
-            <span class="text-amber-600 text-sm">⏮️</span>
-            <span>Yesterday ({yesterdayDateStr}):</span>
-          </span>
-          <div class="font-mono font-black text-xs flex items-center gap-2">
-            <span class="inline-flex items-center gap-1 bg-amber-500 text-white px-2.5 py-1 rounded-md shadow-xs">
-              <span class="text-[10px] font-bold opacity-90">FR</span>
-              <span class="text-sm font-black">{yesterday.khanapara_fr}</span>
-            </span>
-            <span class="inline-flex items-center gap-1 bg-emerald-600 text-white px-2.5 py-1 rounded-md shadow-xs">
-              <span class="text-[10px] font-bold opacity-90">SR</span>
-              <span class="text-sm font-black">{yesterday.khanapara_sr}</span>
-            </span>
-          </div>
-        </div>
-      )}
 
       <!-- FR & SR Result Box -->
       <div class="grid grid-cols-2 gap-3 pt-2 max-w-md">
@@ -68,6 +48,26 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           </span>
         </div>
       </div>
+
+      <!-- Previous Match Result Box (Placed below today's result to avoid confusion) -->
+      {yesterday && (
+        <div class="bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 border-2 border-slate-200 rounded-xl p-3 max-w-md flex items-center justify-between text-xs shadow-xs mt-3">
+          <span class="text-slate-800 font-black text-xs flex items-center gap-1.5 uppercase tracking-wide">
+            <span class="text-amber-600 text-sm">⏮️</span>
+            <span>Yesterday ({yesterdayDateStr}):</span>
+          </span>
+          <div class="font-mono font-black text-xs flex items-center gap-2">
+            <span class="inline-flex items-center gap-1 bg-amber-500 text-white px-2.5 py-1 rounded-md shadow-xs">
+              <span class="text-[10px] font-bold opacity-90">FR</span>
+              <span class="text-sm font-black">{yesterday.khanapara_fr}</span>
+            </span>
+            <span class="inline-flex items-center gap-1 bg-emerald-600 text-white px-2.5 py-1 rounded-md shadow-xs">
+              <span class="text-[10px] font-bold opacity-90">SR</span>
+              <span class="text-sm font-black">{yesterday.khanapara_sr}</span>
+            </span>
+          </div>
+        </div>
+      )}
     </header>
 
     <PWAInstallBanner client:idle />
