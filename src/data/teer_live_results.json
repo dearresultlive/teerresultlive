@@ -1,15 +1,15 @@
 {
   "date": "2026-10-30",
-  "updated_at": "2026-10-30T12:02:23.474Z",
+  "updated_at": "2026-10-30T18:47:33.064Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "60",
-      "sr": "97",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "20",
@@ -34,11 +34,11 @@
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "99",
-      "sr": "45",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "64",
@@ -63,11 +63,11 @@
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
-      "fr": "36",
-      "sr": "94",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "83",
