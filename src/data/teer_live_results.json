@@ -1,6 +1,6 @@
 {
   "date": "2026-10-30",
-  "updated_at": "2026-10-30T10:29:57.115Z",
+  "updated_at": "2026-10-30T11:16:01.564Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -34,11 +34,11 @@
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "99",
+      "sr": "45",
       "common_numbers": {
         "direct": [
           "64",
