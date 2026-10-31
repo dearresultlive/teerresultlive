@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
 import MobileBottomNav from '../components/MobileBottomNav';
+import PWAInstallBanner from '../components/PWAInstallBanner';
 import { ONESIGNAL_CONFIG } from '../config/onesignal';
 
 interface Props {
@@ -30,7 +31,20 @@ const oneSignalAppId = ONESIGNAL_CONFIG.appId;
       <slot />
     </main>
     <Footer />
+    
+    <!-- Floating App Install Banner (Appears after delay, 5-day dismiss cooldown) -->
+    <PWAInstallBanner client:idle />
+    
+    <!-- Mobile Fixed Bottom Navigation Dock & Features Drawer -->
     <MobileBottomNav client:idle currentPath={Astro.url.pathname} />
+
+    <!-- Early Intercept for PWA Install Prompt -->
+    <script is:inline>
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.deferredPWAInstallPrompt = e;
+      });
+    </script>
 
     <!-- Safe Service Worker Registration -->
     <script is:inline>
