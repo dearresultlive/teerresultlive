@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
 import MobileBottomNav from '../components/MobileBottomNav';
+import { ONESIGNAL_CONFIG } from '../config/onesignal';
 
 interface Props {
   title?: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const { title, description, canonicalUrl, publishDate } = Astro.props;
+const oneSignalAppId = ONESIGNAL_CONFIG.appId;
 ---
 
 <!doctype html>
@@ -36,6 +38,26 @@ const { title, description, canonicalUrl, publishDate } = Astro.props;
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js').catch((err) => {
             console.warn('SW registration skipped:', err);
+          });
+        });
+      }
+    </script>
+
+    <!-- OneSignal Web Push Integration -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script is:inline define:vars={{ oneSignalAppId }}>
+      if (oneSignalAppId && oneSignalAppId.trim()) {
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+          await OneSignal.init({
+            appId: oneSignalAppId.trim(),
+            notifyButton: {
+              enable: true,
+              position: 'bottom-left',
+              size: 'medium',
+              theme: 'default'
+            },
+            allowLocalhostAsSecureOrigin: true
           });
         });
       }
