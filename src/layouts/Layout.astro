@@ -65,14 +65,36 @@ const oneSignalAppId = ONESIGNAL_CONFIG.appId;
         OneSignalDeferred.push(async function(OneSignal) {
           await OneSignal.init({
             appId: oneSignalAppId.trim(),
-            notifyButton: {
-              enable: true,
-              position: 'bottom-left',
-              size: 'medium',
-              theme: 'default'
-            },
-            allowLocalhostAsSecureOrigin: true
+            allowLocalhostAsSecureOrigin: true,
+            slidedown: {
+              prompts: [
+                {
+                  type: 'push',
+                  autoPrompt: true,
+                  text: {
+                    actionMessage: 'Get instant live Teer results (1st & 2nd round) direct on your screen.',
+                    acceptButton: 'Allow Alerts',
+                    cancelButton: 'Later'
+                  },
+                  delay: {
+                    pageViews: 1,
+                    timeDelay: 5
+                  }
+                }
+              ]
+            }
           });
+
+          // Automatically pop up push prompt to user after 5 seconds
+          setTimeout(async () => {
+            try {
+              if (typeof OneSignal.Slidedown?.promptPush === 'function') {
+                await OneSignal.Slidedown.promptPush();
+              }
+            } catch (e) {
+              // Gracefully handle if user already opted in or dismissed
+            }
+          }, 5000);
         });
       }
     </script>

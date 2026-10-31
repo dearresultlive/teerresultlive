@@ -270,44 +270,6 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
             {/* Feature Cards Stack */}
             <div className="space-y-2.5">
 
-              {/* Card: Web Push Notifications (OneSignal) */}
-              <button
-                type="button"
-                onClick={() => {
-                  setDrawerOpen(false);
-                  if (typeof window !== 'undefined' && (window as any).OneSignalDeferred) {
-                    (window as any).OneSignalDeferred.push(async function(OneSignal: any) {
-                      OneSignal.Slidedown.promptPush();
-                    });
-                  } else {
-                    alert('🔔 Push alerts ready! Please allow notifications when prompted by your browser.');
-                  }
-                }}
-                className="w-full text-left group flex items-center justify-between p-3 rounded-2xl border border-amber-200 bg-amber-50/60 hover:bg-amber-100/70 transition-all shadow-2xs active:scale-[0.99] cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-xs shrink-0">
-                    🔔
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-black text-slate-900 text-xs sm:text-sm">
-                        Live Push Notifications
-                      </span>
-                      <span className="bg-amber-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                        INSTANT
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 font-medium line-clamp-1 mt-0.5">
-                      Get instant screen popup when 1st & 2nd round numbers declare
-                    </p>
-                  </div>
-                </div>
-                <span className="text-amber-600 font-black text-base pl-2 group-hover:translate-x-0.5 transition-transform">
-                  ➔
-                </span>
-              </button>
-
               {/* Card 1: 5Y Hit Archive & Digit Frequency */}
               <a
                 href="/previous-results"
