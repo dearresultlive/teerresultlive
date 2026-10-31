@@ -15,6 +15,7 @@ interface Props {
 
 const { title, description, canonicalUrl, publishDate } = Astro.props;
 const oneSignalAppId = ONESIGNAL_CONFIG.appId;
+const oneSignalSafariWebId = ONESIGNAL_CONFIG.safariWebId;
 ---
 
 <!doctype html>
@@ -59,11 +60,11 @@ const oneSignalAppId = ONESIGNAL_CONFIG.appId;
 
     <!-- OneSignal Web Push Integration -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script is:inline define:vars={{ oneSignalAppId }}>
+    <script is:inline define:vars={{ oneSignalAppId, oneSignalSafariWebId }}>
       if (oneSignalAppId && oneSignalAppId.trim()) {
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
-          await OneSignal.init({
+          const initConfig = {
             appId: oneSignalAppId.trim(),
             allowLocalhostAsSecureOrigin: true,
             slidedown: {
@@ -83,7 +84,13 @@ const oneSignalAppId = ONESIGNAL_CONFIG.appId;
                 }
               ]
             }
-          });
+          };
+
+          if (oneSignalSafariWebId && oneSignalSafariWebId.trim()) {
+            initConfig.safari_web_id = oneSignalSafariWebId.trim();
+          }
+
+          await OneSignal.init(initConfig);
 
           // Automatically pop up push prompt to user after 5 seconds
           setTimeout(async () => {
