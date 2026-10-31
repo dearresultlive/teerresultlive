@@ -8,7 +8,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.juwai;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
-const yesterday = archiveData && archiveData.length > 0 ? archiveData[0] : null;
+const yesterday = (archiveData && archiveData.find((item) => item.date < liveData.date)) || (archiveData && archiveData.length > 0 ? archiveData[0] : null);
 const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/') : '';
 ---
 

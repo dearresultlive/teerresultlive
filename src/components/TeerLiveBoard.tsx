@@ -20,9 +20,18 @@ interface TeerData {
 }
 
 export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
-  const yesterday = initialData.yesterday || (archiveData && archiveData.length > 0 ? archiveData[0] : null);
-  const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const [data, setData] = useState<TeerData>(initialData);
+  const yesterday = useMemo(() => {
+    if (data.yesterday && data.yesterday.date !== data.date) {
+      return data.yesterday;
+    }
+    if (archiveData && archiveData.length > 0) {
+      const prior = archiveData.find((item: any) => item.date < data.date);
+      return prior || archiveData[0];
+    }
+    return null;
+  }, [data.date, data.yesterday]);
+  const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const [viewMode, setViewMode] = useState<'today' | 'yesterday'>('today');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');

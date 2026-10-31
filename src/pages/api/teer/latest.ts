@@ -34,7 +34,8 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Clone baseline data from disk
   const result = JSON.parse(JSON.stringify(liveData));
-  result.yesterday = (archiveData && archiveData.length > 0) ? archiveData[0] : null;
+  const priorDay = archiveData?.find((item) => item.date < result.date);
+  result.yesterday = priorDay || ((archiveData && archiveData.length > 0) ? archiveData[0] : null);
 
   try {
     // Multi-tier parallel fetch (Google Apps Script -> Shillong CDN -> Aggregator)
