@@ -460,58 +460,43 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         })}
       </div>
 
-      {/* Official Community Channels (Telegram & WhatsApp Channel) */}
-      <div className="bg-gradient-to-r from-sky-50 via-indigo-50/30 to-emerald-50 border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
+      {/* Official Community Channel (Telegram Only) */}
+      <div className="bg-gradient-to-r from-sky-50 via-indigo-50/30 to-sky-100/50 border border-sky-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🔔</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-xl bg-[#229ED9] text-white flex items-center justify-center text-xl shadow-xs shrink-0">
+              ✈️
+            </div>
             <div>
               <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5">
-                <span>Join Official Alert Communities</span>
-                <span className="bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
-                  FAST
+                <span>Join Official Telegram Alerts Channel</span>
+                <span className="bg-[#229ED9] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                  INSTANT
                 </span>
               </h3>
               <p className="text-[11px] text-slate-600 font-medium">
-                Get 0-second live result notifications &amp; daily target formulas direct to your phone.
+                Instant 0-second live result notifications &amp; daily target formulas direct to your phone.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+        <div>
           {/* Telegram Channel Button */}
           <a
             href={COMMUNITY_LINKS.telegram}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#229ED9] to-[#0088cc] hover:from-[#1b8bc2] hover:to-[#0077b3] text-white font-bold text-xs shadow-xs transition-all active:scale-[0.98] group"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-[#229ED9] to-[#0088cc] hover:from-[#1b8bc2] hover:to-[#0077b3] text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98] group"
           >
             <div className="flex items-center gap-2.5">
               <span className="text-xl">✈️</span>
               <div className="text-left">
-                <span className="block font-black text-xs leading-tight">Join Telegram Channel</span>
-                <span className="block text-[10px] text-sky-100 font-medium leading-tight mt-0.5">Instant 0-Sec Result Alerts &amp; Target Tips</span>
+                <span className="block font-black text-xs sm:text-sm leading-tight">Join Official Telegram Channel</span>
+                <span className="block text-[10px] sm:text-[11px] text-sky-100 font-medium leading-tight mt-0.5">0-Sec Fast Declared Results &amp; Target Formulas</span>
               </div>
             </div>
-            <span className="text-white text-sm font-black pl-2 group-hover:translate-x-1 transition-transform">➔</span>
-          </a>
-
-          {/* WhatsApp Channel Button */}
-          <a
-            href={COMMUNITY_LINKS.whatsappChannel}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7569] text-white font-bold text-xs shadow-xs transition-all active:scale-[0.98] group"
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">📢</span>
-              <div className="text-left">
-                <span className="block font-black text-xs leading-tight">Follow WhatsApp Channel</span>
-                <span className="block text-[10px] text-emerald-100 font-medium leading-tight mt-0.5">Results Direct in Your WhatsApp Updates</span>
-              </div>
-            </div>
-            <span className="text-white text-sm font-black pl-2 group-hover:translate-x-1 transition-transform">➔</span>
+            <span className="text-white text-base font-black pl-2 group-hover:translate-x-1 transition-transform">➔</span>
           </a>
         </div>
       </div>
