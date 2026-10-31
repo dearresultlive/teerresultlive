@@ -161,3 +161,36 @@ export async function fetchAggregatorData(): Promise<Record<string, AggregatorGa
     return null;
   }
 }
+
+// Source 4: Dedicated Shillong Night Teer Direct Feed (nightteer.com)
+export async function fetchNightTeerDirect(): Promise<{ date: string; fr: string; sr: string } | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch('https://nightteer.com', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const dateMatch = text.match(/<h2>\s*(\d{1,2})\/(\d{1,2})\/(\d{4})\s*<\/h2>/i);
+    let date = '';
+    if (dateMatch) {
+      date = dateMatch[3] + '-' + dateMatch[2].padStart(2, '0') + '-' + dateMatch[1].padStart(2, '0');
+    }
+    const rowMatch = text.match(/<tr style="[^"]*background-color:\s*cream[^"]*">\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>/i);
+    if (date && rowMatch) {
+      return {
+        date,
+        fr: cleanNumber(rowMatch[1]),
+        sr: cleanNumber(rowMatch[2])
+      };
+    }
+  } catch (err: any) {
+    // skip
+  }
+  return null;
+}

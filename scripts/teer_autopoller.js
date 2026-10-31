@@ -196,6 +196,36 @@ async function fetchAggregatorData() {
   }
 }
 
+
+// Source 3: Dedicated Shillong Night Teer Direct Feed (nightteer.com)
+async function fetchNightTeerDirect() {
+  try {
+    const res = await fetchWithTimeout('https://nightteer.com', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    }, 6000);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const dateMatch = text.match(/<h2>\s*(\d{1,2})\/(\d{1,2})\/(\d{4})\s*<\/h2>/i);
+    let date = '';
+    if (dateMatch) {
+      date = dateMatch[3] + '-' + dateMatch[2].padStart(2, '0') + '-' + dateMatch[1].padStart(2, '0');
+    }
+    const rowMatch = text.match(/<tr style="[^"]*background-color:\s*cream[^"]*">\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>/i);
+    if (date && rowMatch) {
+      return {
+        date,
+        fr: cleanNumber(rowMatch[1]),
+        sr: cleanNumber(rowMatch[2])
+      };
+    }
+  } catch (err) {
+    console.warn('[Night Poller] Direct night teer fetch skipped:', err.message);
+  }
+  return null;
+}
+
 export async function runPoller() {
   const istNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   console.log(`[${istNow} IST] Starting Teer auto-poller...`);
@@ -219,10 +249,11 @@ export async function runPoller() {
   let updated = false;
 
   // 1. Fetch remote data sources (GAS -> Shillong CDN -> Aggregator)
-  const [gasData, shillongCDN, aggregatorData] = await Promise.all([
+  const [gasData, shillongCDN, aggregatorData, nightDirect] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
-    fetchAggregatorData()
+    fetchAggregatorData(),
+    fetchNightTeerDirect()
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -350,6 +381,13 @@ export async function runPoller() {
     if (key === 'shillong' && shillongCDN && shillongCDN.date === liveData.date) {
       if (shillongCDN.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) targetFR = shillongCDN.fr;
       if (shillongCDN.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) targetSR = shillongCDN.sr;
+    }
+
+
+    // Check Dedicated Night Teer Direct Feed
+    if (key === 'night' && nightDirect && nightDirect.date === liveData.date) {
+      if (nightDirect.fr !== 'xx' && isRoundWindowOpen('night', 'fr')) targetFR = nightDirect.fr;
+      if (nightDirect.sr !== 'xx' && isRoundWindowOpen('night', 'sr')) targetSR = nightDirect.sr;
     }
 
     // Physical safeguard: Only prevent premature updates for today's upcoming rounds

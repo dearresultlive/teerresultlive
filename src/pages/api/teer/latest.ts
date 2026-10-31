@@ -5,6 +5,7 @@ import {
   fetchFromGoogleAppsScript,
   fetchShillongCDN,
   fetchAggregatorData,
+  fetchNightTeerDirect,
   isRoundWindowOpen
 } from '../../../utils/liveTeerFetcher';
 
@@ -39,10 +40,11 @@ export const GET: APIRoute = async ({ request }) => {
 
   try {
     // Multi-tier parallel fetch (Google Apps Script -> Shillong CDN -> Aggregator)
-    const [gasData, shillongCDN, aggregator] = await Promise.all([
+    const [gasData, shillongCDN, aggregator, nightDirect] = await Promise.all([
       fetchFromGoogleAppsScript(),
       fetchShillongCDN(),
-      fetchAggregatorData()
+      fetchAggregatorData(),
+      fetchNightTeerDirect()
     ]);
 
     // 1. Apply Google Apps Script Data (Highest reliability, Google Datacenter IP)
@@ -88,6 +90,17 @@ export const GET: APIRoute = async ({ request }) => {
             result.games[key].sr = agg.previous.sr;
           }
         }
+      }
+    }
+
+
+    // 4. Fallback / Augment Shillong Night Teer from Dedicated Direct Feed
+    if (nightDirect && nightDirect.date === result.date) {
+      if (result.games.night.fr === 'xx' && nightDirect.fr !== 'xx' && isRoundWindowOpen('night', 'fr')) {
+        result.games.night.fr = nightDirect.fr;
+      }
+      if (result.games.night.sr === 'xx' && nightDirect.sr !== 'xx' && isRoundWindowOpen('night', 'sr')) {
+        result.games.night.sr = nightDirect.sr;
       }
     }
 
