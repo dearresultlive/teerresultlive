@@ -209,9 +209,16 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   // 1-Click WhatsApp Share Generator
   const shareOnWhatsApp = (targetGameKey?: string) => {
     const isYesterday = viewMode === 'yesterday';
-    let shareText = isYesterday
-      ? `🎯 *TEER RESULT (YESTERDAY - ${displayedDate})*\n`
-      : `🎯 *TEER RESULT TODAY LIVE (${displayedDate})*\n`;
+    let shareText = '';
+    if (isSunday) {
+      shareText = isYesterday
+        ? `🎯 *TEER RESULT (PREVIOUS ARCHIVE - ${displayedDate})*\n`
+        : `🎯 *TEER RESULT (LATEST OFFICIAL - ${displayedDate})*\n`;
+    } else {
+      shareText = isYesterday
+        ? `🎯 *TEER RESULT (YESTERDAY - ${displayedDate})*\n`
+        : `🎯 *TEER RESULT TODAY LIVE (${displayedDate})*\n`;
+    }
 
     const activeGames = displayedGames;
 
@@ -249,9 +256,16 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
   const copyResults = () => {
     const isYesterday = viewMode === 'yesterday';
-    let text = isYesterday
-      ? `🎯 TEER RESULT (YESTERDAY - ${displayedDate})\n`
-      : `🎯 TEER RESULT LIVE (${displayedDate})\n`;
+    let text = '';
+    if (isSunday) {
+      text = isYesterday
+        ? `🎯 TEER RESULT (PREVIOUS ARCHIVE - ${displayedDate})\n`
+        : `🎯 TEER RESULT (LATEST OFFICIAL - ${displayedDate})\n`;
+    } else {
+      text = isYesterday
+        ? `🎯 TEER RESULT (YESTERDAY - ${displayedDate})\n`
+        : `🎯 TEER RESULT LIVE (${displayedDate})\n`;
+    }
     const activeGames = displayedGames;
     for (const { key, title } of games) {
       const g = activeGames[key];
@@ -287,7 +301,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${viewMode === 'today' ? 'bg-emerald-300 animate-pulse' : 'bg-slate-400'}`}></span>
-              <span>Today</span>
+              <span>{isSunday ? '🎯 Latest Result' : 'Today'}</span>
             </button>
 
             <button
@@ -300,7 +314,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
               }`}
             >
               <span>⏮️</span>
-              <span>Yesterday</span>
+              <span>{isSunday ? 'Previous' : 'Yesterday'}</span>
             </button>
           </div>
 
@@ -340,11 +354,11 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             </span>
             {viewMode === 'today' ? (
               <span className="text-emerald-700 text-[10px] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-black">
-                {isSunday ? '🏖️ SUNDAY HOLIDAY • LATEST RESULTS' : '⚡ LIVE SESSION'}
+                {isSunday ? '🏖️ SUNDAY HOLIDAY • LATEST OFFICIAL RESULT' : '⚡ LIVE SESSION'}
               </span>
             ) : (
               <span className="text-slate-700 text-[10px] bg-slate-100 border border-slate-300 px-2 py-0.5 rounded font-black">
-                🏛️ YESTERDAY ARCHIVE
+                {isSunday ? '🏛️ PREVIOUS DAY ARCHIVE' : '🏛️ YESTERDAY ARCHIVE'}
               </span>
             )}
           </div>
