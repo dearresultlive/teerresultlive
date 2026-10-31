@@ -331,7 +331,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             </span>
             {viewMode === 'today' ? (
               <span className="text-emerald-700 text-[10px] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-black">
-                ⚡ LIVE SESSION
+                {isSunday ? '🏖️ SUNDAY HOLIDAY • LATEST RESULTS' : '⚡ LIVE SESSION'}
               </span>
             ) : (
               <span className="text-slate-700 text-[10px] bg-slate-100 border border-slate-300 px-2 py-0.5 rounded font-black">
@@ -378,7 +378,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
           const isDeclared = game.fr !== 'xx' && game.sr !== 'xx';
           const isFrDeclared = game.fr !== 'xx' && game.sr === 'xx';
-          const isSundayOff = game.status === 'SUNDAY OFF';
+          const isSundayOff = game.status === 'SUNDAY OFF' && !isDeclared && !isFrDeclared;
 
           return (
             <div
@@ -421,7 +421,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                       ? 'bg-amber-50 text-amber-800 border-amber-300'
                       : 'bg-slate-50 text-slate-700 border-slate-300'
                   }`}>
-                    {isSundayOff ? 'SUNDAY OFF' : game.status}
+                    {isDeclared ? (isSunday ? 'OFFICIAL RESULT' : 'DECLARED') : (isSundayOff ? 'SUNDAY OFF' : game.status)}
                   </span>
                 </div>
               </div>

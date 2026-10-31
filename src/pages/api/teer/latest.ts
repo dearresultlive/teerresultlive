@@ -96,12 +96,12 @@ export const GET: APIRoute = async ({ request }) => {
 
     for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
       const g = result.games[key];
-      if (isSunday) {
-        g.status = 'SUNDAY OFF';
-      } else if (g.fr !== 'xx' && g.sr !== 'xx') {
+      if (g.fr !== 'xx' && g.sr !== 'xx') {
         g.status = 'DECLARED';
       } else if (g.fr !== 'xx') {
         g.status = 'FR DECLARED';
+      } else if (isSunday) {
+        g.status = 'SUNDAY OFF';
       } else {
         g.status = 'UPCOMING';
       }

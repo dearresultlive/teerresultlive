@@ -229,7 +229,13 @@ export async function runPoller() {
   // Day rollover only occurs after 7:00 AM IST (morning rollover)
   // This preserves Night Teer and yesterday's results through late-night hours (11 PM - 6:59 AM)
   const currentISTHour = getISTHour();
-  const isMorningRolloverTime = currentISTHour >= 7;
+  const istDateObj = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  const isSunday = istDateObj.getDay() === 0;
+
+  // Morning rollover occurs only at 9:00 AM IST on shooting days (Monday to Saturday)
+  // On Sunday, archery grounds are closed under KHASA rules.
+  // We keep Saturday's verified results active all day Sunday so visitors can see the latest numbers!
+  const isMorningRolloverTime = currentISTHour >= 9 && !isSunday;
 
   if (liveData.date !== todayIST && isMorningRolloverTime) {
     console.log(`[Day Rollover] Current data date (${liveData.date}) is not today (${todayIST}). Archiving...`);
@@ -346,9 +352,12 @@ export async function runPoller() {
       if (shillongCDN.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) targetSR = shillongCDN.sr;
     }
 
-    // Physical safeguard: Enforce xx if the round shooting window is not yet open
-    if (!isRoundWindowOpen(key, 'fr')) targetFR = 'xx';
-    if (!isRoundWindowOpen(key, 'sr')) targetSR = 'xx';
+    // Physical safeguard: Only prevent premature updates for today's upcoming rounds
+    // NEVER overwrite or delete an already-declared confirmed number!
+    if (liveData.date === todayIST) {
+      if (game.fr === 'xx' && !isRoundWindowOpen(key, 'fr')) targetFR = 'xx';
+      if (game.sr === 'xx' && !isRoundWindowOpen(key, 'sr')) targetSR = 'xx';
+    }
 
     // Update game status
     let status = 'UPCOMING';
@@ -356,7 +365,7 @@ export async function runPoller() {
       status = 'DECLARED';
     } else if (targetFR !== 'xx') {
       status = 'FR DECLARED';
-    } else if (aggregatorData && aggregatorData[key]?.isOffDay) {
+    } else if (isSunday || (aggregatorData && aggregatorData[key]?.isOffDay)) {
       status = 'SUNDAY OFF';
     }
 
