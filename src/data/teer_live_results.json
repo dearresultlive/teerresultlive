@@ -1,15 +1,15 @@
 {
   "date": "2026-11-02",
-  "updated_at": "2026-11-02T10:23:27.569Z",
+  "updated_at": "2026-11-02T13:07:56.214Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
       "fr": "73",
-      "sr": "xx",
+      "sr": "70",
       "common_numbers": {
         "direct": [
           "20",
@@ -34,11 +34,11 @@
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "30",
+      "sr": "81",
       "common_numbers": {
         "direct": [
           "64",
