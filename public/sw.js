@@ -3,13 +3,6 @@
  * Ensures offline shell caching and fast response times
  */
 
-// OneSignal Push Notification Integration
-try {
-  importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
-} catch (e) {
-  // Offline or OneSignal script error
-}
-
 const CACHE_NAME = 'teer-cache-v1';
 const STATIC_ASSETS = [
   '/',

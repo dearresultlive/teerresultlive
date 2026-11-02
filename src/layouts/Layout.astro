@@ -4,7 +4,6 @@ import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
 import MobileBottomNav from '../components/MobileBottomNav';
 import PWAInstallBanner from '../components/PWAInstallBanner';
-import { ONESIGNAL_CONFIG } from '../config/onesignal';
 
 interface Props {
   title?: string;
@@ -14,8 +13,6 @@ interface Props {
 }
 
 const { title, description, canonicalUrl, publishDate } = Astro.props;
-const oneSignalAppId = ONESIGNAL_CONFIG.appId;
-const oneSignalSafariWebId = ONESIGNAL_CONFIG.safariWebId;
 ---
 
 <!doctype html>
@@ -54,54 +51,6 @@ const oneSignalSafariWebId = ONESIGNAL_CONFIG.safariWebId;
           navigator.serviceWorker.register('/sw.js').catch((err) => {
             console.warn('SW registration skipped:', err);
           });
-        });
-      }
-    </script>
-
-    <!-- OneSignal Web Push Integration -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script is:inline define:vars={{ oneSignalAppId, oneSignalSafariWebId }}>
-      if (oneSignalAppId && oneSignalAppId.trim()) {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function(OneSignal) {
-          const initConfig = {
-            appId: oneSignalAppId.trim(),
-            allowLocalhostAsSecureOrigin: true,
-            slidedown: {
-              prompts: [
-                {
-                  type: 'push',
-                  autoPrompt: true,
-                  text: {
-                    actionMessage: 'Get instant live Teer results (1st & 2nd round) direct on your screen.',
-                    acceptButton: 'Allow Alerts',
-                    cancelButton: 'Later'
-                  },
-                  delay: {
-                    pageViews: 1,
-                    timeDelay: 5
-                  }
-                }
-              ]
-            }
-          };
-
-          if (oneSignalSafariWebId && oneSignalSafariWebId.trim()) {
-            initConfig.safari_web_id = oneSignalSafariWebId.trim();
-          }
-
-          await OneSignal.init(initConfig);
-
-          // Automatically pop up push prompt to user after 5 seconds
-          setTimeout(async () => {
-            try {
-              if (typeof OneSignal.Slidedown?.promptPush === 'function') {
-                await OneSignal.Slidedown.promptPush();
-              }
-            } catch (e) {
-              // Gracefully handle if user already opted in or dismissed
-            }
-          }, 5000);
         });
       }
     </script>
