@@ -45,6 +45,48 @@ function checkIsDrawing(gameKey: string, round: 'fr' | 'sr', value: string, nowM
   }
 }
 
+const ALL_GAMES_METADATA: Record<string, { title: string }> = {
+  shillong: { title: 'SHILLONG TEER' },
+  khanapara: { title: 'KHANAPARA TEER' },
+  juwai: { title: 'JUWAI TEER' },
+  night: { title: 'NIGHT TEER' }
+};
+
+function getDynamicGameOrder(nowMin: number, viewMode: 'today' | 'yesterday', isSunday: boolean): string[] {
+  // If viewing yesterday or Sunday holiday, keep standard canonical order
+  if (viewMode === 'yesterday' || isSunday) {
+    return ['shillong', 'khanapara', 'juwai', 'night'];
+  }
+
+  // 1:15 PM to 3:15 PM: Juwai Teer Live Window (Draws at 1:45 PM & 2:30 PM)
+  if (nowMin >= 13 * 60 + 15 && nowMin < 15 * 60 + 15) {
+    return ['juwai', 'shillong', 'khanapara', 'night'];
+  }
+
+  // 3:15 PM to 4:00 PM: Shillong 1st Round Mega-Peak (Draws at 3:45 PM)
+  if (nowMin >= 15 * 60 + 15 && nowMin < 16 * 60) {
+    return ['shillong', 'khanapara', 'juwai', 'night'];
+  }
+
+  // 4:00 PM to 4:35 PM: Khanapara Active Window (Draws at 4:00 PM & 4:30 PM)
+  if (nowMin >= 16 * 60 && nowMin < 16 * 60 + 35) {
+    return ['khanapara', 'shillong', 'juwai', 'night'];
+  }
+
+  // 4:35 PM to 5:30 PM: Shillong 2nd Round Peak (Draws at 4:45 PM)
+  if (nowMin >= 16 * 60 + 35 && nowMin < 17 * 60 + 30) {
+    return ['shillong', 'khanapara', 'juwai', 'night'];
+  }
+
+  // 9:30 PM onwards to 1:00 AM (or early morning before 6:00 AM): Night Teer Window (10:30 PM & 11:30 PM)
+  if (nowMin >= 21 * 60 + 30 || nowMin < 6 * 60) {
+    return ['night', 'shillong', 'khanapara', 'juwai'];
+  }
+
+  // Default Daytime (Morning 6:00 AM to 1:15 PM & Evening 5:30 PM to 9:30 PM): Flagship Shillong first
+  return ['shillong', 'khanapara', 'juwai', 'night'];
+}
+
 interface GameResult {
   name: string;
   location: string;
@@ -174,12 +216,15 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     }
   };
 
-  const games = [
-    { key: 'shillong', title: 'SHILLONG TEER', highlight: true },
-    { key: 'khanapara', title: 'KHANAPARA TEER', highlight: false },
-    { key: 'juwai', title: 'JUWAI TEER', highlight: false },
-    { key: 'night', title: 'NIGHT TEER', highlight: false }
-  ];
+  // Smart Time-Based Auto-Reordering (Active live game automatically sits at Card #1)
+  const games = useMemo(() => {
+    const order = getDynamicGameOrder(currentISTMinutes, viewMode, isSunday);
+    return order.map((key, idx) => ({
+      key,
+      title: ALL_GAMES_METADATA[key]?.title || key.toUpperCase(),
+      highlight: idx === 0 && viewMode === 'today'
+    }));
+  }, [currentISTMinutes, viewMode, isSunday]);
 
   // 1. Initial Mount: Restore from localStorage cache & trigger immediate live sync
   useEffect(() => {
