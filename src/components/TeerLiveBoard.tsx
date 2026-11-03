@@ -511,7 +511,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                     💬
                   </button>
 
-                  <span className={`text-[10px] font-black tracking-wider uppercase px-2.5 py-0.5 rounded-full border ${
+                  <span className={`text-[9px] sm:text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-full border whitespace-nowrap ${
                     isDeclared
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                       : isAnyDrawing
@@ -527,7 +527,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                     ) : isAnyDrawing ? (
                       <>
                         <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
-                        <span>LIVE AT GROUND</span>
+                        <span>LIVE DRAW</span>
                       </>
                     ) : isFrDeclared ? (
                       '1ST ROUND OUT'
@@ -541,37 +541,36 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
               </div>
 
               {/* 2 Rounds (FR & SR) Display */}
-              <div className="grid grid-cols-2 gap-2.5 text-center">
+              <div className="grid grid-cols-2 gap-2 text-center">
                 
                 {/* First Round (FR) */}
-                <div className={`rounded-xl p-3 shadow-2xs transition-all relative overflow-hidden flex flex-col justify-between ${
+                <div className={`rounded-xl p-2.5 sm:p-3 shadow-2xs transition-all relative overflow-hidden flex flex-col justify-between ${
                   isFrDrawing
                     ? 'bg-gradient-to-b from-amber-50/90 to-amber-100/60 border-2 border-amber-400 ring-2 ring-amber-400/20'
                     : 'bg-amber-50/40 border border-amber-200/70'
                 }`}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase text-amber-900 block tracking-wider">
-                      1st Round ({game.fr_time})
+                  <div className="flex items-center justify-center gap-1 text-center">
+                    <span className="text-[10px] sm:text-[11px] font-black uppercase text-amber-900 tracking-wider truncate">
+                      1st ({game.fr_time})
                     </span>
                     {isFrDrawing && (
-                      <span className="inline-flex items-center gap-1 text-[9px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 animate-pulse">
-                        <span className="w-1 h-1 rounded-full bg-rose-500 animate-ping"></span>
-                        LIVE
-                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping shrink-0" title="Live Draw Active"></span>
                     )}
                   </div>
 
                   {isFrDrawing ? (
-                    <div className="my-1.5 flex flex-col items-center justify-center">
-                      <div className="flex items-center gap-1.5 text-amber-600">
-                        <span className="text-xl sm:text-2xl font-black font-mono tracking-widest animate-pulse">
-                          🏹 COUNTING...
+                    <div className="my-1 flex flex-col items-center justify-center">
+                      <div className="flex items-center justify-center gap-1 py-0.5">
+                        <span className="text-3xl sm:text-4xl font-mono font-black tracking-wider animate-pulse text-amber-600">
+                          ??
                         </span>
                       </div>
-                      <span className="text-[10px] text-amber-800 font-bold mt-1 flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Ground Feed Active
-                      </span>
+                      <div className="inline-flex items-center gap-1 bg-amber-500/15 border border-amber-300/80 px-1.5 sm:px-2 py-0.5 rounded-full mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                        <span className="text-[9px] sm:text-[10px] font-black text-amber-900 uppercase tracking-tight whitespace-nowrap">
+                          🏹 Counting
+                        </span>
+                      </div>
                     </div>
                   ) : (
                     <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
@@ -583,34 +582,33 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 </div>
 
                 {/* Second Round (SR) */}
-                <div className={`rounded-xl p-3 shadow-2xs transition-all relative overflow-hidden flex flex-col justify-between ${
+                <div className={`rounded-xl p-2.5 sm:p-3 shadow-2xs transition-all relative overflow-hidden flex flex-col justify-between ${
                   isSrDrawing
                     ? 'bg-gradient-to-b from-emerald-50/90 to-emerald-100/60 border-2 border-emerald-400 ring-2 ring-emerald-400/20'
                     : 'bg-emerald-50/40 border border-emerald-200/70'
                 }`}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase text-emerald-900 block tracking-wider">
-                      2nd Round ({game.sr_time})
+                  <div className="flex items-center justify-center gap-1 text-center">
+                    <span className="text-[10px] sm:text-[11px] font-black uppercase text-emerald-900 tracking-wider truncate">
+                      2nd ({game.sr_time})
                     </span>
                     {isSrDrawing && (
-                      <span className="inline-flex items-center gap-1 text-[9px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 animate-pulse">
-                        <span className="w-1 h-1 rounded-full bg-rose-500 animate-ping"></span>
-                        LIVE
-                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping shrink-0" title="Live Draw Active"></span>
                     )}
                   </div>
 
                   {isSrDrawing ? (
-                    <div className="my-1.5 flex flex-col items-center justify-center">
-                      <div className="flex items-center gap-1.5 text-emerald-600">
-                        <span className="text-xl sm:text-2xl font-black font-mono tracking-widest animate-pulse">
-                          🏹 COUNTING...
+                    <div className="my-1 flex flex-col items-center justify-center">
+                      <div className="flex items-center justify-center gap-1 py-0.5">
+                        <span className="text-3xl sm:text-4xl font-mono font-black tracking-wider animate-pulse text-emerald-600">
+                          ??
                         </span>
                       </div>
-                      <span className="text-[10px] text-emerald-800 font-bold mt-1 flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Ground Feed Active
-                      </span>
+                      <div className="inline-flex items-center gap-1 bg-emerald-500/15 border border-emerald-300/80 px-1.5 sm:px-2 py-0.5 rounded-full mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                        <span className="text-[9px] sm:text-[10px] font-black text-emerald-900 uppercase tracking-tight whitespace-nowrap">
+                          🏹 Counting
+                        </span>
+                      </div>
                     </div>
                   ) : (
                     <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
