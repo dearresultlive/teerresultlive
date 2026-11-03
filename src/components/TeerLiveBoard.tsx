@@ -391,7 +391,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     <div className="space-y-3">
       
       {/* Top Status & Date Bar + Today/Yesterday Segmented Toggle (All 4 in ONE line) */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:p-3 shadow-xs space-y-2.5">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-2 sm:p-3 shadow-xs space-y-2.5">
         <div className="flex items-center justify-between gap-1 sm:gap-2 flex-nowrap">
           
           {/* Today / Yesterday Toggle Pills */}
@@ -418,8 +418,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span className="text-[10px] sm:text-xs">⏮️</span>
-              <span>{isSunday ? 'Prev' : 'Yesterday'}</span>
+              <span>{isSunday ? 'Previous' : 'Yesterday'}</span>
             </button>
           </div>
 
