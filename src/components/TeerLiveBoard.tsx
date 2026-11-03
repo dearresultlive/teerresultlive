@@ -390,49 +390,50 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   return (
     <div className="space-y-3">
       
-      {/* Top Status & Date Bar + Today/Yesterday Segmented Toggle (KeralaLive Style) */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs space-y-2.5">
-        <div className="flex items-center justify-between gap-2 flex-wrap">
+      {/* Top Status & Date Bar + Today/Yesterday Segmented Toggle (All 4 in ONE line) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:p-3 shadow-xs space-y-2.5">
+        <div className="flex items-center justify-between gap-1 sm:gap-2 flex-nowrap">
           
-          {/* Today / Yesterday Toggle Pills (KeralaLive Style) */}
-          <div className="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 shadow-2xs">
+          {/* Today / Yesterday Toggle Pills */}
+          <div className="inline-flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200/80 shadow-2xs shrink-0">
             <button
               type="button"
               onClick={() => setViewMode('today')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
                 viewMode === 'today'
                   ? 'bg-amber-500 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${viewMode === 'today' ? 'bg-emerald-300 animate-pulse' : 'bg-slate-400'}`}></span>
-              <span>{isSunday ? '🎯 Latest Result' : 'Today'}</span>
+              <span>{isSunday ? '🎯 Latest' : 'Today'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => setViewMode('yesterday')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
                 viewMode === 'yesterday'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span>⏮️</span>
-              <span>{isSunday ? 'Previous' : 'Yesterday'}</span>
+              <span className="text-[10px] sm:text-xs">⏮️</span>
+              <span>{isSunday ? 'Prev' : 'Yesterday'}</span>
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
+          {/* Action Buttons: Share & Refresh */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* WhatsApp Direct Share Button */}
             <button
               type="button"
               onClick={() => shareOnWhatsApp()}
-              className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-lg font-black text-xs transition-all shadow-xs cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all shadow-xs cursor-pointer active:scale-95"
               title="Share Live Results on WhatsApp"
             >
               <WhatsAppIcon className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[11px] font-black">Share</span>
+              <span>Share</span>
             </button>
 
             {/* Refresh Button (only active for today) */}
@@ -441,11 +442,11 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 type="button"
                 onClick={() => fetchLatest(true)}
                 disabled={isRefreshing}
-                className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-black text-white px-2.5 py-1.5 rounded-lg font-black text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-slate-800 active:scale-95"
+                className="inline-flex items-center gap-1 bg-slate-900 hover:bg-black text-white px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-slate-800 active:scale-95"
                 title="Refresh Live Results"
               >
                 <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${isRefreshing ? 'animate-spin text-emerald-400' : 'text-slate-200'}`} />
-                <span className="text-[11px] font-black">{isRefreshing ? 'Checking...' : 'Refresh'}</span>
+                <span>{isRefreshing ? 'Checking...' : 'Refresh'}</span>
               </button>
             )}
           </div>
