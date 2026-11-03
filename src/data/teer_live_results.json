@@ -1,6 +1,6 @@
 {
   "date": "2026-11-03",
-  "updated_at": "2026-11-03T17:37:01.157Z",
+  "updated_at": "2026-11-03T18:23:03.793Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -92,11 +92,11 @@
     "night": {
       "name": "Shillong Night Teer",
       "location": "Shillong Club Night Archery Ground",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "10:30 PM",
       "sr_time": "11:30 PM",
-      "fr": "15",
-      "sr": "xx",
+      "fr": "02",
+      "sr": "72",
       "common_numbers": {
         "direct": [
           "21",
