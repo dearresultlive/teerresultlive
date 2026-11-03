@@ -561,14 +561,17 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   {isFrDrawing ? (
                     <div className="my-1 flex flex-col items-center justify-center">
                       <div className="flex items-center justify-center gap-1 py-0.5">
-                        <span className="text-3xl sm:text-4xl font-mono font-black tracking-wider animate-pulse text-amber-600">
-                          ??
+                        <span className="relative flex items-center justify-center">
+                          <span className="text-3xl sm:text-4xl inline-block transform -rotate-45 animate-pulse select-none" aria-hidden="true">
+                            🏹
+                          </span>
+                          <span className="absolute -inset-1 rounded-full bg-amber-400/20 animate-ping opacity-60"></span>
                         </span>
                       </div>
-                      <div className="inline-flex items-center gap-1 bg-amber-500/15 border border-amber-300/80 px-1.5 sm:px-2 py-0.5 rounded-full mt-0.5">
+                      <div className="inline-flex items-center gap-1 bg-amber-500/15 border border-amber-300/80 px-2 py-0.5 rounded-full mt-0.5 shadow-2xs">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                         <span className="text-[9px] sm:text-[10px] font-black text-amber-900 uppercase tracking-tight whitespace-nowrap">
-                          🏹 Counting
+                          Counting Arrows
                         </span>
                       </div>
                     </div>
@@ -599,14 +602,17 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   {isSrDrawing ? (
                     <div className="my-1 flex flex-col items-center justify-center">
                       <div className="flex items-center justify-center gap-1 py-0.5">
-                        <span className="text-3xl sm:text-4xl font-mono font-black tracking-wider animate-pulse text-emerald-600">
-                          ??
+                        <span className="relative flex items-center justify-center">
+                          <span className="text-3xl sm:text-4xl inline-block transform -rotate-45 animate-pulse select-none" aria-hidden="true">
+                            🏹
+                          </span>
+                          <span className="absolute -inset-1 rounded-full bg-emerald-400/20 animate-ping opacity-60"></span>
                         </span>
                       </div>
-                      <div className="inline-flex items-center gap-1 bg-emerald-500/15 border border-emerald-300/80 px-1.5 sm:px-2 py-0.5 rounded-full mt-0.5">
+                      <div className="inline-flex items-center gap-1 bg-emerald-500/15 border border-emerald-300/80 px-2 py-0.5 rounded-full mt-0.5 shadow-2xs">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                         <span className="text-[9px] sm:text-[10px] font-black text-emerald-900 uppercase tracking-tight whitespace-nowrap">
-                          🏹 Counting
+                          Counting Arrows
                         </span>
                       </div>
                     </div>
