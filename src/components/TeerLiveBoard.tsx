@@ -422,13 +422,13 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             </button>
           </div>
 
-          {/* Action Buttons: Share & Refresh */}
-          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+          {/* Action Buttons: Share & Refresh (Google-compliant 8px tap-target gap) */}
+          <div className="flex items-center gap-2 shrink-0">
             {/* WhatsApp Direct Share Button (Icon-only on mobile for optimal single-row spacing) */}
             <button
               type="button"
               onClick={() => shareOnWhatsApp()}
-              className="inline-flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
+              className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white p-2 sm:px-2.5 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
               title="Share Live Results on WhatsApp"
               aria-label="Share on WhatsApp"
             >
@@ -442,7 +442,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 type="button"
                 onClick={() => fetchLatest(true)}
                 disabled={isRefreshing}
-                className="inline-flex items-center gap-1 bg-slate-900 hover:bg-black text-white px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-slate-800 active:scale-95"
+                className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-black text-white px-2.5 py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-slate-800 active:scale-95"
                 title="Refresh Live Results"
               >
                 <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${isRefreshing ? 'animate-spin text-emerald-400' : 'text-slate-200'}`} />
