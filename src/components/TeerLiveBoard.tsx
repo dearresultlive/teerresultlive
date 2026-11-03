@@ -424,15 +424,16 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
           {/* Action Buttons: Share & Refresh */}
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {/* WhatsApp Direct Share Button */}
+            {/* WhatsApp Direct Share Button (Icon-only on mobile for optimal single-row spacing) */}
             <button
               type="button"
               onClick={() => shareOnWhatsApp()}
-              className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all shadow-xs cursor-pointer active:scale-95"
+              className="inline-flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
               title="Share Live Results on WhatsApp"
+              aria-label="Share on WhatsApp"
             >
               <WhatsAppIcon className="w-3.5 h-3.5 shrink-0" />
-              <span>Share</span>
+              <span className="hidden sm:inline">Share</span>
             </button>
 
             {/* Refresh Button (only active for today) */}
