@@ -1,6 +1,49 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { COMMUNITY_LINKS } from '../config/community';
 import archiveData from '../data/previous_teer_archive.json';
+import { getISTCurrentMinutes } from '../utils/liveTeerFetcher';
+
+const GAME_SCHEDULE: Record<string, { frStart: number; srStart: number }> = {
+  juwai: {
+    frStart: 13 * 60 + 45, // 1:45 PM
+    srStart: 14 * 60 + 30  // 2:30 PM
+  },
+  shillong: {
+    frStart: 15 * 60 + 45, // 3:45 PM
+    srStart: 16 * 60 + 45  // 4:45 PM
+  },
+  khanapara: {
+    frStart: 16 * 60 + 0,  // 4:00 PM
+    srStart: 16 * 60 + 30  // 4:30 PM
+  },
+  night: {
+    frStart: 22 * 60 + 30, // 10:30 PM
+    srStart: 23 * 60 + 30  // 11:30 PM
+  }
+};
+
+function checkIsDrawing(gameKey: string, round: 'fr' | 'sr', value: string, nowMin: number, isToday: boolean, isSunday: boolean): boolean {
+  if (!isToday || isSunday || !value || value.toLowerCase() !== 'xx') {
+    return false;
+  }
+  const sched = GAME_SCHEDULE[gameKey];
+  if (!sched) return false;
+
+  if (gameKey === 'night') {
+    if (round === 'fr') {
+      return (nowMin >= sched.frStart || nowMin < 1 * 60);
+    } else {
+      return (nowMin >= sched.srStart || nowMin < 1 * 60 + 30);
+    }
+  }
+
+  // Daytime teer games (Juwai, Shillong, Khanapara)
+  if (round === 'fr') {
+    return nowMin >= sched.frStart && nowMin <= 18 * 60;
+  } else {
+    return nowMin >= sched.srStart && nowMin <= 18 * 60 + 30;
+  }
+}
 
 interface GameResult {
   name: string;
@@ -36,6 +79,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [currentISTMinutes, setCurrentISTMinutes] = useState<number>(() => getISTCurrentMinutes());
 
   // Check URL hash/params on mount for direct tab navigation (e.g., /#yesterday)
   useEffect(() => {
@@ -125,6 +169,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       console.warn('Auto-refresh failed, retrying on next tick');
     } finally {
       setIsRefreshing(false);
+      setCurrentISTMinutes(getISTCurrentMinutes());
       setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
     }
   };
@@ -353,8 +398,33 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
               Date: {displayedDate}
             </span>
             {viewMode === 'today' ? (
-              <span className="text-emerald-700 text-[10px] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-black">
-                {isSunday ? '🏖️ SUNDAY HOLIDAY • LATEST OFFICIAL RESULT' : '⚡ LIVE SESSION'}
+              <span className={`text-[10px] px-2.5 py-0.5 rounded font-black border flex items-center gap-1.5 shadow-2xs ${
+                games.some(({ key }) => {
+                  const g = displayedGames[key];
+                  return g && (
+                    checkIsDrawing(key, 'fr', g.fr, currentISTMinutes, true, isSunday) ||
+                    checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, true, isSunday)
+                  );
+                })
+                  ? 'bg-rose-50 text-rose-700 border-rose-300 animate-pulse'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              }`}>
+                {isSunday ? (
+                  '🏖️ SUNDAY HOLIDAY • LATEST OFFICIAL RESULT'
+                ) : games.some(({ key }) => {
+                  const g = displayedGames[key];
+                  return g && (
+                    checkIsDrawing(key, 'fr', g.fr, currentISTMinutes, true, isSunday) ||
+                    checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, true, isSunday)
+                  );
+                }) ? (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
+                    <span>🏹 LIVE SHOOTING & COUNTING ACTIVE</span>
+                  </>
+                ) : (
+                  '⚡ LIVE SESSION'
+                )}
               </span>
             ) : (
               <span className="text-slate-700 text-[10px] bg-slate-100 border border-slate-300 px-2 py-0.5 rounded font-black">
@@ -403,11 +473,17 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           const isFrDeclared = game.fr !== 'xx' && game.sr === 'xx';
           const isSundayOff = game.status === 'SUNDAY OFF' && !isDeclared && !isFrDeclared;
 
+          const isFrDrawing = checkIsDrawing(key, 'fr', game.fr, currentISTMinutes, viewMode === 'today', isSunday);
+          const isSrDrawing = checkIsDrawing(key, 'sr', game.sr, currentISTMinutes, viewMode === 'today', isSunday);
+          const isAnyDrawing = (isFrDrawing || isSrDrawing) && viewMode === 'today' && !isSunday;
+
           return (
             <div
               key={key}
               className={`rounded-2xl p-4 transition-all relative overflow-hidden bg-white shadow-xs ${
-                highlight && viewMode === 'today'
+                isAnyDrawing
+                  ? 'border-2 border-rose-400 ring-4 ring-rose-500/10 shadow-md'
+                  : highlight && viewMode === 'today'
                   ? 'border-2 border-amber-400 ring-4 ring-amber-500/10 shadow-sm'
                   : 'border border-slate-200/90'
               }`}
@@ -435,16 +511,31 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                     💬
                   </button>
 
-                  <span className={`text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-full border ${
+                  <span className={`text-[10px] font-black tracking-wider uppercase px-2.5 py-0.5 rounded-full border ${
                     isDeclared
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                      : isAnyDrawing
+                      ? 'bg-rose-50 text-rose-700 border-rose-300 flex items-center gap-1 shadow-2xs'
                       : isFrDeclared
                       ? 'bg-blue-50 text-blue-700 border-blue-300'
                       : isSundayOff
                       ? 'bg-amber-50 text-amber-800 border-amber-300'
                       : 'bg-slate-50 text-slate-700 border-slate-300'
                   }`}>
-                    {isDeclared ? (isSunday ? 'OFFICIAL RESULT' : 'DECLARED') : (isSundayOff ? 'SUNDAY OFF' : game.status)}
+                    {isDeclared ? (
+                      isSunday ? 'OFFICIAL RESULT' : 'DECLARED'
+                    ) : isAnyDrawing ? (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
+                        <span>LIVE AT GROUND</span>
+                      </>
+                    ) : isFrDeclared ? (
+                      '1ST ROUND OUT'
+                    ) : isSundayOff ? (
+                      'SUNDAY OFF'
+                    ) : (
+                      game.status
+                    )}
                   </span>
                 </div>
               </div>
@@ -453,27 +544,81 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
               <div className="grid grid-cols-2 gap-2.5 text-center">
                 
                 {/* First Round (FR) */}
-                <div className="bg-amber-50/40 border border-amber-200/70 rounded-xl p-3 shadow-2xs">
-                  <span className="text-[10px] font-black uppercase text-amber-800 block tracking-wider">
-                    1st Round ({game.fr_time})
-                  </span>
-                  <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                    game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
-                  }`}>
-                    {game.fr}
-                  </span>
+                <div className={`rounded-xl p-3 shadow-2xs transition-all relative overflow-hidden flex flex-col justify-between ${
+                  isFrDrawing
+                    ? 'bg-gradient-to-b from-amber-50/90 to-amber-100/60 border-2 border-amber-400 ring-2 ring-amber-400/20'
+                    : 'bg-amber-50/40 border border-amber-200/70'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase text-amber-900 block tracking-wider">
+                      1st Round ({game.fr_time})
+                    </span>
+                    {isFrDrawing && (
+                      <span className="inline-flex items-center gap-1 text-[9px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 animate-pulse">
+                        <span className="w-1 h-1 rounded-full bg-rose-500 animate-ping"></span>
+                        LIVE
+                      </span>
+                    )}
+                  </div>
+
+                  {isFrDrawing ? (
+                    <div className="my-1.5 flex flex-col items-center justify-center">
+                      <div className="flex items-center gap-1.5 text-amber-600">
+                        <span className="text-xl sm:text-2xl font-black font-mono tracking-widest animate-pulse">
+                          🏹 COUNTING...
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-amber-800 font-bold mt-1 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Ground Feed Active
+                      </span>
+                    </div>
+                  ) : (
+                    <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                      game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
+                    }`}>
+                      {game.fr}
+                    </span>
+                  )}
                 </div>
 
                 {/* Second Round (SR) */}
-                <div className="bg-emerald-50/40 border border-emerald-200/70 rounded-xl p-3 shadow-2xs">
-                  <span className="text-[10px] font-black uppercase text-emerald-800 block tracking-wider">
-                    2nd Round ({game.sr_time})
-                  </span>
-                  <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                    game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
-                  }`}>
-                    {game.sr}
-                  </span>
+                <div className={`rounded-xl p-3 shadow-2xs transition-all relative overflow-hidden flex flex-col justify-between ${
+                  isSrDrawing
+                    ? 'bg-gradient-to-b from-emerald-50/90 to-emerald-100/60 border-2 border-emerald-400 ring-2 ring-emerald-400/20'
+                    : 'bg-emerald-50/40 border border-emerald-200/70'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase text-emerald-900 block tracking-wider">
+                      2nd Round ({game.sr_time})
+                    </span>
+                    {isSrDrawing && (
+                      <span className="inline-flex items-center gap-1 text-[9px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 animate-pulse">
+                        <span className="w-1 h-1 rounded-full bg-rose-500 animate-ping"></span>
+                        LIVE
+                      </span>
+                    )}
+                  </div>
+
+                  {isSrDrawing ? (
+                    <div className="my-1.5 flex flex-col items-center justify-center">
+                      <div className="flex items-center gap-1.5 text-emerald-600">
+                        <span className="text-xl sm:text-2xl font-black font-mono tracking-widest animate-pulse">
+                          🏹 COUNTING...
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-emerald-800 font-bold mt-1 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Ground Feed Active
+                      </span>
+                    </div>
+                  ) : (
+                    <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                      game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
+                    }`}>
+                      {game.sr}
+                    </span>
+                  )}
                 </div>
 
               </div>
