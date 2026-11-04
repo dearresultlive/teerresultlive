@@ -125,7 +125,12 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     return null;
   }, [data.date, data.yesterday]);
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
-  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>('today');
+  // Auto-default to 'yesterday' in morning hours (before 1:00 PM IST) so users immediately see declared numbers
+  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
+    const nowMin = getISTCurrentMinutes();
+    const isSun = new Date().getDay() === 0;
+    return (!isSun && nowMin < 13 * 60) ? 'yesterday' : 'today';
+  });
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
   const [copied, setCopied] = useState(false);
@@ -137,6 +142,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       const params = new URLSearchParams(window.location.search);
       if (window.location.hash === '#yesterday' || params.get('tab') === 'yesterday' || params.get('view') === 'yesterday') {
         setViewMode('yesterday');
+      } else if (window.location.hash === '#today' || params.get('tab') === 'today' || params.get('view') === 'today') {
+        setViewMode('today');
       }
     }
   }, []);
@@ -503,6 +510,25 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         </div>
       </div>
 
+      {/* Morning Mode Banner: Active before 1:00 PM IST when viewing yesterday */}
+      {viewMode === 'yesterday' && currentISTMinutes < 13 * 60 && !isSunday && (
+        <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-base shrink-0">⏮️</span>
+            <span className="font-bold truncate text-[11px] sm:text-xs">
+              Showing Yesterday's Results ({yesterdayFormattedDate}) • Today's Live Draws Begin at 1:45 PM
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setViewMode('today')}
+            className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
+          >
+            Today's Board ➔
+          </button>
+        </div>
+      )}
+
       {/* Sunday Archery Holiday Banner */}
       {isSunday && (
         <div className="bg-amber-50/90 border border-amber-300/80 rounded-xl p-3 text-xs text-amber-950 flex items-start gap-2.5 shadow-2xs">
@@ -688,6 +714,19 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 </div>
 
               </div>
+
+              {/* In-Card Morning Previous Result Strip (Active ONLY before 1:00 PM when in Today view) */}
+              {currentISTMinutes < 13 * 60 && viewMode === 'today' && !isSunday && yesterday && (
+                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium flex-wrap gap-1">
+                  <span className="flex items-center gap-1 text-slate-600 font-bold">
+                    <span>⏮️</span>
+                    <span>Yesterday's Official:</span>
+                  </span>
+                  <span className="font-black text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/60">
+                    1st: <span className="text-slate-900">{yesterday[`${key}_fr`] || 'xx'}</span> | 2nd: <span className="text-slate-900">{yesterday[`${key}_sr`] || 'xx'}</span>
+                  </span>
+                </div>
+              )}
 
             </div>
           );
