@@ -442,10 +442,10 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                 type="button"
                 onClick={() => fetchLatest(true)}
                 disabled={isRefreshing}
-                className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-black text-white px-2.5 py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-slate-800 active:scale-95"
+                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-2.5 py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-blue-500/80 active:scale-95"
                 title="Refresh Live Results"
               >
-                <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${isRefreshing ? 'animate-spin text-emerald-400' : 'text-slate-200'}`} />
+                <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${isRefreshing ? 'animate-spin text-blue-200' : 'text-white'}`} />
                 <span>{isRefreshing ? 'Checking...' : 'Refresh'}</span>
               </button>
             )}
