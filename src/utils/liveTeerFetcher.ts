@@ -25,10 +25,10 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
   }
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES: Record<string, { fr: number; sr: number }> = {
-    juwai: { fr: 13 * 60 + 40, sr: 14 * 60 + 25 },    // 1:40 PM / 2:25 PM
-    shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 }, // 3:40 PM / 4:40 PM
-    khanapara: { fr: 15 * 60 + 55, sr: 16 * 60 + 25 },// 3:55 PM / 4:25 PM
-    night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }     // 10:20 PM / 11:20 PM
+    juwai: { fr: 13 * 60 + 40, sr: 14 * 60 + 25 },    // 1:40 PM / 2:25 PM (Jowai timing)
+    shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM (Polo Ground real shooting start)
+    khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM (Khanapara real shooting start)
+    night: { fr: 22 * 60 + 15, sr: 23 * 60 + 15 }     // 10:15 PM / 11:15 PM (Night Archery real shooting start)
   };
   const limits = EARLIEST_MINUTES[gameKey];
   if (!limits) return true;

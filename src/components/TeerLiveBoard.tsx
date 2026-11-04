@@ -13,20 +13,20 @@ const WhatsAppIcon = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => 
 
 const GAME_SCHEDULE: Record<string, { frStart: number; srStart: number }> = {
   juwai: {
-    frStart: 13 * 60 + 45, // 1:45 PM
-    srStart: 14 * 60 + 30  // 2:30 PM
+    frStart: 13 * 60 + 42, // 1:42 PM (aligned with Jowai ground delay)
+    srStart: 14 * 60 + 27  // 2:27 PM
   },
   shillong: {
-    frStart: 15 * 60 + 45, // 3:45 PM
-    srStart: 16 * 60 + 45  // 4:45 PM
+    frStart: 15 * 60 + 30, // 3:30 PM (Polo Ground real-time shooting start)
+    srStart: 16 * 60 + 30  // 4:30 PM (Polo Ground real-time shooting start)
   },
   khanapara: {
-    frStart: 16 * 60 + 0,  // 4:00 PM
-    srStart: 16 * 60 + 30  // 4:30 PM
+    frStart: 15 * 60 + 48, // 3:48 PM (Khanapara real-time shooting start)
+    srStart: 16 * 60 + 18  // 4:18 PM (Khanapara real-time shooting start)
   },
   night: {
-    frStart: 22 * 60 + 30, // 10:30 PM
-    srStart: 23 * 60 + 30  // 11:30 PM
+    frStart: 22 * 60 + 18, // 10:18 PM (Night Archery real-time shooting start)
+    srStart: 23 * 60 + 18  // 11:18 PM (Night Archery real-time shooting start)
   }
 };
 
@@ -77,12 +77,12 @@ function getDynamicGameOrder(nowMin: number, viewMode: 'today' | 'yesterday', is
   }
 
   // 4:00 PM to 4:35 PM: Khanapara Active Window (Draws at 4:00 PM & 4:30 PM)
-  if (nowMin >= 16 * 60 && nowMin < 16 * 60 + 35) {
+  if (nowMin >= 16 * 60 && nowMin < 16 * 60 + 30) {
     return ['khanapara', 'shillong', 'juwai', 'night'];
   }
 
-  // 4:35 PM to 5:30 PM: Shillong 2nd Round Peak (Draws at 4:45 PM)
-  if (nowMin >= 16 * 60 + 35 && nowMin < 17 * 60 + 30) {
+  // 4:30 PM to 5:30 PM: Shillong 2nd Round Peak (Shooting starts 4:30 PM, Draws at 4:45 PM)
+  if (nowMin >= 16 * 60 + 30 && nowMin < 17 * 60 + 30) {
     return ['shillong', 'khanapara', 'juwai', 'night'];
   }
 
