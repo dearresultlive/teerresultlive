@@ -1,9 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import archive from '../data/previous_teer_archive.json';
 
-export default function PreviousResultsTable() {
+interface PreviousResultsTableProps {
+  initialGame?: 'all' | 'shillong' | 'khanapara' | 'juwai' | 'night';
+}
+
+export default function PreviousResultsTable({ initialGame = 'all' }: PreviousResultsTableProps) {
   const [searchNumber, setSearchNumber] = useState('');
-  const [activeGame, setActiveGame] = useState<'all' | 'shillong' | 'khanapara' | 'juwai' | 'night'>('all');
+  const [activeGame, setActiveGame] = useState<'all' | 'shillong' | 'khanapara' | 'juwai' | 'night'>(initialGame);
   const [showAll, setShowAll] = useState(false);
 
   // Filtered rows based on game and number query

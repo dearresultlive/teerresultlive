@@ -5,6 +5,7 @@ import liveData from '../data/teer_live_results.json';
 import archiveData from '../data/previous_teer_archive.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
+import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.juwai;
@@ -42,8 +43,35 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
       />
     </header>
 
-    <CommonNumbersCard client:visible />
-    <PreviousResultsTable client:visible />
+    <!-- Cross-Game Quick Navigation Hub -->
+    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto text-xs py-1 scrollbar-none">
+      <span class="text-slate-500 font-bold whitespace-nowrap text-[11px]">Quick Switch:</span>
+      <a href="/shillong-teer" class="inline-flex items-center gap-1 bg-white border border-amber-300 text-amber-800 font-bold px-2.5 py-1 rounded-lg hover:bg-amber-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Shillong Teer (3:45 PM)</span>
+      </a>
+      <a href="/khanapara-teer" class="inline-flex items-center gap-1 bg-white border border-emerald-300 text-emerald-800 font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Khanapara Teer (4:00 PM)</span>
+      </a>
+      <a href="/dream-numbers" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🌙</span>
+        <span>Dream Numbers</span>
+      </a>
+      <a href="/previous-results" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>📊</span>
+        <span>Past Archive</span>
+      </a>
+    </div>
+
+    <!-- Today's Juwai Common Numbers -->
+    <CommonNumbersCard client:visible filterGame="juwai" />
+
+    <!-- Interactive Teer Formula & Target Calculator -->
+    <TeerFormulaCalculator client:visible />
+
+    <!-- Historical Hit Archive Filtered to Juwai -->
+    <PreviousResultsTable client:visible initialGame="juwai" />
 
     <!-- In-Depth SEO Gazette for Juwai Teer -->
     <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
@@ -52,7 +80,7 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           Guide to Juwai Teer Results (West Jaintia Hills)
         </h2>
         <p class="text-xs text-slate-500 mt-1">
-          The earliest daily traditional archery event in Meghalaya.
+          The earliest daily traditional archery event in Meghalaya, conducted in West Jaintia Hills.
         </p>
       </header>
 
@@ -64,9 +92,9 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           Juwai Teer is unique because its shooting rounds take place earlier in the afternoon than Shillong or Khanapara:
         </p>
         <ul class="list-disc pl-5 space-y-1 text-slate-600">
-          <li><strong>First Round (FR):</strong> Shooting commences at 1:30 PM, with winning numbers declared at <strong>1:45 PM IST</strong>.</li>
-          <li><strong>Second Round (SR):</strong> The concluding round targets are tallied at <strong>2:30 PM IST</strong>.</li>
-          <li><strong>Days of Operation:</strong> Conducted Monday through Saturday. Sunday is an archery rest day.</li>
+          <li><strong>First Round (FR):</strong> Archers begin shooting at 1:42 PM IST, with winning numbers declared at <strong>1:45 PM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> Second round shooting commences at 2:27 PM IST, with final hit numbers tallied at <strong>2:30 PM IST</strong>.</li>
+          <li><strong>Days of Operation:</strong> Conducted Monday through Saturday. Sunday is an official archery rest day.</li>
         </ul>
       </div>
 
@@ -77,6 +105,51 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
         <p class="text-slate-600">
           In the Pnar culture of the Jaintia Hills, archery is deeply intertwined with ancient seasonal festivals and rites of passage. Local archers use handcrafted bows fashioned from seasoned hill bamboo and arrows fletched with bird feathers, maintaining indigenous archery mastery passed down across generations.
         </p>
+      </div>
+
+      <!-- Official Prize & Payout Structure -->
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Juwai Teer Official Prize Rates &amp; Returns
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden font-mono mt-2">
+            <thead class="bg-blue-50 text-blue-950 font-black uppercase text-[11px] border-b border-blue-200">
+              <tr>
+                <th class="p-2.5 sm:p-3">Bet Type</th>
+                <th class="p-2.5 sm:p-3">Sample Bet</th>
+                <th class="p-2.5 sm:p-3">Return Ratio</th>
+                <th class="p-2.5 sm:p-3">Payout</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-blue-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Single / Direct Hit (FR or SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on "96"</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">80 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹800</td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">House (Tens Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on House 9</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Ending (Units Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on Ending 6</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Forecast / Both Rounds (FR + SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on FR 96 + SR 74</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">4,000 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹40,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="space-y-2">
@@ -100,7 +173,15 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           </details>
           <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
             <summary class="font-bold text-slate-800 text-xs sm:text-sm">Where can I see previous Juwai hit results?</summary>
-            <p class="mt-2 text-xs text-slate-600">Browse our <a href="/previous-results" class="text-amber-700 font-bold hover:underline">Previous Results Archive</a> to filter and inspect historical winning hit records across all months.</p>
+            <p class="mt-2 text-xs text-slate-600">Browse our <a href="/previous-results" class="text-amber-700 font-bold hover:underline">Previous Results Archive</a> or use the table above to filter and inspect historical winning hit records across all months.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Is Juwai Teer held on Sundays?</summary>
+            <p class="mt-2 text-xs text-slate-600">No. Archery contests are suspended on Sundays across all Meghalaya grounds. Juwai live shooting resumes Monday at 1:42 PM IST.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">How is the Juwai winning number calculated?</summary>
+            <p class="mt-2 text-xs text-slate-600">Archers shoot cane arrows at a circular target. The total number of arrows hitting the target are counted, and the last two digits become the official winning number (e.g. 596 arrows = number 96).</p>
           </details>
         </div>
       </div>

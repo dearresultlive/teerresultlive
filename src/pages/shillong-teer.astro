@@ -5,6 +5,7 @@ import liveData from '../data/teer_live_results.json';
 import archiveData from '../data/previous_teer_archive.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
+import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const game = liveData.games.shillong;
@@ -42,8 +43,35 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
       />
     </header>
 
-    <CommonNumbersCard client:visible />
-    <PreviousResultsTable client:visible />
+    <!-- Cross-Game Quick Navigation Hub -->
+    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto text-xs py-1 scrollbar-none">
+      <span class="text-slate-500 font-bold whitespace-nowrap text-[11px]">Quick Switch:</span>
+      <a href="/khanapara-teer" class="inline-flex items-center gap-1 bg-white border border-emerald-300 text-emerald-800 font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Khanapara Teer (4:00 PM)</span>
+      </a>
+      <a href="/juwai-teer" class="inline-flex items-center gap-1 bg-white border border-blue-300 text-blue-800 font-bold px-2.5 py-1 rounded-lg hover:bg-blue-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Juwai Teer (1:45 PM)</span>
+      </a>
+      <a href="/dream-numbers" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🌙</span>
+        <span>Dream Numbers</span>
+      </a>
+      <a href="/previous-results" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>📊</span>
+        <span>Past Archive</span>
+      </a>
+    </div>
+
+    <!-- Today's Shillong Common Numbers -->
+    <CommonNumbersCard client:visible filterGame="shillong" />
+
+    <!-- Interactive Teer Formula & Target Calculator -->
+    <TeerFormulaCalculator client:visible />
+
+    <!-- Historical Hit Archive Filtered to Shillong -->
+    <PreviousResultsTable client:visible initialGame="shillong" />
 
     <!-- In-Depth SEO Gazette for Shillong Teer -->
     <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
@@ -52,7 +80,7 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           Everything You Need to Know About Shillong Teer Results
         </h2>
         <p class="text-xs text-slate-500 mt-1">
-          Authorized daily traditional archery competition organized at Polo Ground, Shillong.
+          Authorized daily traditional archery competition organized at Polo Ground, Shillong by KHASA.
         </p>
       </header>
 
@@ -64,9 +92,9 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           Shillong Teer is conducted daily from Monday through Saturday at the historic Polo Ground in Shillong. The archery contest takes place in two consecutive rounds:
         </p>
         <ul class="list-disc pl-5 space-y-1 text-slate-600">
-          <li><strong>First Round (FR):</strong> Shooting commences at 3:30 PM IST, and results are officially declared at approximately <strong>3:45 PM IST</strong>.</li>
-          <li><strong>Second Round (SR):</strong> Shooting begins at 4:30 PM IST, and winning hit numbers are announced at approximately <strong>4:45 PM IST</strong>.</li>
-          <li><strong>Sundays:</strong> Archery competitions are strictly suspended on Sundays in accordance with KHASA sports regulations.</li>
+          <li><strong>First Round (FR):</strong> Archers begin shooting at 3:30 PM IST, and winning hit numbers are declared officially at <strong>3:45 PM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> Second round shooting commences at 4:30 PM IST, and results are announced at <strong>4:45 PM IST</strong>.</li>
+          <li><strong>Sunday Closure:</strong> Archery competitions are strictly suspended on Sundays in accordance with KHASA sports regulations.</li>
         </ul>
       </div>
 
@@ -75,25 +103,56 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           How the Winning Number is Determined
         </h3>
         <p class="text-slate-600">
-          Approximately 50 traditional archers from local clubs affiliated with KHASA participate in each round. Each archer shoots 30 cane/bamboo arrows in the first round and 20 arrows in the second round at a cylindrical straw target set at a standard distance of 45–50 meters.
+          Approximately 50 licensed traditional archers representing 12 affiliated local Khasi archery clubs assemble at Polo Ground. Each archer shoots 30 bamboo arrows in the first round and 20 arrows in the second round at a cylindrical straw target placed 45–50 meters away.
         </p>
         <p class="text-slate-600">
-          After the allotted 5 minutes of shooting, all arrows that firmly struck the target are counted in front of official observers. The <strong>last two digits</strong> of the total hit count determine the winning number. For example, if 874 arrows strike the target, the declared result is <strong>74</strong>.
+          After 5 minutes of shooting, all arrows firmly lodged in the target are collected and counted in front of official observers and the public. The <strong>last two digits</strong> of the total hit count form the winning number. For instance, if 874 arrows strike the target, the declared result is <strong>74</strong>.
         </p>
       </div>
 
+      <!-- Official Prize & Payout Structure -->
       <div class="space-y-2">
         <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
-          Common Numbers: Direct, House, and Ending
+          Official Prize Rates &amp; Payout Structure
         </h3>
-        <p class="text-slate-600">
-          Teer analysts predict target numbers daily using mathematical formulas and historical hit frequencies. In two-digit numbers (00–99):
-        </p>
-        <ul class="list-disc pl-5 space-y-1 text-slate-600">
-          <li><strong>House:</strong> Represents the tens digit (e.g. in 68, the House is 6).</li>
-          <li><strong>Ending:</strong> Represents the units digit (e.g. in 68, the Ending is 8).</li>
-          <li><strong>Direct:</strong> Exact 2-digit predictions matching the full declared number.</li>
-        </ul>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden font-mono mt-2">
+            <thead class="bg-amber-50 text-amber-950 font-black uppercase text-[11px] border-b border-amber-200">
+              <tr>
+                <th class="p-2.5 sm:p-3">Bet Type</th>
+                <th class="p-2.5 sm:p-3">Sample Bet</th>
+                <th class="p-2.5 sm:p-3">Return Ratio</th>
+                <th class="p-2.5 sm:p-3">Payout</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-amber-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Single / Direct Hit (FR or SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on "74"</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">80 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹800</td>
+              </tr>
+              <tr class="hover:bg-amber-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">House (Tens Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on House 7</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-amber-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Ending (Units Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on Ending 4</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-amber-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Forecast / Both Rounds (FR + SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on FR 74 + SR 12</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">4,000 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹40,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Quick FAQs -->
@@ -113,6 +172,10 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
             <summary class="font-bold text-slate-800 text-xs sm:text-sm">Is Shillong Teer legal in Meghalaya?</summary>
             <p class="mt-2 text-xs text-slate-600">Yes. The traditional sport of archery and its associated activities are regulated by the Meghalaya state government under the <em>Meghalaya Amusements and Betting Tax (Amendment) Act 1982</em>.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">How can I calculate today's common numbers?</summary>
+            <p class="mt-2 text-xs text-slate-600">You can use our interactive <a href="#formula-calculator" class="text-amber-700 font-bold hover:underline">Teer Formula Calculator</a> above to enter previous day FR and SR numbers. It automatically generates Direct numbers, House, and Ending predictions.</p>
           </details>
         </div>
       </div>
