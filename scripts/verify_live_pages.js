@@ -5,6 +5,7 @@ const pages = [
   '/shillong-teer',
   '/khanapara-teer',
   '/juwai-teer',
+  '/shillong-night-teer',
   '/previous-results',
   '/dream-numbers',
   '/about',

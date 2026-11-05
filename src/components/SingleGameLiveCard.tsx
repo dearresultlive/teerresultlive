@@ -212,7 +212,8 @@ export default function SingleGameLiveCard({
 
     shareText += `▶ 1st Round (${game.fr_time}): *${game.fr}*\n`;
     shareText += `▶ 2nd Round (${game.sr_time}): *${game.sr}*\n`;
-    shareText += `\n⚡ Check official live numbers:\n👉 https://teerresultlive.in/${gameKey}-teer`;
+    const pageUrl = gameKey === 'night' ? 'https://teerresultlive.in/shillong-night-teer' : `https://teerresultlive.in/${gameKey}-teer`;
+    shareText += `\n⚡ Check official live numbers:\n👉 ${pageUrl}`;
 
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
 
@@ -221,7 +222,7 @@ export default function SingleGameLiveCard({
         .share({
           title: `${meta.title} Live Result`,
           text: shareText,
-          url: `https://teerresultlive.in/${gameKey}-teer`
+          url: gameKey === 'night' ? 'https://teerresultlive.in/shillong-night-teer' : `https://teerresultlive.in/${gameKey}-teer`
         })
         .catch(() => {
           window.open(whatsappUrl, '_blank');

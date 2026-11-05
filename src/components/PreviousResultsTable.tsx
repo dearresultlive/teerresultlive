@@ -153,6 +153,17 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
           >
             Juwai
           </button>
+          <button
+            type="button"
+            onClick={() => setActiveGame('night')}
+            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeGame === 'night'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
+            }`}
+          >
+            Night
+          </button>
         </div>
 
         {/* Number Search Box */}
@@ -192,7 +203,7 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
             </span>
           </div>
           <span className="text-[11px] text-amber-800 font-semibold">
-            Shillong: {hitStats.gameHits.shillong}x • Khanapara: {hitStats.gameHits.khanapara}x • Juwai: {hitStats.gameHits.juwai}x
+            Shillong: {hitStats.gameHits.shillong}x • Khanapara: {hitStats.gameHits.khanapara}x • Juwai: {hitStats.gameHits.juwai}x • Night: {hitStats.gameHits.night}x
           </span>
         </div>
       )}
@@ -212,7 +223,7 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
               {(activeGame === 'all' || activeGame === 'juwai') && (
                 <th className="p-2.5 sm:p-3 text-blue-800">Juwai (FR / SR)</th>
               )}
-              {activeGame === 'all' && (
+              {(activeGame === 'all' || activeGame === 'night') && (
                 <th className="p-2.5 sm:p-3 text-purple-800">Night (FR / SR)</th>
               )}
             </tr>
@@ -267,7 +278,7 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
                     </td>
                   )}
 
-                  {activeGame === 'all' && (
+                  {(activeGame === 'all' || activeGame === 'night') && (
                     <td className={`p-2.5 sm:p-3 font-black text-purple-700 ${
                       isMatched(row.night_fr) || isMatched(row.night_sr) ? 'bg-purple-100/70 font-extrabold' : ''
                     }`}>

@@ -59,10 +59,10 @@ export const ALL_GAMES_METADATA: Record<
     location: 'Ladrymbai traditional Ground'
   },
   night: {
-    title: 'NIGHT TEER',
+    title: 'SHILLONG NIGHT TEER',
     defaultFrTime: '10:30 PM',
     defaultSrTime: '11:30 PM',
-    location: 'Night Archery Ground'
+    location: 'Shillong Club Night Archery Ground'
   }
 };
 
