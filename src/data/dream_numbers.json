@@ -1,37 +1,1298 @@
 [
-  { "keyword": "Snake", "bengali": "সাপ", "hindi": "सांप", "direct": ["07", "70", "09"], "house": [0, 7], "ending": [7, 0, 9] },
-  { "keyword": "Water", "bengali": "জল / পানি", "hindi": "पानी / जल", "direct": ["04", "40", "07", "74"], "house": [0, 4], "ending": [4, 7] },
-  { "keyword": "Money / Currency", "bengali": "টাকা / পয়সা", "hindi": "पैसा / धन", "direct": ["00", "11", "22", "33", "44", "55"], "house": [0, 5], "ending": [0, 5] },
-  { "keyword": "Dead Body / Funeral", "bengali": "মৃতদেহ / লাশ", "hindi": "शव / लाश", "direct": ["14", "41", "04"], "house": [1, 4], "ending": [4, 1] },
-  { "keyword": "Fire", "bengali": "আগুন", "hindi": "आग", "direct": ["05", "50", "55"], "house": [0, 5], "ending": [5, 0] },
-  { "keyword": "Dog", "bengali": "কুকুর", "hindi": "कुत्ता", "direct": ["04", "44", "49"], "house": [4], "ending": [4, 9] },
-  { "keyword": "Cat", "bengali": "বিড়াল", "hindi": "बिल्ली", "direct": ["01", "10", "11"], "house": [1], "ending": [1, 0] },
-  { "keyword": "Fish", "bengali": "মাছ", "hindi": "मछली", "direct": ["06", "60", "66"], "house": [6], "ending": [6, 0] },
-  { "keyword": "Tree / Plant", "bengali": "গাছ / বৃক্ষ", "hindi": "पेड़ / पौधा", "direct": ["08", "80", "88"], "house": [8], "ending": [8, 0] },
-  { "keyword": "Bird / Flying", "bengali": "পাখি / ওড়া", "hindi": "पक्षी / उड़ना", "direct": ["03", "30", "33"], "house": [3], "ending": [3, 0] },
-  { "keyword": "Police / Army", "bengali": "পুলিশ / সেনা", "hindi": "पुलिस / सेना", "direct": ["07", "70", "77"], "house": [7], "ending": [7, 0] },
-  { "keyword": "Ghost / Spirit", "bengali": "ভূত / প্রেত", "hindi": "भूत / आत्मा", "direct": ["09", "90", "99"], "house": [9], "ending": [9, 0] },
-  { "keyword": "Child / Baby", "bengali": "শিশু / বাচ্চা", "hindi": "बच्चा / शिशु", "direct": ["02", "20", "22"], "house": [2], "ending": [2, 0] },
-  { "keyword": "Blood", "bengali": "রক্ত", "hindi": "खून / रक्त", "direct": ["05", "55", "75"], "house": [5, 7], "ending": [5] },
-  { "keyword": "Train", "bengali": "রেলগাড়ি", "hindi": "रेलगाड़ी / ट्रेन", "direct": ["09", "90", "59"], "house": [0, 9], "ending": [9, 0] },
-  { "keyword": "Car / Vehicle", "bengali": "গাড়ি", "hindi": "गाड़ी / कार", "direct": ["04", "40", "44"], "house": [4], "ending": [4, 0] },
-  { "keyword": "Gold / Jewellery", "bengali": "সোনা / গহনা", "hindi": "सोना / गहने", "direct": ["08", "88", "18"], "house": [8, 1], "ending": [8] },
-  { "keyword": "Elephant", "bengali": "হাতি", "hindi": "हाथी", "direct": ["09", "90", "89"], "house": [9], "ending": [9, 0] },
-  { "keyword": "Tiger / Lion", "bengali": "বাঘ / সিংহ", "hindi": "बाघ / शेर", "direct": ["02", "22", "52"], "house": [2], "ending": [2] },
-  { "keyword": "House / Building", "bengali": "বাড়ি / ঘর", "hindi": "घर / मकान", "direct": ["04", "44", "14"], "house": [4, 1], "ending": [4] },
-  { "keyword": "Aeroplane / Sky", "bengali": "বিমান / আকাশ", "hindi": "हवाई जहाज / आकाश", "direct": ["07", "77", "37"], "house": [7], "ending": [7] },
-  { "keyword": "Wedding / Marriage", "bengali": "বিয়ে / বিবাহ", "hindi": "शादी / विवाह", "direct": ["03", "33", "23"], "house": [3, 2], "ending": [3] },
-  { "keyword": "Fight / Argument", "bengali": "মারামারি / ঝগড়া", "hindi": "लड़ाई / झगड़ा", "direct": ["06", "66", "16"], "house": [6, 1], "ending": [6] },
-  { "keyword": "Rain / Storm", "bengali": "বৃষ্টি / ঝড়", "hindi": "बारिश / तूफान", "direct": ["04", "44", "84"], "house": [4, 8], "ending": [4] },
-  { "keyword": "Milk", "bengali": "দুধ", "hindi": "दूध", "direct": ["01", "10", "41"], "house": [1], "ending": [1, 0] },
-  { "keyword": "God / Temple / Puja", "bengali": "ভগবান / ঈশ্বর / মন্দির / পূজা", "hindi": "भगवान / ईश्वर / मंदिर / पूजा", "direct": ["09", "19", "90", "99"], "house": [0, 9], "ending": [9, 0] },
-  { "keyword": "Egg / Eggs", "bengali": "ডিম", "hindi": "अंडा / अंडे", "direct": ["00", "08", "80", "88"], "house": [0, 8], "ending": [0, 8] },
-  { "keyword": "River / Sea / Pond", "bengali": "নদী / সাগর / পুকুর", "hindi": "नदी / समुद्र / तालाब", "direct": ["42", "24", "44", "04"], "house": [4, 2], "ending": [2, 4] },
-  { "keyword": "Moon / Sun / Light", "bengali": "চাঁদ / সূর্য / আলো", "hindi": "चांद / सूरज / रोशनी", "direct": ["01", "10", "11", "07"], "house": [1, 0], "ending": [1, 7] },
-  { "keyword": "Flower / Garden", "bengali": "ফুল / বাগান", "hindi": "फूल / बगीचा", "direct": ["06", "60", "66", "16"], "house": [6], "ending": [6, 0] },
-  { "keyword": "Meat / Flesh", "bengali": "মাংস", "hindi": "मांस / मीट", "direct": ["02", "20", "22", "52"], "house": [2], "ending": [2, 0] },
-  { "keyword": "Coin / Ring / Money", "bengali": "আংটি / মুদ্রা / কয়েন", "hindi": "अंगूठी / सिक्का / मुद्रा", "direct": ["00", "10", "01", "50"], "house": [0, 1], "ending": [0, 1] },
-  { "keyword": "Book / Study / Exam", "bengali": "বই / পরীক্ষা / পড়া", "hindi": "किताब / परीक्षा / पढ़ाई", "direct": ["03", "30", "33", "83"], "house": [3], "ending": [3, 0] },
-  { "keyword": "Boat / Ship", "bengali": "নৌকা / জাহাজ", "hindi": "नाव / जहाज", "direct": ["04", "40", "44", "24"], "house": [4], "ending": [4, 0] },
-  { "keyword": "King / Queen / Leader", "bengali": "রাজা / রানী / নেতা", "hindi": "राजा / रानी / नेता", "direct": ["01", "10", "11", "91"], "house": [1], "ending": [1, 0] }
+  {
+    "keyword": "Snake / Serpent",
+    "bengali": "সাপ / সর্প",
+    "hindi": "सांप / सर्प",
+    "direct": [
+      "07",
+      "70",
+      "09",
+      "89"
+    ],
+    "house": [
+      0,
+      7,
+      9
+    ],
+    "ending": [
+      7,
+      0,
+      9
+    ]
+  },
+  {
+    "keyword": "Snake Bite / Attacked",
+    "bengali": "সাপের কামড় / দংশন",
+    "hindi": "सांप का काटना / डंक",
+    "direct": [
+      "09",
+      "99",
+      "79",
+      "19"
+    ],
+    "house": [
+      0,
+      9
+    ],
+    "ending": [
+      9
+    ]
+  },
+  {
+    "keyword": "Water / River / Ocean",
+    "bengali": "জল / পানি / নদী",
+    "hindi": "पानी / जल / नदी",
+    "direct": [
+      "04",
+      "40",
+      "07",
+      "74",
+      "42"
+    ],
+    "house": [
+      0,
+      4,
+      7
+    ],
+    "ending": [
+      4,
+      7,
+      2
+    ]
+  },
+  {
+    "keyword": "Clean Water / Drinking",
+    "bengali": "পরিষ্কার জল / পানি খাওয়া",
+    "hindi": "साफ पानी / पानी पीना",
+    "direct": [
+      "04",
+      "40",
+      "07"
+    ],
+    "house": [
+      0,
+      4
+    ],
+    "ending": [
+      4,
+      7
+    ]
+  },
+  {
+    "keyword": "Swimming in Water",
+    "bengali": "সাঁতার কাটা",
+    "hindi": "पानी में तैरना",
+    "direct": [
+      "04",
+      "40",
+      "44",
+      "24"
+    ],
+    "house": [
+      4,
+      2
+    ],
+    "ending": [
+      4,
+      0
+    ]
+  },
+  {
+    "keyword": "Money / Currency Notes",
+    "bengali": "টাকা / নোট / পয়সা",
+    "hindi": "पैसा / धन / नोट",
+    "direct": [
+      "00",
+      "11",
+      "22",
+      "33",
+      "44",
+      "55"
+    ],
+    "house": [
+      0,
+      5
+    ],
+    "ending": [
+      0,
+      5
+    ]
+  },
+  {
+    "keyword": "Gold Coins / Treasure",
+    "bengali": "সোনার কয়েন / গুপ্তধন",
+    "hindi": "सोने का सिक्का / खजाना",
+    "direct": [
+      "08",
+      "88",
+      "80",
+      "18"
+    ],
+    "house": [
+      8,
+      1
+    ],
+    "ending": [
+      8,
+      0
+    ]
+  },
+  {
+    "keyword": "Silver / Metal Coins",
+    "bengali": "রূপা / মুদ্রা / কয়েন",
+    "hindi": "चांदी / धातु / सिक्का",
+    "direct": [
+      "02",
+      "20",
+      "22",
+      "50"
+    ],
+    "house": [
+      2,
+      0
+    ],
+    "ending": [
+      2,
+      0
+    ]
+  },
+  {
+    "keyword": "Tooth Falling / Broken Tooth",
+    "bengali": "দাঁত পড়া / ভাঙা দাঁত",
+    "hindi": "दांत टूटना / दांत गिरना",
+    "direct": [
+      "13",
+      "31",
+      "03",
+      "33"
+    ],
+    "house": [
+      1,
+      3
+    ],
+    "ending": [
+      3,
+      1
+    ]
+  },
+  {
+    "keyword": "Dead Body / Funeral / Corpse",
+    "bengali": "মৃতদেহ / লাশ / শবদেহ",
+    "hindi": "शव / लाश / अंतिम संस्कार",
+    "direct": [
+      "14",
+      "41",
+      "04",
+      "44"
+    ],
+    "house": [
+      1,
+      4
+    ],
+    "ending": [
+      4,
+      1
+    ]
+  },
+  {
+    "keyword": "Doctor / Hospital / Clinic",
+    "bengali": "ডাক্তার / হাসপাতাল / ওষুধ",
+    "hindi": "डॉक्टर / अस्पताल / दवा",
+    "direct": [
+      "10",
+      "01",
+      "11",
+      "91"
+    ],
+    "house": [
+      1,
+      0
+    ],
+    "ending": [
+      0,
+      1
+    ]
+  },
+  {
+    "keyword": "Fire / Flame",
+    "bengali": "আগুন / শিখা",
+    "hindi": "आग / ज्वाला",
+    "direct": [
+      "05",
+      "50",
+      "55",
+      "15"
+    ],
+    "house": [
+      0,
+      5
+    ],
+    "ending": [
+      5,
+      0
+    ]
+  },
+  {
+    "keyword": "Dog / Puppy",
+    "bengali": "কুকুর / বাচ্ছা কুকুর",
+    "hindi": "कुत्ता / पिल्ला",
+    "direct": [
+      "04",
+      "44",
+      "49",
+      "14"
+    ],
+    "house": [
+      4
+    ],
+    "ending": [
+      4,
+      9
+    ]
+  },
+  {
+    "keyword": "Cat / Kitten",
+    "bengali": "বিড়াল / মেকুর",
+    "hindi": "बिल्ली / बिलाव",
+    "direct": [
+      "01",
+      "10",
+      "11",
+      "51"
+    ],
+    "house": [
+      1
+    ],
+    "ending": [
+      1,
+      0
+    ]
+  },
+  {
+    "keyword": "Cow / Bull / Buffalo",
+    "bengali": "গরু / ষাঁড় / মহিষ",
+    "hindi": "गाय / बैल / भैंस",
+    "direct": [
+      "12",
+      "21",
+      "22",
+      "52"
+    ],
+    "house": [
+      1,
+      2
+    ],
+    "ending": [
+      2,
+      1
+    ]
+  },
+  {
+    "keyword": "Fish / Fishing",
+    "bengali": "মাছ / মাছ ধরা",
+    "hindi": "मछली / मछली पकड़ना",
+    "direct": [
+      "06",
+      "60",
+      "66",
+      "03"
+    ],
+    "house": [
+      6,
+      3
+    ],
+    "ending": [
+      6,
+      0,
+      3
+    ]
+  },
+  {
+    "keyword": "Tree / Plant / Bamboo",
+    "bengali": "গাছ / বাঁশ / বৃক্ষ",
+    "hindi": "पेड़ / पौधा / बांस",
+    "direct": [
+      "08",
+      "80",
+      "88",
+      "18"
+    ],
+    "house": [
+      8
+    ],
+    "ending": [
+      8,
+      0
+    ]
+  },
+  {
+    "keyword": "Forest / Woods / Jungle",
+    "bengali": "জঙ্গল / বনভূমি",
+    "hindi": "जंगल / वन",
+    "direct": [
+      "08",
+      "80",
+      "88",
+      "48"
+    ],
+    "house": [
+      8,
+      4
+    ],
+    "ending": [
+      8
+    ]
+  },
+  {
+    "keyword": "Bird / Flying",
+    "bengali": "পাখি / আকাশে ওড়া",
+    "hindi": "पक्षी / उड़ना",
+    "direct": [
+      "03",
+      "30",
+      "33",
+      "88"
+    ],
+    "house": [
+      3,
+      8
+    ],
+    "ending": [
+      3,
+      0
+    ]
+  },
+  {
+    "keyword": "Police / Army / Soldier",
+    "bengali": "পুলিশ / সেনা / সৈন্য",
+    "hindi": "पुलिस / सेना / फौजी",
+    "direct": [
+      "07",
+      "70",
+      "77",
+      "17"
+    ],
+    "house": [
+      7,
+      1
+    ],
+    "ending": [
+      7,
+      0
+    ]
+  },
+  {
+    "keyword": "Jail / Prison / Handcuffs",
+    "bengali": "জেল / কারাগার / হাতকড়া",
+    "hindi": "जेल / कैद / हथकड़ी",
+    "direct": [
+      "07",
+      "70",
+      "77",
+      "27"
+    ],
+    "house": [
+      7,
+      2
+    ],
+    "ending": [
+      7
+    ]
+  },
+  {
+    "keyword": "Ghost / Spirit / Nightmare",
+    "bengali": "ভূত / প্রেত / খারাপ স্বপ্ন",
+    "hindi": "भूत / आत्मा / बुरा सपना",
+    "direct": [
+      "09",
+      "90",
+      "99",
+      "49"
+    ],
+    "house": [
+      9,
+      4
+    ],
+    "ending": [
+      9,
+      0
+    ]
+  },
+  {
+    "keyword": "Child / Baby / Newborn",
+    "bengali": "শিশু / বাচ্চা / সন্তান",
+    "hindi": "बच्चा / शिशु / बालक",
+    "direct": [
+      "02",
+      "20",
+      "22",
+      "12"
+    ],
+    "house": [
+      2,
+      1
+    ],
+    "ending": [
+      2,
+      0
+    ]
+  },
+  {
+    "keyword": "Blood / Bleeding",
+    "bengali": "রক্ত / রক্তপাত",
+    "hindi": "खून / रक्त / चोट",
+    "direct": [
+      "05",
+      "55",
+      "75",
+      "15"
+    ],
+    "house": [
+      5,
+      7
+    ],
+    "ending": [
+      5
+    ]
+  },
+  {
+    "keyword": "Train / Railway Track",
+    "bengali": "রেলগাড়ি / রেললাইন",
+    "hindi": "रेलगाड़ी / ट्रेन / पटरी",
+    "direct": [
+      "09",
+      "90",
+      "59",
+      "19"
+    ],
+    "house": [
+      0,
+      9
+    ],
+    "ending": [
+      9,
+      0
+    ]
+  },
+  {
+    "keyword": "Car / Vehicle / Auto",
+    "bengali": "গাড়ি / মোটরযান",
+    "hindi": "गाड़ी / कार / वाहन",
+    "direct": [
+      "04",
+      "40",
+      "44",
+      "84"
+    ],
+    "house": [
+      4
+    ],
+    "ending": [
+      4,
+      0
+    ]
+  },
+  {
+    "keyword": "Bicycle / Bike / Scooter",
+    "bengali": "সাইকেল / বাইক",
+    "hindi": "साइकिल / बाइक / स्कूटर",
+    "direct": [
+      "02",
+      "20",
+      "22",
+      "72"
+    ],
+    "house": [
+      2
+    ],
+    "ending": [
+      2
+    ]
+  },
+  {
+    "keyword": "Bus / Big Truck",
+    "bengali": "বাস / ট্রাক",
+    "hindi": "बस / ट्रक",
+    "direct": [
+      "04",
+      "40",
+      "44",
+      "14"
+    ],
+    "house": [
+      4,
+      1
+    ],
+    "ending": [
+      4
+    ]
+  },
+  {
+    "keyword": "Gold / Jewellery / Necklace",
+    "bengali": "সোনা / গহনা / অলঙ্কার",
+    "hindi": "सोना / गहने / जेवर",
+    "direct": [
+      "08",
+      "88",
+      "18",
+      "78"
+    ],
+    "house": [
+      8,
+      1
+    ],
+    "ending": [
+      8
+    ]
+  },
+  {
+    "keyword": "Elephant / Wild Tusker",
+    "bengali": "হাতি / বুনো হাতি",
+    "hindi": "हाथी / गजराज",
+    "direct": [
+      "09",
+      "90",
+      "89",
+      "19"
+    ],
+    "house": [
+      9,
+      8
+    ],
+    "ending": [
+      9,
+      0
+    ]
+  },
+  {
+    "keyword": "Tiger / Lion / Leopard",
+    "bengali": "বাঘ / সিংহ / চিতা",
+    "hindi": "बाघ / शेर / चीता",
+    "direct": [
+      "02",
+      "22",
+      "52",
+      "72"
+    ],
+    "house": [
+      2,
+      5
+    ],
+    "ending": [
+      2
+    ]
+  },
+  {
+    "keyword": "Horse / Riding Horse",
+    "bengali": "ঘোড়া / ঘোড়দৌড়",
+    "hindi": "घोड़ा / घुड़सवारी",
+    "direct": [
+      "08",
+      "80",
+      "18",
+      "28"
+    ],
+    "house": [
+      8,
+      1
+    ],
+    "ending": [
+      8,
+      0
+    ]
+  },
+  {
+    "keyword": "Monkey / Langur",
+    "bengali": "বানর / বাঁদর",
+    "hindi": "बंदर / लंगूर",
+    "direct": [
+      "09",
+      "90",
+      "39",
+      "79"
+    ],
+    "house": [
+      9,
+      3
+    ],
+    "ending": [
+      9
+    ]
+  },
+  {
+    "keyword": "House / Building / Construction",
+    "bengali": "বাড়ি / ঘর / প্রাসাদ",
+    "hindi": "घर / मकान / इमारत",
+    "direct": [
+      "04",
+      "44",
+      "14",
+      "84"
+    ],
+    "house": [
+      4,
+      1
+    ],
+    "ending": [
+      4
+    ]
+  },
+  {
+    "keyword": "Aeroplane / Helicopter / Sky",
+    "bengali": "বিমান / আকাশ / বিমান ভ্রমণ",
+    "hindi": "हवाई जहाज / हेलीकॉप्टर / आकाश",
+    "direct": [
+      "07",
+      "77",
+      "37",
+      "87"
+    ],
+    "house": [
+      7,
+      3
+    ],
+    "ending": [
+      7
+    ]
+  },
+  {
+    "keyword": "Wedding / Marriage Party",
+    "bengali": "বিয়ে / বিবাহ / শুভকাজ",
+    "hindi": "शादी / विवाह / बारात",
+    "direct": [
+      "03",
+      "33",
+      "23",
+      "73"
+    ],
+    "house": [
+      3,
+      2
+    ],
+    "ending": [
+      3
+    ]
+  },
+  {
+    "keyword": "Fight / Quarrel / Argument",
+    "bengali": "মারামারি / ঝগড়া / যুদ্ধ",
+    "hindi": "लड़ाई / झगड़ा / मारपीट",
+    "direct": [
+      "06",
+      "66",
+      "16",
+      "96"
+    ],
+    "house": [
+      6,
+      1
+    ],
+    "ending": [
+      6
+    ]
+  },
+  {
+    "keyword": "Rain / Thunderstorm / Hail",
+    "bengali": "বৃষ্টি / ঝড় / মেঘ",
+    "hindi": "बारिश / तूफान / ओले",
+    "direct": [
+      "04",
+      "44",
+      "84",
+      "07"
+    ],
+    "house": [
+      4,
+      8
+    ],
+    "ending": [
+      4,
+      7
+    ]
+  },
+  {
+    "keyword": "Milk / Dairy",
+    "bengali": "দুধ / ক্ষীর",
+    "hindi": "दूध / मलाई",
+    "direct": [
+      "01",
+      "10",
+      "41",
+      "11"
+    ],
+    "house": [
+      1
+    ],
+    "ending": [
+      1,
+      0
+    ]
+  },
+  {
+    "keyword": "God / Temple / Puja / Church",
+    "bengali": "ভগবান / ঈশ্বর / মন্দির / পূজা",
+    "hindi": "भगवान / ईश्वर / मंदिर / पूजा",
+    "direct": [
+      "09",
+      "19",
+      "90",
+      "99"
+    ],
+    "house": [
+      0,
+      9
+    ],
+    "ending": [
+      9,
+      0
+    ]
+  },
+  {
+    "keyword": "Mosque / Namaz / Quran",
+    "bengali": "মসজিদ / নামাজ / প্রার্থনা",
+    "hindi": "मस्जिद / नमाज़ / इबादत",
+    "direct": [
+      "07",
+      "70",
+      "77",
+      "97"
+    ],
+    "house": [
+      7,
+      9
+    ],
+    "ending": [
+      7
+    ]
+  },
+  {
+    "keyword": "Egg / Bird Eggs",
+    "bengali": "ডিম / হাঁসের ডিম",
+    "hindi": "अंडा / चिड़िया का अंडा",
+    "direct": [
+      "00",
+      "08",
+      "80",
+      "88"
+    ],
+    "house": [
+      0,
+      8
+    ],
+    "ending": [
+      0,
+      8
+    ]
+  },
+  {
+    "keyword": "Moon / Full Moon",
+    "bengali": "চাঁদ / পূর্ণিমা / জ্যোৎস্না",
+    "hindi": "चांद / पूर्णिमा / चंद्रमा",
+    "direct": [
+      "01",
+      "10",
+      "11",
+      "07"
+    ],
+    "house": [
+      1,
+      0
+    ],
+    "ending": [
+      1,
+      7
+    ]
+  },
+  {
+    "keyword": "Sun / Sunrise / Sunshine",
+    "bengali": "সূর্য / সূর্যোদয় / রোদ",
+    "hindi": "सूरज / सूर्योदय / धूप",
+    "direct": [
+      "01",
+      "10",
+      "11",
+      "91"
+    ],
+    "house": [
+      1
+    ],
+    "ending": [
+      1,
+      0
+    ]
+  },
+  {
+    "keyword": "Stars / Night Sky",
+    "bengali": "তারা / রাতের আকাশ",
+    "hindi": "तारे / सितारे",
+    "direct": [
+      "08",
+      "80",
+      "88",
+      "38"
+    ],
+    "house": [
+      8,
+      3
+    ],
+    "ending": [
+      8
+    ]
+  },
+  {
+    "keyword": "Flower / Garden",
+    "bengali": "ফুল / বাগান / পুষ্প",
+    "hindi": "फूल / बगीचा / पुष्प",
+    "direct": [
+      "06",
+      "60",
+      "66",
+      "16"
+    ],
+    "house": [
+      6
+    ],
+    "ending": [
+      6,
+      0
+    ]
+  },
+  {
+    "keyword": "Meat / Flesh / Butchering",
+    "bengali": "মাংস / গোশত",
+    "hindi": "मांस / मीट",
+    "direct": [
+      "02",
+      "20",
+      "22",
+      "52"
+    ],
+    "house": [
+      2
+    ],
+    "ending": [
+      2,
+      0
+    ]
+  },
+  {
+    "keyword": "Book / Exam / Studying",
+    "bengali": "বই / পরীক্ষা / পড়া",
+    "hindi": "किताब / परीक्षा / पढ़ाई",
+    "direct": [
+      "03",
+      "30",
+      "33",
+      "83"
+    ],
+    "house": [
+      3
+    ],
+    "ending": [
+      3,
+      0
+    ]
+  },
+  {
+    "keyword": "Boat / Ship / Sailing",
+    "bengali": "নৌকা / জাহাজ / জলযান",
+    "hindi": "नाव / जहाज / नौका",
+    "direct": [
+      "04",
+      "40",
+      "44",
+      "24"
+    ],
+    "house": [
+      4
+    ],
+    "ending": [
+      4,
+      0
+    ]
+  },
+  {
+    "keyword": "King / Queen / Minister",
+    "bengali": "রাজা / রানী / মন্ত্রী",
+    "hindi": "राजा / रानी / नेता",
+    "direct": [
+      "01",
+      "10",
+      "11",
+      "91"
+    ],
+    "house": [
+      1
+    ],
+    "ending": [
+      1,
+      0
+    ]
+  },
+  {
+    "keyword": "Shoe / Chappal / Slippers",
+    "bengali": "জুতো / চটি / চপ্পল",
+    "hindi": "जूता / चप्पल / खड़ाऊं",
+    "direct": [
+      "08",
+      "80",
+      "28",
+      "88"
+    ],
+    "house": [
+      8,
+      2
+    ],
+    "ending": [
+      8
+    ]
+  },
+  {
+    "keyword": "Theft / Thief / Robber",
+    "bengali": "চুরি / চোর / ডাকাত",
+    "hindi": "चोरी / चोर / डाकू",
+    "direct": [
+      "07",
+      "70",
+      "77",
+      "17"
+    ],
+    "house": [
+      7,
+      1
+    ],
+    "ending": [
+      7
+    ]
+  },
+  {
+    "keyword": "Key / Padlock / Lock",
+    "bengali": "চাবি / তালা",
+    "hindi": "चाबी / ताला",
+    "direct": [
+      "04",
+      "40",
+      "14",
+      "44"
+    ],
+    "house": [
+      4,
+      1
+    ],
+    "ending": [
+      4,
+      0
+    ]
+  },
+  {
+    "keyword": "Knife / Dagger / Sword",
+    "bengali": "ছুরি / তলোয়ার / ছুরি মারা",
+    "hindi": "चाकू / तलवार / छुरी",
+    "direct": [
+      "01",
+      "11",
+      "17",
+      "71"
+    ],
+    "house": [
+      1
+    ],
+    "ending": [
+      1,
+      7
+    ]
+  },
+  {
+    "keyword": "Gun / Pistol / Shooting",
+    "bengali": "বন্দুক / পিস্তল / গুলি",
+    "hindi": "बंदूक / पिस्तौल / गोली",
+    "direct": [
+      "07",
+      "70",
+      "77",
+      "37"
+    ],
+    "house": [
+      7,
+      3
+    ],
+    "ending": [
+      7
+    ]
+  },
+  {
+    "keyword": "Bridge / Flyover / Crossing",
+    "bengali": "সেতু / ব্রিজ / পুল",
+    "hindi": "पुल / सेतु / फ्लाईओवर",
+    "direct": [
+      "42",
+      "24",
+      "04",
+      "44"
+    ],
+    "house": [
+      4,
+      2
+    ],
+    "ending": [
+      2,
+      4
+    ]
+  },
+  {
+    "keyword": "Rice / Food / Feasting",
+    "bengali": "ভাত / খাবার / ভোজ",
+    "hindi": "चावल / खाना / दावत",
+    "direct": [
+      "05",
+      "50",
+      "55",
+      "25"
+    ],
+    "house": [
+      5,
+      2
+    ],
+    "ending": [
+      5,
+      0
+    ]
+  },
+  {
+    "keyword": "Mirror / Looking in Glass",
+    "bengali": "আয়না / কাঁচ / চেহারা দেখা",
+    "hindi": "आईना / शीशा / दर्पण",
+    "direct": [
+      "00",
+      "11",
+      "88",
+      "10"
+    ],
+    "house": [
+      0,
+      1
+    ],
+    "ending": [
+      0,
+      8
+    ]
+  },
+  {
+    "keyword": "Watch / Clock / Time",
+    "bengali": "ঘড়ি / সময় / দেওয়াল ঘড়ি",
+    "hindi": "घड़ी / समय / वक़्त",
+    "direct": [
+      "00",
+      "12",
+      "60",
+      "24"
+    ],
+    "house": [
+      0,
+      1
+    ],
+    "ending": [
+      0,
+      2
+    ]
+  },
+  {
+    "keyword": "Umbrella / Parasol",
+    "bengali": "ছাতা / রোদছাতা",
+    "hindi": "छाता / छतरी",
+    "direct": [
+      "01",
+      "10",
+      "11",
+      "71"
+    ],
+    "house": [
+      1
+    ],
+    "ending": [
+      1
+    ]
+  },
+  {
+    "keyword": "Crying / Tears / Mourning",
+    "bengali": "কান্না / অশ্রু / শোক",
+    "hindi": "रोना / आंसू / विलाप",
+    "direct": [
+      "05",
+      "50",
+      "52",
+      "25"
+    ],
+    "house": [
+      5,
+      2
+    ],
+    "ending": [
+      5,
+      0
+    ]
+  },
+  {
+    "keyword": "Laughing / Joy / Celebration",
+    "bengali": "হাসি / আনন্দ / উৎসব",
+    "hindi": "हंसना / खुशी / उत्सव",
+    "direct": [
+      "02",
+      "20",
+      "22",
+      "62"
+    ],
+    "house": [
+      2,
+      6
+    ],
+    "ending": [
+      2
+    ]
+  },
+  {
+    "keyword": "Falling from Height / Cliff",
+    "bengali": "উঁচু থেকে পড়া / খাদ",
+    "hindi": "ऊंचाई से गिरना / खाई",
+    "direct": [
+      "07",
+      "70",
+      "77",
+      "47"
+    ],
+    "house": [
+      7,
+      4
+    ],
+    "ending": [
+      7
+    ]
+  },
+  {
+    "keyword": "Market / Shopping / Bazaar",
+    "bengali": "বাজার / হাট / কেনাকাটা",
+    "hindi": "बाजार / हाट / खरीदारी",
+    "direct": [
+      "05",
+      "50",
+      "55",
+      "35"
+    ],
+    "house": [
+      5,
+      3
+    ],
+    "ending": [
+      5
+    ]
+  },
+  {
+    "keyword": "Tea / Coffee / Tea Stall",
+    "bengali": "চা / কফি / চায়ের দোকান",
+    "hindi": "चाय / कॉफी / चाय की दुकान",
+    "direct": [
+      "01",
+      "10",
+      "11",
+      "31"
+    ],
+    "house": [
+      1,
+      3
+    ],
+    "ending": [
+      1
+    ]
+  },
+  {
+    "keyword": "Frog / Toads",
+    "bengali": "ব্যাঙ / কোলাব্যাঙ",
+    "hindi": "मेंढक / दादुर",
+    "direct": [
+      "04",
+      "40",
+      "44",
+      "64"
+    ],
+    "house": [
+      4,
+      6
+    ],
+    "ending": [
+      4
+    ]
+  },
+  {
+    "keyword": "Honey / Honeybee / Beehive",
+    "bengali": "মৌমাছি / মধু / মৌচাক",
+    "hindi": "मधुमक्खी / शहद / छत्ता",
+    "direct": [
+      "06",
+      "60",
+      "66",
+      "26"
+    ],
+    "house": [
+      6,
+      2
+    ],
+    "ending": [
+      6
+    ]
+  },
+  {
+    "keyword": "Snake Shedding Skin",
+    "bengali": "সাপের খোলস ছাড়া",
+    "hindi": "सांप की केंचुल",
+    "direct": [
+      "09",
+      "90",
+      "79",
+      "19"
+    ],
+    "house": [
+      9,
+      7
+    ],
+    "ending": [
+      9
+    ]
+  },
+  {
+    "keyword": "Mother / Father / Old Person",
+    "bengali": "বাবা / মা / বৃদ্ধ ব্যক্তি",
+    "hindi": "माता / पिता / बुजुर्ग",
+    "direct": [
+      "01",
+      "10",
+      "02",
+      "20"
+    ],
+    "house": [
+      1,
+      2
+    ],
+    "ending": [
+      1,
+      2
+    ]
+  },
+  {
+    "keyword": "Friend / Meeting Companions",
+    "bengali": "বন্ধু / মিলন / আড্ডা",
+    "hindi": "दोस्त / मित्र / सखा",
+    "direct": [
+      "06",
+      "60",
+      "16",
+      "26"
+    ],
+    "house": [
+      6,
+      1
+    ],
+    "ending": [
+      6
+    ]
+  }
 ]
