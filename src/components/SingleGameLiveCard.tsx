@@ -364,7 +364,7 @@ export default function SingleGameLiveCard({
 
       {/* FR & SR Result Box (Grid 2 cols) */}
       <div
-        className={`grid grid-cols-2 gap-3 max-w-md transition-all rounded-2xl p-1 ${
+        className={`grid grid-cols-2 gap-2 sm:gap-3 max-w-md transition-all rounded-2xl p-1 ${
           isAnyDrawing ? 'border-2 border-rose-400 ring-4 ring-rose-500/10 shadow-sm' : ''
         }`}
       >
@@ -377,8 +377,8 @@ export default function SingleGameLiveCard({
           }`}
         >
           <div className="flex items-center justify-center gap-1 text-center">
-            <span className="text-xs font-bold text-amber-800 uppercase tracking-wider truncate">
-              1st Round ({game.fr_time})
+            <span className="text-[10.5px] sm:text-xs font-black uppercase text-amber-900 tracking-tight whitespace-nowrap">
+              1st ({game.fr_time})
             </span>
             {isFrDrawing && (
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping shrink-0" title="Live Draw Active"></span>
@@ -425,8 +425,8 @@ export default function SingleGameLiveCard({
           }`}
         >
           <div className="flex items-center justify-center gap-1 text-center">
-            <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider truncate">
-              2nd Round ({game.sr_time})
+            <span className="text-[10.5px] sm:text-xs font-black uppercase text-emerald-900 tracking-tight whitespace-nowrap">
+              2nd ({game.sr_time})
             </span>
             {isSrDrawing && (
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping shrink-0" title="Live Draw Active"></span>
