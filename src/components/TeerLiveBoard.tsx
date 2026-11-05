@@ -2,115 +2,16 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { RefreshCw, Copy, Check } from 'lucide-react';
 import { COMMUNITY_LINKS } from '../config/community';
 import archiveData from '../data/previous_teer_archive.json';
-import { getISTCurrentMinutes } from '../utils/liveTeerFetcher';
-
-const WhatsAppIcon = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
-  <svg className={`${className} fill-current`} viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-  </svg>
-);
-
-
-const GAME_SCHEDULE: Record<string, { frStart: number; srStart: number }> = {
-  juwai: {
-    frStart: 13 * 60 + 42, // 1:42 PM (aligned with Jowai ground delay)
-    srStart: 14 * 60 + 27  // 2:27 PM
-  },
-  shillong: {
-    frStart: 15 * 60 + 30, // 3:30 PM (Polo Ground real-time shooting start)
-    srStart: 16 * 60 + 30  // 4:30 PM (Polo Ground real-time shooting start)
-  },
-  khanapara: {
-    frStart: 15 * 60 + 48, // 3:48 PM (Khanapara real-time shooting start)
-    srStart: 16 * 60 + 18  // 4:18 PM (Khanapara real-time shooting start)
-  },
-  night: {
-    frStart: 22 * 60 + 18, // 10:18 PM (Night Archery real-time shooting start)
-    srStart: 23 * 60 + 18  // 11:18 PM (Night Archery real-time shooting start)
-  }
-};
-
-function checkIsDrawing(gameKey: string, round: 'fr' | 'sr', value: string, nowMin: number, isToday: boolean, isSunday: boolean): boolean {
-  if (!isToday || isSunday || !value || value.toLowerCase() !== 'xx') {
-    return false;
-  }
-  const sched = GAME_SCHEDULE[gameKey];
-  if (!sched) return false;
-
-  if (gameKey === 'night') {
-    if (round === 'fr') {
-      return (nowMin >= sched.frStart || nowMin < 1 * 60);
-    } else {
-      return (nowMin >= sched.srStart || nowMin < 1 * 60 + 30);
-    }
-  }
-
-  // Daytime teer games (Juwai, Shillong, Khanapara)
-  if (round === 'fr') {
-    return nowMin >= sched.frStart && nowMin <= 18 * 60;
-  } else {
-    return nowMin >= sched.srStart && nowMin <= 18 * 60 + 30;
-  }
-}
-
-const ALL_GAMES_METADATA: Record<string, { title: string }> = {
-  shillong: { title: 'SHILLONG TEER' },
-  khanapara: { title: 'KHANAPARA TEER' },
-  juwai: { title: 'JUWAI TEER' },
-  night: { title: 'NIGHT TEER' }
-};
-
-function getDynamicGameOrder(nowMin: number, viewMode: 'today' | 'yesterday', isSunday: boolean): string[] {
-  // If viewing yesterday or Sunday holiday, keep standard canonical order
-  if (viewMode === 'yesterday' || isSunday) {
-    return ['shillong', 'khanapara', 'juwai', 'night'];
-  }
-
-  // 1:15 PM to 3:15 PM: Juwai Teer Live Window (Draws at 1:45 PM & 2:30 PM)
-  if (nowMin >= 13 * 60 + 15 && nowMin < 15 * 60 + 15) {
-    return ['juwai', 'shillong', 'khanapara', 'night'];
-  }
-
-  // 3:15 PM to 4:00 PM: Shillong 1st Round Mega-Peak (Draws at 3:45 PM)
-  if (nowMin >= 15 * 60 + 15 && nowMin < 16 * 60) {
-    return ['shillong', 'khanapara', 'juwai', 'night'];
-  }
-
-  // 4:00 PM to 4:35 PM: Khanapara Active Window (Draws at 4:00 PM & 4:30 PM)
-  if (nowMin >= 16 * 60 && nowMin < 16 * 60 + 30) {
-    return ['khanapara', 'shillong', 'juwai', 'night'];
-  }
-
-  // 4:30 PM to 5:30 PM: Shillong 2nd Round Peak (Shooting starts 4:30 PM, Draws at 4:45 PM)
-  if (nowMin >= 16 * 60 + 30 && nowMin < 17 * 60 + 30) {
-    return ['shillong', 'khanapara', 'juwai', 'night'];
-  }
-
-  // 9:30 PM onwards to 1:00 AM (or early morning before 6:00 AM): Night Teer Window (10:30 PM & 11:30 PM)
-  if (nowMin >= 21 * 60 + 30 || nowMin < 6 * 60) {
-    return ['night', 'shillong', 'khanapara', 'juwai'];
-  }
-
-  // Default Daytime (Morning 6:00 AM to 1:15 PM & Evening 5:30 PM to 9:30 PM): Flagship Shillong first
-  return ['shillong', 'khanapara', 'juwai', 'night'];
-}
-
-interface GameResult {
-  name: string;
-  location: string;
-  status: string;
-  fr_time: string;
-  sr_time: string;
-  fr: string;
-  sr: string;
-}
-
-interface TeerData {
-  date: string;
-  updated_at: string;
-  games: Record<string, GameResult>;
-  yesterday?: any;
-}
+import type { TeerData, GameResult } from '../utils/teerShared';
+import {
+  GAME_SCHEDULE,
+  ALL_GAMES_METADATA,
+  checkIsDrawing,
+  getDynamicGameOrder,
+  getISTCurrentMinutes,
+  isSundayInIST,
+  WhatsAppIcon
+} from '../utils/teerShared';
 
 export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
   const [data, setData] = useState<TeerData>(initialData);
@@ -199,14 +100,21 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     return data.games;
   }, [viewMode, yesterday, data.games]);
 
-  // Check if today is Sunday in Indian Standard Time (Archery Holiday)
-  const isSunday = (() => {
-    try {
-      return new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date()) === 'Sun';
-    } catch {
-      return false;
+  const isSunday = isSundayInIST();
+
+  // Dynamic H1 Label & Date Synchronization (solves Issue 1 for homepage)
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const liveLabel = document.getElementById('hero-live-label');
+      const dateLabel = document.getElementById('hero-date-label');
+      if (liveLabel) {
+        liveLabel.textContent = viewMode === 'yesterday' ? 'Yesterday' : (isSunday ? 'Latest' : 'Today Live');
+      }
+      if (dateLabel) {
+        dateLabel.textContent = viewMode === 'yesterday' ? yesterdayFormattedDate : data.date.split('-').reverse().join('/');
+      }
     }
-  })();
+  }, [viewMode, yesterdayFormattedDate, data.date, isSunday]);
 
   const fetchLatest = async (isManual = false) => {
     setIsRefreshing(true);
