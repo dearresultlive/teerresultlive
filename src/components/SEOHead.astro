@@ -44,7 +44,7 @@ const websiteSchema = {
 };
 
 // Determine page category for contextual schemas
-const isSportsPage = ['/', '/shillong-teer', '/khanapara-teer', '/juwai-teer'].includes(cleanPath);
+const isSportsPage = ['/', '/shillong-teer', '/khanapara-teer', '/juwai-teer', '/shillong-night-teer'].includes(cleanPath);
 const isNewsArticle = isSportsPage || ['/previous-results', '/dream-numbers'].includes(cleanPath);
 const isAboutPage = cleanPath === '/about';
 const isContactPage = cleanPath === '/contact';
@@ -158,6 +158,29 @@ if (cleanPath === '/shillong-teer') {
     {
       q: "What is the payout rate for Khanapara Teer?",
       a: "Single numbers pay 80:1 (₹800 on a ₹10 ticket), House or Ending pays 9:1, and a forecast on both rounds pays 4,000:1."
+    }
+  ];
+} else if (cleanPath === '/shillong-night-teer') {
+  pageFaqs = [
+    {
+      q: "What time is Shillong Night Teer result declared today?",
+      a: "Shillong Night Teer 1st Round is declared at 10:30 PM IST and 2nd Round at 11:30 PM IST, Monday to Saturday."
+    },
+    {
+      q: "When does Night Teer shooting start?",
+      a: "Night archery shooting begins at 10:18 PM IST for the First Round and 11:18 PM IST for the Second Round."
+    },
+    {
+      q: "Where is Shillong Night Teer conducted?",
+      a: "Shillong Night Teer is conducted under illuminated archery grounds in Shillong, Meghalaya."
+    },
+    {
+      q: "Is Shillong Night Teer open on Sundays?",
+      a: "No, Sunday is an official archery holiday across Meghalaya. Night Teer operates from Monday to Saturday."
+    },
+    {
+      q: "What is the payout for Shillong Night Teer?",
+      a: "A direct 2-digit number win pays 80:1 (₹80 for ₹1 bet), while House or Ending pays 9:1, and Forecast pays 4,000:1."
     }
   ];
 } else if (cleanPath === '/juwai-teer') {

@@ -1,0 +1,194 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SingleGameLiveCard from '../components/SingleGameLiveCard';
+import liveData from '../data/teer_live_results.json';
+import archiveData from '../data/previous_teer_archive.json';
+import CommonNumbersCard from '../components/CommonNumbersCard';
+import PreviousResultsTable from '../components/PreviousResultsTable';
+import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const game = liveData.games.night;
+const todayDateStr = liveData.date.split('-').reverse().join('/');
+const yesterday = (archiveData && archiveData.find((item) => item.date < liveData.date)) || (archiveData && archiveData.length > 0 ? archiveData[0] : null);
+const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/') : '';
+---
+
+<Layout
+  title={`Shillong Night Teer Result Today Live • 1st & 2nd Round (${todayDateStr})`}
+  description={`Fastest official Shillong Night Teer result today live (${todayDateStr}) for 1st Round (10:30 PM) & 2nd Round (11:30 PM). 100% verified night archery hit numbers.`}
+>
+  <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Shillong Night Teer' }]} />
+
+    <header class="bg-white border-2 border-purple-400 rounded-2xl p-4 sm:p-6 text-slate-900 space-y-3 shadow-xs ring-4 ring-purple-50">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          Shillong Night Teer Result <span id="game-live-label">Today Live</span> • <span id="game-date-label">{todayDateStr}</span>
+        </h1>
+        <span class="text-xs bg-purple-50 text-purple-700 font-black border border-purple-300 px-2.5 py-1 rounded-full shadow-2xs">
+          ● Night Archery Counter Feed
+        </span>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-500 font-medium">
+        Conducted officially under illuminated archery grounds in Shillong, Meghalaya. The premier late-evening archery competition followed across Northeast India.
+      </p>
+
+      <!-- Interactive Zero-Refresh Live Result Card with Arrow Counting Animation -->
+      <SingleGameLiveCard
+        client:load
+        gameKey="night"
+        initialData={liveData}
+        themeColor="indigo"
+      />
+    </header>
+
+    <!-- Cross-Game Quick Navigation Hub -->
+    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto text-xs py-1 scrollbar-none">
+      <span class="text-slate-500 font-bold whitespace-nowrap text-[11px]">Quick Switch:</span>
+      <a href="/shillong-teer" class="inline-flex items-center gap-1 bg-white border border-amber-300 text-amber-800 font-bold px-2.5 py-1 rounded-lg hover:bg-amber-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Shillong Teer (3:45 PM)</span>
+      </a>
+      <a href="/khanapara-teer" class="inline-flex items-center gap-1 bg-white border border-emerald-300 text-emerald-800 font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Khanapara Teer (4:00 PM)</span>
+      </a>
+      <a href="/juwai-teer" class="inline-flex items-center gap-1 bg-white border border-blue-300 text-blue-800 font-bold px-2.5 py-1 rounded-lg hover:bg-blue-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🎯</span>
+        <span>Juwai Teer (1:45 PM)</span>
+      </a>
+      <a href="/dream-numbers" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>🌙</span>
+        <span>Dream Numbers</span>
+      </a>
+      <a href="/previous-results" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
+        <span>📊</span>
+        <span>Past Archive</span>
+      </a>
+    </div>
+
+    <!-- Today's Night Teer Common Numbers -->
+    <CommonNumbersCard client:visible filterGame="night" />
+
+    <!-- Interactive Teer Formula & Target Calculator -->
+    <TeerFormulaCalculator client:visible />
+
+    <!-- Historical Hit Archive Filtered to Night Teer -->
+    <PreviousResultsTable client:visible initialGame="night" />
+
+    <!-- In-Depth SEO Gazette for Shillong Night Teer -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          Guide to Shillong Night Teer Results &amp; Timings
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          Authorized nocturnal traditional archery competition conducted six nights a week in Shillong.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Official Shooting Schedule &amp; Night Declaration Timings
+        </h3>
+        <p class="text-slate-600">
+          Shillong Night Teer takes place every Monday to Saturday evening. Because shooting is conducted under sheltered, floodlit pavilions, the timing is strictly maintained:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>First Round (FR):</strong> Archers commence shooting at 10:18 PM IST, and verified winning numbers are announced at approximately <strong>10:30 PM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> Concluding round shooting starts at 11:18 PM IST, with the final hit number declared at approximately <strong>11:30 PM IST</strong>.</li>
+          <li><strong>Sunday Closure:</strong> Just like daytime games, no archery competitions take place on Sunday nights.</li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          How Night Teer Arrows are Counted
+        </h3>
+        <p class="text-slate-600">
+          Licensed traditional archers shoot pointed cane arrows at a circular straw target. When shooting concludes, official referees tally all arrows that remained firmly lodged in the target. The <strong>last two digits</strong> of the total hit count decide the declared result. For example, if 619 arrows hit the target, the declared result is <strong>19</strong>.
+        </p>
+      </div>
+
+      <!-- Official Prize & Payout Structure -->
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Night Teer Prize Rates &amp; Returns
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden font-mono mt-2">
+            <thead class="bg-purple-50 text-purple-950 font-black uppercase text-[11px] border-b border-purple-200">
+              <tr>
+                <th class="p-2.5 sm:p-3">Bet Type</th>
+                <th class="p-2.5 sm:p-3">Sample Bet</th>
+                <th class="p-2.5 sm:p-3">Return Ratio</th>
+                <th class="p-2.5 sm:p-3">Payout</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-purple-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Single / Direct Hit (FR or SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on "19"</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">80 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹800</td>
+              </tr>
+              <tr class="hover:bg-purple-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">House (Tens Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on House 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-purple-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Ending (Units Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on Ending 9</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-purple-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Forecast / Both Rounds (FR + SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on FR 19 + SR 54</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">4,000 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹40,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          How to Calculate Night Teer Common Numbers
+        </h3>
+        <p class="text-slate-600">
+          Enthusiasts analyze daytime results from Shillong (3:45 PM &amp; 4:45 PM) and Khanapara (4:00 PM &amp; 4:30 PM) to find recurring House and Ending digits for the Night contest. You can use our <a href="#formula-calculator" class="text-amber-700 font-bold hover:underline">Formula Calculator</a> above to enter daytime results and generate probabilistic Night targets.
+        </p>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Frequently Asked Questions (FAQs)
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">What time is Shillong Night Teer result declared?</summary>
+            <p class="mt-2 text-xs text-slate-600">First Round (FR) is declared at 10:30 PM IST and Second Round (SR) is declared at 11:30 PM IST, Monday to Saturday.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Where can I see previous Night Teer hit results?</summary>
+            <p class="mt-2 text-xs text-slate-600">Use the interactive table above or visit our <a href="/previous-results" class="text-amber-700 font-bold hover:underline">Previous Results Archive</a> to filter and inspect historical Night Teer winning numbers.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Is Night Teer open on Sundays?</summary>
+            <p class="mt-2 text-xs text-slate-600">No. In accordance with Meghalaya sports regulations, archery grounds remain closed on Sunday nights. Live shooting resumes every Monday night at 10:18 PM IST.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">How to get 0-second live alerts for Night Teer?</summary>
+            <p class="mt-2 text-xs text-slate-600">Join our official Telegram Channel or keep this page open; our live card updates with zero refresh within seconds of the referee declaration.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
