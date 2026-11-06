@@ -1,7 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SingleGameLiveCard from '../components/SingleGameLiveCard';
-import liveData from '../data/teer_live_results.json';
+import { getFreshTeerData } from '../utils/getFreshTeerData';
+
+const liveData = await getFreshTeerData();
 import archiveData from '../data/previous_teer_archive.json';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';

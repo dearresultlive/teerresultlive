@@ -6,7 +6,9 @@ import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import TeerPrizeCalculator from '../components/TeerPrizeCalculator';
 import DreamNumberSearch from '../components/DreamNumberSearch';
 import PreviousResultsTable from '../components/PreviousResultsTable';
-import liveData from '../data/teer_live_results.json';
+import { getFreshTeerData } from '../utils/getFreshTeerData';
+
+const liveData = await getFreshTeerData();
 
 const todayDateStr = liveData.date.split('-').reverse().join('/');
 ---
