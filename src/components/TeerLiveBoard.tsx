@@ -623,18 +623,6 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
               </div>
 
-              {/* In-Card Morning Previous Result Strip (Active ONLY before 1:00 PM when in Today view) */}
-              {currentISTMinutes < 13 * 60 && viewMode === 'today' && !isSunday && yesterday && (
-                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium flex-wrap gap-1">
-                  <span className="flex items-center gap-1 text-slate-600 font-bold">
-                    <span>⏮️</span>
-                    <span>Yesterday's Official:</span>
-                  </span>
-                  <span className="font-black text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/60">
-                    1st: <span className="text-slate-900">{yesterday[`${key}_fr`] || 'xx'}</span> | 2nd: <span className="text-slate-900">{yesterday[`${key}_sr`] || 'xx'}</span>
-                  </span>
-                </div>
-              )}
 
             </div>
           );

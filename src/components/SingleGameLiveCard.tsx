@@ -49,6 +49,18 @@ export default function SingleGameLiveCard({
     return (!isSunday && nowMin < 13 * 60) ? 'yesterday' : 'today';
   });
 
+  // Check URL hash/params on mount for direct tab navigation (e.g. /#yesterday)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (window.location.hash === '#yesterday' || params.get('tab') === 'yesterday' || params.get('view') === 'yesterday') {
+        setViewMode('yesterday');
+      } else if (window.location.hash === '#today' || params.get('tab') === 'today' || params.get('view') === 'today') {
+        setViewMode('today');
+      }
+    }
+  }, []);
+
   // Dynamic H1 Label & Date Synchronization (solves Issue 1 for dedicated game pages)
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -231,9 +243,6 @@ export default function SingleGameLiveCard({
       window.open(whatsappUrl, '_blank');
     }
   };
-
-  const yesterdayFr = yesterday ? yesterday[`${gameKey}_fr`] || 'xx' : 'xx';
-  const yesterdaySr = yesterday ? yesterday[`${gameKey}_sr`] || 'xx' : 'xx';
 
   return (
     <div className="space-y-3 pt-1">
@@ -465,26 +474,6 @@ export default function SingleGameLiveCard({
           )}
         </div>
       </div>
-
-      {/* Yesterday Result Strip (Only shown on Today view to provide yesterday's context) */}
-      {viewMode === 'today' && yesterday && (
-        <div className="bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 border-2 border-slate-200 rounded-xl p-3 max-w-md flex items-center justify-between text-xs shadow-xs mt-2">
-          <span className="text-slate-800 font-black text-xs flex items-center gap-1.5 uppercase tracking-wide">
-            <span className="text-amber-600 text-sm">⏮️</span>
-            <span>Yesterday ({yesterdayFormattedDate}):</span>
-          </span>
-          <div className="font-mono font-black text-xs flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 bg-amber-500 text-white px-2.5 py-1 rounded-md shadow-xs">
-              <span className="text-[10px] font-bold opacity-90">FR</span>
-              <span className="text-sm font-black">{yesterdayFr}</span>
-            </span>
-            <span className="inline-flex items-center gap-1 bg-emerald-600 text-white px-2.5 py-1 rounded-md shadow-xs">
-              <span className="text-[10px] font-bold opacity-90">SR</span>
-              <span className="text-sm font-black">{yesterdaySr}</span>
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
