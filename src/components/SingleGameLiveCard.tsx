@@ -298,13 +298,16 @@ export default function SingleGameLiveCard({
               type="button"
               onClick={() => fetchLatest(true)}
               disabled={isRefreshing}
-              className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-2.5 py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-blue-500/80 active:scale-95"
+              className="inline-flex items-center justify-center gap-1 sm:gap-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white p-2 sm:px-2.5 sm:py-1.5 rounded-lg font-black text-[11px] sm:text-xs transition-all disabled:opacity-60 cursor-pointer shadow-xs border border-blue-500/80 active:scale-95 shrink-0"
               title="Refresh Live Results"
+              aria-label="Refresh Live Results"
             >
               <RefreshCw
                 className={`w-3.5 h-3.5 shrink-0 ${isRefreshing ? 'animate-spin text-blue-200' : 'text-white'}`}
               />
-              <span>{isRefreshing ? 'Checking...' : 'Refresh'}</span>
+              <span className="hidden min-[360px]:inline">
+                {isRefreshing ? 'Checking...' : 'Refresh'}
+              </span>
             </button>
           )}
         </div>
