@@ -1,4 +1,5 @@
 ---
+import QuickSwitch from '../components/QuickSwitch.astro';
 import Layout from '../layouts/Layout.astro';
 import SingleGameLiveCard from '../components/SingleGameLiveCard';
 import { getFreshTeerData } from '../utils/getFreshTeerData';
@@ -45,30 +46,7 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
       />
     </header>
 
-    <!-- Cross-Game Quick Navigation Hub -->
-    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto text-xs py-1 scrollbar-none">
-      <span class="text-slate-500 font-bold whitespace-nowrap text-[11px]">Quick Switch:</span>
-      <a href="/shillong-teer" class="inline-flex items-center gap-1 bg-white border border-amber-300 text-amber-800 font-bold px-2.5 py-1 rounded-lg hover:bg-amber-50 transition-colors whitespace-nowrap shadow-2xs">
-        <span>🎯</span>
-        <span>Shillong Teer (3:45 PM)</span>
-      </a>
-      <a href="/khanapara-teer" class="inline-flex items-center gap-1 bg-white border border-emerald-300 text-emerald-800 font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-50 transition-colors whitespace-nowrap shadow-2xs">
-        <span>🎯</span>
-        <span>Khanapara Teer (4:00 PM)</span>
-      </a>
-      <a href="/shillong-night-teer" class="inline-flex items-center gap-1 bg-white border border-purple-300 text-purple-800 font-bold px-2.5 py-1 rounded-lg hover:bg-purple-50 transition-colors whitespace-nowrap shadow-2xs">
-        <span>🎯</span>
-        <span>Night Teer (10:30 PM)</span>
-      </a>
-      <a href="/dream-numbers" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
-        <span>🌙</span>
-        <span>Dream Numbers</span>
-      </a>
-      <a href="/previous-results" class="inline-flex items-center gap-1 bg-white border border-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shadow-2xs">
-        <span>📊</span>
-        <span>Past Archive</span>
-      </a>
-    </div>
+    <QuickSwitch currentGame="juwai" />
 
     <!-- Today's Juwai Common Numbers -->
     <CommonNumbersCard client:visible filterGame="juwai" />

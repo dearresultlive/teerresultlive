@@ -1,0 +1,91 @@
+---
+interface Props {
+  currentGame?: 'shillong' | 'khanapara' | 'juwai' | 'night' | 'dream' | 'archive';
+}
+
+const { currentGame } = Astro.props;
+
+const allLinks = [
+  {
+    key: 'shillong',
+    href: '/shillong-teer',
+    name: 'Shillong Teer (3:45 PM)',
+    icon: '🎯',
+    border: 'border-amber-300',
+    text: 'text-amber-800',
+    hover: 'hover:bg-amber-50 active:bg-amber-100'
+  },
+  {
+    key: 'khanapara',
+    href: '/khanapara-teer',
+    name: 'Khanapara Teer (4:00 PM)',
+    icon: '🎯',
+    border: 'border-emerald-300',
+    text: 'text-emerald-800',
+    hover: 'hover:bg-emerald-50 active:bg-emerald-100'
+  },
+  {
+    key: 'juwai',
+    href: '/juwai-teer',
+    name: 'Juwai Teer (1:45 PM)',
+    icon: '🎯',
+    border: 'border-blue-300',
+    text: 'text-blue-800',
+    hover: 'hover:bg-blue-50 active:bg-blue-100'
+  },
+  {
+    key: 'night',
+    href: '/shillong-night-teer',
+    name: 'Night Teer (10:30 PM)',
+    icon: '🎯',
+    border: 'border-purple-300',
+    text: 'text-purple-800',
+    hover: 'hover:bg-purple-50 active:bg-purple-100'
+  },
+  {
+    key: 'dream',
+    href: '/dream-numbers',
+    name: 'Dream Numbers',
+    icon: '🌙',
+    border: 'border-slate-300',
+    text: 'text-slate-700',
+    hover: 'hover:bg-slate-100 active:bg-slate-200'
+  },
+  {
+    key: 'archive',
+    href: '/previous-results',
+    name: 'Past Archive',
+    icon: '📊',
+    border: 'border-slate-300',
+    text: 'text-slate-700',
+    hover: 'hover:bg-slate-100 active:bg-slate-200'
+  }
+];
+
+const links = allLinks.filter((item) => item.key !== currentGame);
+---
+
+<!-- Cross-Game Quick Navigation Hub (Mobile-Optimized Touch Targets) -->
+<nav aria-label="Quick game switch" class="w-full">
+  <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-1.5 px-0.5 touch-pan-x select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <span class="text-slate-500 font-extrabold whitespace-nowrap text-xs flex items-center gap-1 shrink-0">
+      <span>⚡</span>
+      <span>Quick Switch:</span>
+    </span>
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class={`inline-flex items-center gap-1.5 bg-white ${link.border} ${link.text} font-bold text-xs px-3 py-2 sm:py-1.5 rounded-xl border shadow-2xs whitespace-nowrap active:scale-95 ${link.hover} transition-all cursor-pointer shrink-0 min-h-[38px] sm:min-h-[32px]`}
+      >
+        <span>{link.icon}</span>
+        <span>{link.name}</span>
+      </a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  div::-webkit-scrollbar {
+    display: none;
+  }
+</style>
