@@ -466,8 +466,8 @@ export default function SingleGameLiveCard({
         </div>
       </div>
 
-      {/* Yesterday Result Strip */}
-      {yesterday && (
+      {/* Yesterday Result Strip (Only shown on Today view to provide yesterday's context) */}
+      {viewMode === 'today' && yesterday && (
         <div className="bg-gradient-to-r from-amber-50/80 via-slate-50 to-emerald-50/80 border-2 border-slate-200 rounded-xl p-3 max-w-md flex items-center justify-between text-xs shadow-xs mt-2">
           <span className="text-slate-800 font-black text-xs flex items-center gap-1.5 uppercase tracking-wide">
             <span className="text-amber-600 text-sm">⏮️</span>
