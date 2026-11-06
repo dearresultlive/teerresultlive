@@ -35,10 +35,13 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   const result: TeerData = JSON.parse(JSON.stringify(liveData));
 
   // Determine current date in IST
+  const istDateParts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).formatToParts(new Date());
+  const isSunday = istDateParts.find(p => p.type === 'weekday')?.value === 'Sun';
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
 
   // Automatic midnight date rollover in case Git has not run morning commit yet
-  if (result.date !== todayIST) {
+  // NOTE: On Sundays, archery is suspended; preserve Saturday's latest declared results
+  if (result.date !== todayIST && !isSunday) {
     const priorRecord = {
       date: result.date,
       shillong_fr: result.games.shillong.fr,
