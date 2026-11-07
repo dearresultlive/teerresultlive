@@ -1,6 +1,7 @@
 [
   {
     "keyword": "Snake / Serpent",
+    "assamese": "সাপ / সৰ্প",
     "bengali": "সাপ / সর্প",
     "hindi": "सांप / सर्प",
     "direct": [
@@ -22,6 +23,7 @@
   },
   {
     "keyword": "Snake Bite / Attacked",
+    "assamese": "সাপে কামোৰা / সাপে খোঁটা / সৰ্প দংশন",
     "bengali": "সাপের কামড় / দংশন",
     "hindi": "सांप का काटना / डंक",
     "direct": [
@@ -40,6 +42,7 @@
   },
   {
     "keyword": "Water / River / Ocean",
+    "assamese": "পানী / নদী / সাগৰ",
     "bengali": "জল / পানি / নদী",
     "hindi": "पानी / जल / नदी",
     "direct": [
@@ -62,6 +65,7 @@
   },
   {
     "keyword": "Clean Water / Drinking",
+    "assamese": "পৰিষ্কাৰ পানী / পানী খোৱা",
     "bengali": "পরিষ্কার জল / পানি খাওয়া",
     "hindi": "साफ पानी / पानी पीना",
     "direct": [
@@ -80,6 +84,7 @@
   },
   {
     "keyword": "Swimming in Water",
+    "assamese": "পানীত সাঁতোৰা / সাঁতোৰা",
     "bengali": "সাঁতার কাটা",
     "hindi": "पानी में तैरना",
     "direct": [
@@ -99,6 +104,7 @@
   },
   {
     "keyword": "Money / Currency Notes",
+    "assamese": "টকা / পইচা / ধন",
     "bengali": "টাকা / নোট / পয়সা",
     "hindi": "पैसा / धन / नोट",
     "direct": [
@@ -120,6 +126,7 @@
   },
   {
     "keyword": "Gold Coins / Treasure",
+    "assamese": "সোণৰ মুদ্ৰা / সোণ / গুপ্তধন",
     "bengali": "সোনার কয়েন / গুপ্তধন",
     "hindi": "सोने का सिक्का / खजाना",
     "direct": [
@@ -139,6 +146,7 @@
   },
   {
     "keyword": "Silver / Metal Coins",
+    "assamese": "ৰূপ / ধাতুৰ মুদ্ৰা",
     "bengali": "রূপা / মুদ্রা / কয়েন",
     "hindi": "चांदी / धातु / सिक्का",
     "direct": [
@@ -158,6 +166,7 @@
   },
   {
     "keyword": "Tooth Falling / Broken Tooth",
+    "assamese": "দাঁত সৰা / ভগা দাঁত",
     "bengali": "দাঁত পড়া / ভাঙা দাঁত",
     "hindi": "दांत टूटना / दांत गिरना",
     "direct": [
@@ -177,6 +186,7 @@
   },
   {
     "keyword": "Dead Body / Funeral / Corpse",
+    "assamese": "মৃতদেহ / শৱদেহ / মৰাশ",
     "bengali": "মৃতদেহ / লাশ / শবদেহ",
     "hindi": "शव / लाश / अंतिम संस्कार",
     "direct": [
@@ -196,6 +206,7 @@
   },
   {
     "keyword": "Doctor / Hospital / Clinic",
+    "assamese": "ডাক্তাৰ / চিকিৎসালয় / দৰব",
     "bengali": "ডাক্তার / হাসপাতাল / ওষুধ",
     "hindi": "डॉक्टर / अस्पताल / दवा",
     "direct": [
@@ -215,6 +226,7 @@
   },
   {
     "keyword": "Fire / Flame",
+    "assamese": "জুই / অগ্নি / শিখা",
     "bengali": "আগুন / শিখা",
     "hindi": "आग / ज्वाला",
     "direct": [
@@ -234,6 +246,7 @@
   },
   {
     "keyword": "Dog / Puppy",
+    "assamese": "কুকুৰ / কুকুৰ পোৱালি",
     "bengali": "কুকুর / বাচ্ছা কুকুর",
     "hindi": "कुत्ता / पिल्ला",
     "direct": [
@@ -252,6 +265,7 @@
   },
   {
     "keyword": "Cat / Kitten",
+    "assamese": "মেকুৰী / মেকুৰী পোৱালি",
     "bengali": "বিড়াল / মেকুর",
     "hindi": "बिल्ली / बिलाव",
     "direct": [
@@ -270,6 +284,7 @@
   },
   {
     "keyword": "Cow / Bull / Buffalo",
+    "assamese": "গৰু / দামুৰি / ম’হ",
     "bengali": "গরু / ষাঁড় / মহিষ",
     "hindi": "गाय / बैल / भैंस",
     "direct": [
@@ -289,6 +304,7 @@
   },
   {
     "keyword": "Fish / Fishing",
+    "assamese": "মাছ / মাছ মৰা / মাছ ধৰা",
     "bengali": "মাছ / মাছ ধরা",
     "hindi": "मछली / मछली पकड़ना",
     "direct": [
@@ -309,6 +325,7 @@
   },
   {
     "keyword": "Tree / Plant / Bamboo",
+    "assamese": "গছ / বাঁহ / গছপুলি",
     "bengali": "গাছ / বাঁশ / বৃক্ষ",
     "hindi": "पेड़ / पौधा / बांस",
     "direct": [
@@ -327,6 +344,7 @@
   },
   {
     "keyword": "Forest / Woods / Jungle",
+    "assamese": "হাবি / অৰণ্য / জংঘল",
     "bengali": "জঙ্গল / বনভূমি",
     "hindi": "जंगल / वन",
     "direct": [
@@ -345,6 +363,7 @@
   },
   {
     "keyword": "Bird / Flying",
+    "assamese": "চৰাই / চৰাই উৰা",
     "bengali": "পাখি / আকাশে ওড়া",
     "hindi": "पक्षी / उड़ना",
     "direct": [
@@ -364,6 +383,7 @@
   },
   {
     "keyword": "Police / Army / Soldier",
+    "assamese": "পুলিচ / সেনা / ফৌজি",
     "bengali": "পুলিশ / সেনা / সৈন্য",
     "hindi": "पुलिस / सेना / फौजी",
     "direct": [
@@ -383,6 +403,7 @@
   },
   {
     "keyword": "Jail / Prison / Handcuffs",
+    "assamese": "কাৰাগাৰ / জেল / হেণ্ডকাফ",
     "bengali": "জেল / কারাগার / হাতকড়া",
     "hindi": "जेल / कैद / हथकड़ी",
     "direct": [
@@ -401,6 +422,7 @@
   },
   {
     "keyword": "Ghost / Spirit / Nightmare",
+    "assamese": "ভূত / প্রেত / বেয়া সপোন",
     "bengali": "ভূত / প্রেত / খারাপ স্বপ্ন",
     "hindi": "भूत / आत्मा / बुरा सपना",
     "direct": [
@@ -420,6 +442,7 @@
   },
   {
     "keyword": "Child / Baby / Newborn",
+    "assamese": "কেঁচুৱা / সন্তান / শিশু",
     "bengali": "শিশু / বাচ্চা / সন্তান",
     "hindi": "बच्चा / शिशु / बालक",
     "direct": [
@@ -439,6 +462,7 @@
   },
   {
     "keyword": "Blood / Bleeding",
+    "assamese": "তেজ / ৰক্ত / তেজ ওলোৱা",
     "bengali": "রক্ত / রক্তপাত",
     "hindi": "खून / रक्त / चोट",
     "direct": [
@@ -457,6 +481,7 @@
   },
   {
     "keyword": "Train / Railway Track",
+    "assamese": "ৰে’লগাড়ী / ৰে’ল লাইন",
     "bengali": "রেলগাড়ি / রেললাইন",
     "hindi": "रेलगाड़ी / ट्रेन / पटरी",
     "direct": [
@@ -476,6 +501,7 @@
   },
   {
     "keyword": "Car / Vehicle / Auto",
+    "assamese": "গাড়ী / মটৰ গাড়ী",
     "bengali": "গাড়ি / মোটরযান",
     "hindi": "गाड़ी / कार / वाहन",
     "direct": [
@@ -494,6 +520,7 @@
   },
   {
     "keyword": "Bicycle / Bike / Scooter",
+    "assamese": "চাইকেল / বাইক",
     "bengali": "সাইকেল / বাইক",
     "hindi": "साइकिल / बाइक / स्कूटर",
     "direct": [
@@ -511,6 +538,7 @@
   },
   {
     "keyword": "Bus / Big Truck",
+    "assamese": "বাছ / ট্ৰাক",
     "bengali": "বাস / ট্রাক",
     "hindi": "बस / ट्रक",
     "direct": [
@@ -529,6 +557,7 @@
   },
   {
     "keyword": "Gold / Jewellery / Necklace",
+    "assamese": "সোণ / গহনা / অলংকাৰ",
     "bengali": "সোনা / গহনা / অলঙ্কার",
     "hindi": "सोना / गहने / जेवर",
     "direct": [
@@ -547,6 +576,7 @@
   },
   {
     "keyword": "Elephant / Wild Tusker",
+    "assamese": "হাতী / বনৰীয়া হাতী",
     "bengali": "হাতি / বুনো হাতি",
     "hindi": "हाथी / गजराज",
     "direct": [
@@ -566,6 +596,7 @@
   },
   {
     "keyword": "Tiger / Lion / Leopard",
+    "assamese": "বাঘ / সিংহ / নাহৰফুটুকী",
     "bengali": "বাঘ / সিংহ / চিতা",
     "hindi": "बाघ / शेर / चीता",
     "direct": [
@@ -584,6 +615,7 @@
   },
   {
     "keyword": "Horse / Riding Horse",
+    "assamese": "ঘোঁৰা / ঘোঁৰা দৌৰ",
     "bengali": "ঘোড়া / ঘোড়দৌড়",
     "hindi": "घोड़ा / घुड़सवारी",
     "direct": [
@@ -603,6 +635,7 @@
   },
   {
     "keyword": "Monkey / Langur",
+    "assamese": "বান্দৰ / লাঙুৰ",
     "bengali": "বানর / বাঁদর",
     "hindi": "बंदर / लंगूर",
     "direct": [
@@ -621,6 +654,7 @@
   },
   {
     "keyword": "House / Building / Construction",
+    "assamese": "ঘৰ / বাসগৃহ / অট্টালিকা",
     "bengali": "বাড়ি / ঘর / প্রাসাদ",
     "hindi": "घर / मकान / इमारत",
     "direct": [
@@ -639,6 +673,7 @@
   },
   {
     "keyword": "Aeroplane / Helicopter / Sky",
+    "assamese": "উৰাজাহাজ / বিমান / আকাশ",
     "bengali": "বিমান / আকাশ / বিমান ভ্রমণ",
     "hindi": "हवाई जहाज / हेलीकॉप्टर / आकाश",
     "direct": [
@@ -657,6 +692,7 @@
   },
   {
     "keyword": "Wedding / Marriage Party",
+    "assamese": "বিয়া / বিবাহ / দৰা-কইনা",
     "bengali": "বিয়ে / বিবাহ / শুভকাজ",
     "hindi": "शादी / विवाह / बारात",
     "direct": [
@@ -675,6 +711,7 @@
   },
   {
     "keyword": "Fight / Quarrel / Argument",
+    "assamese": "মাৰপিট / কাজিয়া / যুদ্ধ",
     "bengali": "মারামারি / ঝগড়া / যুদ্ধ",
     "hindi": "लड़ाई / झगड़ा / मारपीट",
     "direct": [
@@ -693,6 +730,7 @@
   },
   {
     "keyword": "Rain / Thunderstorm / Hail",
+    "assamese": "বৰষুণ / ধুমুহা / মেঘ",
     "bengali": "বৃষ্টি / ঝড় / মেঘ",
     "hindi": "बारिश / तूफान / ओले",
     "direct": [
@@ -712,6 +750,7 @@
   },
   {
     "keyword": "Milk / Dairy",
+    "assamese": "গাখীৰ / মাখন",
     "bengali": "দুধ / ক্ষীর",
     "hindi": "दूध / मलाई",
     "direct": [
@@ -730,6 +769,7 @@
   },
   {
     "keyword": "God / Temple / Puja / Church",
+    "assamese": "ভগৱান / মন্দিৰ / পূজা / গিৰ্জা",
     "bengali": "ভগবান / ঈশ্বর / মন্দির / পূজা",
     "hindi": "भगवान / ईश्वर / मंदिर / पूजा",
     "direct": [
@@ -749,6 +789,7 @@
   },
   {
     "keyword": "Mosque / Namaz / Quran",
+    "assamese": "মছজিদ / নামাজ / কোৰআন",
     "bengali": "মসজিদ / নামাজ / প্রার্থনা",
     "hindi": "मस्जिद / नमाज़ / इबादत",
     "direct": [
@@ -767,6 +808,7 @@
   },
   {
     "keyword": "Egg / Bird Eggs",
+    "assamese": "কণী / হাঁহৰ কণী",
     "bengali": "ডিম / হাঁসের ডিম",
     "hindi": "अंडा / चिड़िया का अंडा",
     "direct": [
@@ -786,6 +828,7 @@
   },
   {
     "keyword": "Moon / Full Moon",
+    "assamese": "জোন / পূৰ্ণিমা / জোনাক",
     "bengali": "চাঁদ / পূর্ণিমা / জ্যোৎস্না",
     "hindi": "चांद / पूर्णिमा / चंद्रमा",
     "direct": [
@@ -805,6 +848,7 @@
   },
   {
     "keyword": "Sun / Sunrise / Sunshine",
+    "assamese": "সূৰ্য / ৰ’দ / বেলি",
     "bengali": "সূর্য / সূর্যোদয় / রোদ",
     "hindi": "सूरज / सूर्योदय / धूप",
     "direct": [
@@ -823,6 +867,7 @@
   },
   {
     "keyword": "Stars / Night Sky",
+    "assamese": "তৰা / নিশাৰ আকাশ",
     "bengali": "তারা / রাতের আকাশ",
     "hindi": "तारे / सितारे",
     "direct": [
@@ -841,6 +886,7 @@
   },
   {
     "keyword": "Flower / Garden",
+    "assamese": "ফুল / ফুলনি / বাগিচা",
     "bengali": "ফুল / বাগান / পুষ্প",
     "hindi": "फूल / बगीचा / पुष्प",
     "direct": [
@@ -859,6 +905,7 @@
   },
   {
     "keyword": "Meat / Flesh / Butchering",
+    "assamese": "মাংস / মঙহ",
     "bengali": "মাংস / গোশত",
     "hindi": "मांस / मीट",
     "direct": [
@@ -877,6 +924,7 @@
   },
   {
     "keyword": "Book / Exam / Studying",
+    "assamese": "কিতাপ / পৰীক্ষা / পঢ়া-শুনা",
     "bengali": "বই / পরীক্ষা / পড়া",
     "hindi": "किताब / परीक्षा / पढ़ाई",
     "direct": [
@@ -895,6 +943,7 @@
   },
   {
     "keyword": "Boat / Ship / Sailing",
+    "assamese": "নাও / জাহাজ / নাও বোৱা",
     "bengali": "নৌকা / জাহাজ / জলযান",
     "hindi": "नाव / जहाज / नौका",
     "direct": [
@@ -913,6 +962,7 @@
   },
   {
     "keyword": "King / Queen / Minister",
+    "assamese": "ৰজা / ৰাণী / মন্ত্ৰী",
     "bengali": "রাজা / রানী / মন্ত্রী",
     "hindi": "राजा / रानी / नेता",
     "direct": [
@@ -931,6 +981,7 @@
   },
   {
     "keyword": "Shoe / Chappal / Slippers",
+    "assamese": "জোতা / চেন্দেল",
     "bengali": "জুতো / চটি / চপ্পল",
     "hindi": "जूता / चप्पल / खड़ाऊं",
     "direct": [
@@ -949,6 +1000,7 @@
   },
   {
     "keyword": "Theft / Thief / Robber",
+    "assamese": "চুৰি / চোৰ / ডকাইত",
     "bengali": "চুরি / চোর / ডাকাত",
     "hindi": "चोरी / चोर / डाकू",
     "direct": [
@@ -967,6 +1019,7 @@
   },
   {
     "keyword": "Key / Padlock / Lock",
+    "assamese": "চাবি / তলা",
     "bengali": "চাবি / তালা",
     "hindi": "चाबी / ताला",
     "direct": [
@@ -986,6 +1039,7 @@
   },
   {
     "keyword": "Knife / Dagger / Sword",
+    "assamese": "কটাৰী / তৰোৱাল / ডেগাৰ",
     "bengali": "ছুরি / তলোয়ার / ছুরি মারা",
     "hindi": "चाकू / तलवार / छुरी",
     "direct": [
@@ -1004,6 +1058,7 @@
   },
   {
     "keyword": "Gun / Pistol / Shooting",
+    "assamese": "বন্দুক / পিস্তল / গুলী",
     "bengali": "বন্দুক / পিস্তল / গুলি",
     "hindi": "बंदूक / पिस्तौल / गोली",
     "direct": [
@@ -1022,6 +1077,7 @@
   },
   {
     "keyword": "Bridge / Flyover / Crossing",
+    "assamese": "দলং / সেতু / ফ্লাইঅভাৰ",
     "bengali": "সেতু / ব্রিজ / পুল",
     "hindi": "पुल / सेतु / फ्लाईओवर",
     "direct": [
@@ -1041,6 +1097,7 @@
   },
   {
     "keyword": "Rice / Food / Feasting",
+    "assamese": "ভাত / আহাৰ / ভোজ",
     "bengali": "ভাত / খাবার / ভোজ",
     "hindi": "चावल / खाना / दावत",
     "direct": [
@@ -1060,6 +1117,7 @@
   },
   {
     "keyword": "Mirror / Looking in Glass",
+    "assamese": "আইনা / দাপোণ",
     "bengali": "আয়না / কাঁচ / চেহারা দেখা",
     "hindi": "आईना / शीशा / दर्पण",
     "direct": [
@@ -1079,6 +1137,7 @@
   },
   {
     "keyword": "Watch / Clock / Time",
+    "assamese": "ঘড়ী / সময়",
     "bengali": "ঘড়ি / সময় / দেওয়াল ঘড়ি",
     "hindi": "घड़ी / समय / वक़्त",
     "direct": [
@@ -1098,6 +1157,7 @@
   },
   {
     "keyword": "Umbrella / Parasol",
+    "assamese": "ছাতি / জাপি",
     "bengali": "ছাতা / রোদছাতা",
     "hindi": "छाता / छतरी",
     "direct": [
@@ -1115,6 +1175,7 @@
   },
   {
     "keyword": "Crying / Tears / Mourning",
+    "assamese": "কান্দোন / চকুলো / শোক",
     "bengali": "কান্না / অশ্রু / শোক",
     "hindi": "रोना / आंसू / विलाप",
     "direct": [
@@ -1134,6 +1195,7 @@
   },
   {
     "keyword": "Laughing / Joy / Celebration",
+    "assamese": "হাঁহি / আনন্দ / উৎসৱ",
     "bengali": "হাসি / আনন্দ / উৎসব",
     "hindi": "हंसना / खुशी / उत्सव",
     "direct": [
@@ -1152,6 +1214,7 @@
   },
   {
     "keyword": "Falling from Height / Cliff",
+    "assamese": "ওপৰৰ পৰা পৰা / গাত",
     "bengali": "উঁচু থেকে পড়া / খাদ",
     "hindi": "ऊंचाई से गिरना / खाई",
     "direct": [
@@ -1170,6 +1233,7 @@
   },
   {
     "keyword": "Market / Shopping / Bazaar",
+    "assamese": "বজাৰ / হাট / কিনা-বেচা",
     "bengali": "বাজার / হাট / কেনাকাটা",
     "hindi": "बाजार / हाट / खरीदारी",
     "direct": [
@@ -1188,6 +1252,7 @@
   },
   {
     "keyword": "Tea / Coffee / Tea Stall",
+    "assamese": "চাহ / কফি / চাহ দোকান",
     "bengali": "চা / কফি / চায়ের দোকান",
     "hindi": "चाय / कॉफी / चाय की दुकान",
     "direct": [
@@ -1206,6 +1271,7 @@
   },
   {
     "keyword": "Frog / Toads",
+    "assamese": "ভেকুলী / বেং",
     "bengali": "ব্যাঙ / কোলাব্যাঙ",
     "hindi": "मेंढक / दादुर",
     "direct": [
@@ -1224,6 +1290,7 @@
   },
   {
     "keyword": "Honey / Honeybee / Beehive",
+    "assamese": "মৌমাখি / মৌজোল / মৌচাক",
     "bengali": "মৌমাছি / মধু / মৌচাক",
     "hindi": "मधुमक्खी / शहद / छत्ता",
     "direct": [
@@ -1242,6 +1309,7 @@
   },
   {
     "keyword": "Snake Shedding Skin",
+    "assamese": "সাপৰ মোট সলোৱা / মোট",
     "bengali": "সাপের খোলস ছাড়া",
     "hindi": "सांप की केंचुल",
     "direct": [
@@ -1260,6 +1328,7 @@
   },
   {
     "keyword": "Mother / Father / Old Person",
+    "assamese": "পিতা / মাতা / আই-বোপাই / বুঢ়া মানুহ",
     "bengali": "বাবা / মা / বৃদ্ধ ব্যক্তি",
     "hindi": "माता / पिता / बुजुर्ग",
     "direct": [
@@ -1279,6 +1348,7 @@
   },
   {
     "keyword": "Friend / Meeting Companions",
+    "assamese": "বন্ধু / সখা / মিলন",
     "bengali": "বন্ধু / মিলন / আড্ডা",
     "hindi": "दोस्त / मित्र / सखा",
     "direct": [

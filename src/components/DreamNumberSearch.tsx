@@ -8,11 +8,12 @@ export default function DreamNumberSearch() {
   const filtered = useMemo(() => {
     if (!query.trim()) return dreamList;
     const q = query.toLowerCase().trim();
-    return dreamList.filter(item => 
+    return dreamList.filter((item: any) => 
       item.keyword.toLowerCase().includes(q) ||
-      item.bengali.toLowerCase().includes(q) ||
-      item.hindi.toLowerCase().includes(q) ||
-      item.direct.some(d => d.includes(q))
+      (item.assamese && item.assamese.toLowerCase().includes(q)) ||
+      (item.bengali && item.bengali.toLowerCase().includes(q)) ||
+      (item.hindi && item.hindi.toLowerCase().includes(q)) ||
+      item.direct.some((d: string) => d.includes(q))
     );
   }, [query]);
 
@@ -35,7 +36,7 @@ export default function DreamNumberSearch() {
             <span>Teer Dream Number Calculator</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Search your dream symbols to find traditional lucky Direct, House, and Ending numbers.
+            Search your dream symbols in Assamese (অসমীয়া), English, or Hindi to find traditional lucky Direct, House, and Ending numbers.
           </p>
         </div>
 
@@ -51,7 +52,7 @@ export default function DreamNumberSearch() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type your dream (e.g. Snake, Water, Fish, River, Money)..."
+            placeholder="Type your dream (e.g. সাপ, পানী, টকা, Snake, Water, Fish, River, Money)..."
             className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 pl-10 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-hidden focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-medium"
           />
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
@@ -72,24 +73,32 @@ export default function DreamNumberSearch() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500 px-0.5">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="font-bold text-slate-600">Popular:</span>
-            {['Snake', 'Water', 'Money', 'Fish', 'Fire', 'Dog', 'Tiger'].map((p) => (
+            {[
+              { label: 'সাপ (Snake)', val: 'Snake' },
+              { label: 'পানী (Water)', val: 'Water' },
+              { label: 'টকা (Money)', val: 'Money' },
+              { label: 'মাছ (Fish)', val: 'Fish' },
+              { label: 'জুই (Fire)', val: 'Fire' },
+              { label: 'কুকুৰ (Dog)', val: 'Dog' },
+              { label: 'বাঘ (Tiger)', val: 'Tiger' }
+            ].map((p) => (
               <button
-                key={p}
+                key={p.val}
                 type="button"
-                onClick={() => setQuery(p)}
+                onClick={() => setQuery(p.val)}
                 className={`px-2 py-0.5 rounded-md border text-[10px] font-semibold transition-colors cursor-pointer ${
-                  query.toLowerCase() === p.toLowerCase()
+                  query.toLowerCase() === p.val.toLowerCase()
                     ? 'bg-amber-500 text-slate-950 border-amber-500 font-bold'
                     : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
                 }`}
               >
-                {p}
+                {p.label}
               </button>
             ))}
           </div>
 
-          <span className="text-[10px] text-slate-400 font-medium">
-            Search in: English • অসমীয়া • বাংলা • हिंदी
+          <span className="text-[10px] text-slate-500 font-medium">
+            Search in: <strong className="text-emerald-700 font-bold">অসমীয়া (Assamese)</strong> • English • हिंदी • বাংলা
           </span>
         </div>
       </div>
@@ -97,7 +106,7 @@ export default function DreamNumberSearch() {
       {/* Results List */}
       <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
         {filtered.length > 0 ? (
-          filtered.map((item, idx) => (
+          filtered.map((item: any, idx: number) => (
             <div
               key={idx}
               className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-100/70 hover:border-slate-300 transition-colors"
@@ -106,9 +115,28 @@ export default function DreamNumberSearch() {
                 <span className="font-bold text-sm text-slate-900 block">
                   {item.keyword}
                 </span>
-                <span className="text-xs text-slate-500 font-medium">
-                  {item.bengali} • {item.hindi}
-                </span>
+                <div className="flex items-center gap-1.5 flex-wrap text-xs text-slate-600 font-medium mt-1">
+                  <span className="font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-300/80 px-1.5 py-0.5 rounded text-[10px]">
+                    অসমীয়া
+                  </span>
+                  <span className="font-bold text-slate-900">
+                    {item.assamese || item.bengali}
+                  </span>
+                  <span className="text-slate-300">•</span>
+                  <span className="font-bold text-slate-700 bg-slate-100 border border-slate-300 px-1.5 py-0.5 rounded text-[10px]">
+                    हिंदी
+                  </span>
+                  <span>{item.hindi}</span>
+                  {item.bengali && item.bengali !== item.assamese && (
+                    <>
+                      <span className="text-slate-300">•</span>
+                      <span className="font-bold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded text-[10px]">
+                        বাংলা
+                      </span>
+                      <span className="text-slate-500">{item.bengali}</span>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Numbers: Direct / House / Ending */}
@@ -116,7 +144,7 @@ export default function DreamNumberSearch() {
                 <div className="flex items-center gap-1">
                   <span className="text-[10px] font-bold text-slate-500 uppercase">Direct:</span>
                   <div className="flex items-center gap-1">
-                    {item.direct.map(num => (
+                    {item.direct.map((num: string) => (
                       <button
                         key={num}
                         type="button"
@@ -149,7 +177,7 @@ export default function DreamNumberSearch() {
         ) : (
           <div className="text-center py-8 text-slate-500 text-xs">
             <p className="font-medium">No exact dream match found for "{query}".</p>
-            <p className="text-[11px] text-slate-400 mt-1">Try searching for keywords like "Water", "Snake", "Money", or "Fish".</p>
+            <p className="text-[11px] text-slate-400 mt-1">Try searching for keywords like "পানী", "সাপ", "টকা", "Water", "Snake", "Money", or "Fish".</p>
           </div>
         )}
       </div>
