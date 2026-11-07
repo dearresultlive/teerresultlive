@@ -592,20 +592,11 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                       </div>
                     </div>
                   ) : (
-                    <>
-                      <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                        game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
-                      }`}>
-                        {game.fr}
-                      </span>
-                      {viewMode === 'today' && game.fr === 'xx' && !isFrDrawing && yestGameFr && yestGameFr !== 'xx' && (
-                        <div className="mt-1 pt-1 border-t border-amber-200/50">
-                          <span className="text-[10px] text-slate-500 font-semibold">
-                            Prev: <span className="font-mono font-black text-slate-700">{yestGameFr}</span>
-                          </span>
-                        </div>
-                      )}
-                    </>
+                    <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                      game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
+                    }`}>
+                      {game.fr}
+                    </span>
                   )}
                 </div>
 
@@ -642,26 +633,30 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                       </div>
                     </div>
                   ) : (
-                    <>
-                      <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                        game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
-                      }`}>
-                        {game.sr}
-                      </span>
-                      {viewMode === 'today' && game.sr === 'xx' && !isSrDrawing && yestGameSr && yestGameSr !== 'xx' && (
-                        <div className="mt-1 pt-1 border-t border-emerald-200/50">
-                          <span className="text-[10px] text-slate-500 font-semibold">
-                            Prev: <span className="font-mono font-black text-slate-700">{yestGameSr}</span>
-                          </span>
-                        </div>
-                      )}
-                    </>
+                    <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                      game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
+                    }`}>
+                      {game.sr}
+                    </span>
                   )}
                 </div>
 
               </div>
 
-
+              {/* Layout B: Single horizontal yesterday reference strip (auto-hides when live draws start or when results declare) */}
+              {viewMode === 'today' && game.fr === 'xx' && game.sr === 'xx' && !isAnyDrawing && !isSunday && yestGameFr && yestGameSr && yestGameFr !== 'xx' && (
+                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600 bg-slate-50/80 px-2.5 py-1.5 rounded-xl border border-slate-200/60 flex-wrap gap-1">
+                  <span className="font-semibold text-slate-500 flex items-center gap-1">
+                    <span>🏛️</span>
+                    <span>Yesterday:</span>
+                  </span>
+                  <div className="flex items-center gap-2 font-mono font-bold text-slate-800">
+                    <span>1st <span className="text-amber-700 bg-amber-100/70 px-1.5 py-0.5 rounded border border-amber-200/60">{yestGameFr}</span></span>
+                    <span className="text-slate-300">•</span>
+                    <span>2nd <span className="text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded border border-emerald-200/60">{yestGameSr}</span></span>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
