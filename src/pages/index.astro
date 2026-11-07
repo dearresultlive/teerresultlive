@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import QuickSwitch from '../components/QuickSwitch.astro';
 import TeerLiveBoard from '../components/TeerLiveBoard';
 import CommonNumbersCard from '../components/CommonNumbersCard';
 import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
@@ -33,6 +34,9 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
     <section id="live-results">
       <TeerLiveBoard client:idle initialData={liveData} />
     </section>
+
+    <!-- Cross-Game & Dream Number Quick Navigation Hub -->
+    <QuickSwitch />
 
     <!-- 2. Today's Target Common Numbers (Direct, House, Ending) -->
     <section id="common-numbers">

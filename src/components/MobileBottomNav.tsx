@@ -72,6 +72,7 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
 
   const isLiveActive = cleanPath === '/';
   const isArchiveActive = cleanPath === '/previous-results';
+  const isDreamsActive = cleanPath === '/dream-numbers';
 
   return (
     <>
@@ -144,31 +145,35 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
             </span>
           </a>
 
-          {/* Tab 3: Formula (Interactive Target Engine) */}
+          {/* Tab 3: Dreams (Khasi & Assamese Dream Number Directory) */}
           <a
-            href="/#formula-calculator"
-            className="flex flex-col items-center justify-center gap-0.5 relative py-1 rounded-xl transition-all text-slate-600 font-semibold hover:text-slate-900"
+            href="/dream-numbers"
+            className={`flex flex-col items-center justify-center gap-0.5 relative py-1 rounded-xl transition-all ${
+              isDreamsActive ? 'text-amber-600 font-black' : 'text-slate-600 font-semibold hover:text-slate-900'
+            }`}
           >
-            <div className="w-6 h-6 flex items-center justify-center transition-transform">
+            {isDreamsActive && (
+              <span className="absolute top-0 w-8 h-0.5 rounded-full bg-amber-500 shadow-xs"></span>
+            )}
+            <div className={`w-6 h-6 flex items-center justify-center transition-transform ${isDreamsActive ? 'scale-110' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
                 <defs>
-                  <linearGradient id="targetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#EC4899" />
-                    <stop offset="100%" stopColor="#A855F7" />
+                  <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#FBBF24" />
+                    <stop offset="60%" stopColor="#F59E0B" />
+                    <stop offset="100%" stopColor="#D97706" />
                   </linearGradient>
-                  <filter id="targetShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="1" stdDeviation="1" floodColor="#A855F7" floodOpacity="0.35"/>
+                  <filter id="moonGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="1" stdDeviation="1" floodColor="#F59E0B" floodOpacity="0.4"/>
                   </filter>
                 </defs>
-                <circle cx="16" cy="16" r="11" fill="url(#targetGrad)" filter="url(#targetShadow)"/>
-                <circle cx="16" cy="16" r="7.5" fill="#FFFFFF"/>
-                <circle cx="16" cy="16" r="4.5" fill="#EC4899"/>
-                <circle cx="16" cy="16" r="2" fill="#FFFFFF"/>
-                <path d="M21 11 L26 6 M23 8 L25 10" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M22 17.5C21.8 22.2 17.8 26 13 26C8.6 26 5 22.4 5 18C5 13.6 8.2 9.9 12.5 9.1C11.5 10.8 11 12.8 11 15C11 20 15 24 20 24C20.7 24 21.4 23.9 22 23.7C20.8 21.9 20.2 19.8 20.2 17.5C20.2 12.8 23.7 8.9 28 8.1C25.5 8.7 22.2 12.5 22 17.5Z" fill="url(#moonGrad)" filter="url(#moonGlow)"/>
+                <circle cx="23" cy="7" r="1.5" fill="#FBBF24" />
+                <circle cx="27" cy="13" r="1" fill="#FBBF24" />
               </svg>
             </div>
             <span className="text-[10px] tracking-tight leading-none">
-              Formula
+              Dreams
             </span>
           </a>
 

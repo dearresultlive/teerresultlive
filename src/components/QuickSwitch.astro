@@ -5,16 +5,8 @@ interface Props {
 
 const { currentGame } = Astro.props;
 
+// Reordered so the highest-traffic pages (Khanapara & Dream Numbers) appear first!
 const allLinks = [
-  {
-    key: 'shillong',
-    href: '/shillong-teer',
-    name: 'Shillong Teer (3:45 PM)',
-    icon: '🎯',
-    border: 'border-amber-300',
-    text: 'text-amber-800',
-    hover: 'hover:bg-amber-50 active:bg-amber-100'
-  },
   {
     key: 'khanapara',
     href: '/khanapara-teer',
@@ -23,6 +15,24 @@ const allLinks = [
     border: 'border-emerald-300',
     text: 'text-emerald-800',
     hover: 'hover:bg-emerald-50 active:bg-emerald-100'
+  },
+  {
+    key: 'dream',
+    href: '/dream-numbers',
+    name: 'Dream Numbers (A-Z)',
+    icon: '🌙',
+    border: 'border-purple-300',
+    text: 'text-purple-800',
+    hover: 'hover:bg-purple-50 active:bg-purple-100 font-black'
+  },
+  {
+    key: 'shillong',
+    href: '/shillong-teer',
+    name: 'Shillong Teer (3:45 PM)',
+    icon: '🎯',
+    border: 'border-amber-300',
+    text: 'text-amber-800',
+    hover: 'hover:bg-amber-50 active:bg-amber-100'
   },
   {
     key: 'juwai',
@@ -43,15 +53,6 @@ const allLinks = [
     hover: 'hover:bg-purple-50 active:bg-purple-100'
   },
   {
-    key: 'dream',
-    href: '/dream-numbers',
-    name: 'Dream Numbers',
-    icon: '🌙',
-    border: 'border-slate-300',
-    text: 'text-slate-700',
-    hover: 'hover:bg-slate-100 active:bg-slate-200'
-  },
-  {
     key: 'archive',
     href: '/previous-results',
     name: 'Past Archive',
@@ -65,7 +66,7 @@ const allLinks = [
 const links = allLinks.filter((item) => item.key !== currentGame);
 ---
 
-<!-- Cross-Game Quick Navigation Hub (Mobile-Optimized Touch Targets) -->
+<!-- Cross-Game & Dream Number Quick Navigation Hub -->
 <nav aria-label="Quick game switch" class="w-full">
   <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-1.5 px-0.5 touch-pan-x select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
     <span class="text-slate-500 font-extrabold whitespace-nowrap text-xs flex items-center gap-1 shrink-0">

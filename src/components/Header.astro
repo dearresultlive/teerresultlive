@@ -21,8 +21,22 @@ const currentPath = Astro.url.pathname;
     </a>
 
     <!-- Top Controls: Live Badge (all screens) + Desktop Navigation Links (hidden on mobile) -->
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class="flex items-center gap-1.5 sm:gap-2.5">
       
+      <!-- Direct 1-Tap Dream Numbers Shortcut (Visible on both Mobile & Desktop) -->
+      <a
+        href="/dream-numbers"
+        class={`inline-flex items-center gap-1 text-[11px] sm:text-xs font-black px-2.5 py-1 rounded-full transition-all active:scale-95 shadow-2xs border ${
+          currentPath === '/dream-numbers'
+            ? 'bg-amber-500 text-white border-amber-600'
+            : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
+        }`}
+        title="Teer Dream Numbers Directory"
+      >
+        <span>🌙</span>
+        <span>Dreams</span>
+      </a>
+
       <!-- Live Indicator Badge: visible on mobile & desktop -->
       <div class="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-300 text-emerald-700 text-[11px] sm:text-xs font-black px-2.5 py-1 rounded-full shadow-2xs">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
