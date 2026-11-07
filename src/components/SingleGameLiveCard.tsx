@@ -43,11 +43,8 @@ export default function SingleGameLiveCard({
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const todayFormattedDate = data.date ? data.date.split('-').reverse().join('/') : '';
 
-  // Auto-default to 'yesterday' in morning hours (before 1:00 PM IST) so users immediately see declared numbers
-  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
-    const nowMin = getISTCurrentMinutes();
-    return (!isSunday && nowMin < 13 * 60) ? 'yesterday' : 'today';
-  });
+  // Default to 'today' so Googlebot and visitors always see Today Live with 100% SEO Title/H1 alignment
+  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>('today');
 
   // Check URL hash/params on mount for direct tab navigation (e.g. /#yesterday)
   useEffect(() => {
@@ -61,19 +58,19 @@ export default function SingleGameLiveCard({
     }
   }, []);
 
-  // Dynamic H1 Label & Date Synchronization (solves Issue 1 for dedicated game pages)
+  // Ensure H1 Label & Date strictly remain "Today Live" for 100% SEO Title/H1 alignment (never overwritten to Yesterday)
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const liveLabel = document.getElementById('game-live-label');
       const dateLabel = document.getElementById('game-date-label');
       if (liveLabel) {
-        liveLabel.textContent = viewMode === 'yesterday' ? 'Yesterday' : (isSunday ? 'Latest' : 'Today Live');
+        liveLabel.textContent = isSunday ? 'Latest' : 'Today Live';
       }
       if (dateLabel) {
-        dateLabel.textContent = viewMode === 'yesterday' ? yesterdayFormattedDate : todayFormattedDate;
+        dateLabel.textContent = todayFormattedDate;
       }
     }
-  }, [viewMode, yesterdayFormattedDate, todayFormattedDate, isSunday]);
+  }, [todayFormattedDate, isSunday]);
 
   const meta = ALL_GAMES_METADATA[gameKey] || {
     title: gameKey.toUpperCase(),
@@ -356,8 +353,27 @@ export default function SingleGameLiveCard({
         )}
       </div>
 
-      {/* Morning Mode Banner */}
-      {viewMode === 'yesterday' && currentISTMinutes < 13 * 60 && !isSunday && (
+      {/* Morning Helper: In Today mode before game's draw, allow 1-tap toggle to yesterday */}
+      {viewMode === 'today' && game.fr === 'xx' && !isSunday && yesterday && (
+        <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-base shrink-0">🏹</span>
+            <span className="font-bold truncate text-[11px] sm:text-xs">
+              Today's live draw begins at {meta.defaultFrTime} • View yesterday's declared result ({yesterdayFormattedDate})
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setViewMode('yesterday')}
+            className="bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
+          >
+            Yesterday ➔
+          </button>
+        </div>
+      )}
+
+      {/* When user toggles to yesterday: Banner to easily return to Today */}
+      {viewMode === 'yesterday' && !isSunday && (
         <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-base shrink-0">⏮️</span>

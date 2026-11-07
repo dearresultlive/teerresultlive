@@ -26,12 +26,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     return null;
   }, [data.date, data.yesterday]);
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
-  // Auto-default to 'yesterday' in morning hours (before 1:00 PM IST) so users immediately see declared numbers
-  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
-    const nowMin = getISTCurrentMinutes();
-    const isSun = new Date().getDay() === 0;
-    return (!isSun && nowMin < 13 * 60) ? 'yesterday' : 'today';
-  });
+  // Default to 'today' so Googlebot and visitors always see Today Live with 100% SEO Title/H1 alignment
+  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>('today');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
   const [copied, setCopied] = useState(false);
@@ -102,19 +98,19 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
   const isSunday = isSundayInIST();
 
-  // Dynamic H1 Label & Date Synchronization (solves Issue 1 for homepage)
+  // Ensure H1 Label & Date strictly remain "Today Live" for 100% SEO Title/H1 alignment (never overwritten to Yesterday)
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const liveLabel = document.getElementById('hero-live-label');
       const dateLabel = document.getElementById('hero-date-label');
       if (liveLabel) {
-        liveLabel.textContent = viewMode === 'yesterday' ? 'Yesterday' : (isSunday ? 'Latest' : 'Today Live');
+        liveLabel.textContent = isSunday ? 'Latest' : 'Today Live';
       }
       if (dateLabel) {
-        dateLabel.textContent = viewMode === 'yesterday' ? yesterdayFormattedDate : data.date.split('-').reverse().join('/');
+        dateLabel.textContent = data.date.split('-').reverse().join('/');
       }
     }
-  }, [viewMode, yesterdayFormattedDate, data.date, isSunday]);
+  }, [data.date, isSunday]);
 
   const fetchLatest = async (isManual = false) => {
     setIsRefreshing(true);
@@ -421,8 +417,27 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         </div>
       </div>
 
-      {/* Morning Mode Banner: Active before 1:00 PM IST when viewing yesterday */}
-      {viewMode === 'yesterday' && currentISTMinutes < 13 * 60 && !isSunday && (
+      {/* Morning Helper: In Today mode before 1:45 PM draws, allow 1-tap toggle to yesterday */}
+      {viewMode === 'today' && currentISTMinutes < 13 * 60 + 45 && !isSunday && yesterday && (
+        <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-base shrink-0">🏹</span>
+            <span className="font-bold truncate text-[11px] sm:text-xs">
+              Today's live draws begin at 1:45 PM • View yesterday's declared numbers ({yesterdayFormattedDate})
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setViewMode('yesterday')}
+            className="bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
+          >
+            Yesterday ➔
+          </button>
+        </div>
+      )}
+
+      {/* When user toggles to yesterday: Banner to easily return to Today */}
+      {viewMode === 'yesterday' && !isSunday && (
         <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-base shrink-0">⏮️</span>
