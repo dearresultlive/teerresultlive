@@ -1,14 +1,14 @@
 {
   "date": "2026-11-07",
-  "updated_at": "2026-11-07T09:30:59.836Z",
+  "updated_at": "2026-11-07T10:20:40.457Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "xx",
+      "fr": "25",
       "sr": "xx",
       "common_numbers": {
         "direct": [
@@ -63,11 +63,11 @@
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
       "fr": "16",
-      "sr": "xx",
+      "sr": "43",
       "common_numbers": {
         "direct": [
           "40",
