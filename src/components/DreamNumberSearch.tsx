@@ -115,25 +115,14 @@ export default function DreamNumberSearch() {
                 <span className="font-bold text-sm text-slate-900 block">
                   {item.keyword}
                 </span>
-                <div className="flex items-center gap-1.5 flex-wrap text-xs text-slate-600 font-medium mt-1">
-                  <span className="font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-300/80 px-1.5 py-0.5 rounded text-[10px]">
-                    অসমীয়া
-                  </span>
-                  <span className="font-bold text-slate-900">
-                    {item.assamese || item.bengali}
-                  </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="font-bold text-slate-700 bg-slate-100 border border-slate-300 px-1.5 py-0.5 rounded text-[10px]">
-                    हिंदी
-                  </span>
-                  <span>{item.hindi}</span>
+                <div className="text-xs font-medium text-slate-600 mt-0.5">
+                  <span className="text-slate-900 font-semibold">{item.assamese || item.bengali}</span>
+                  <span className="text-slate-300 mx-1.5">•</span>
+                  <span className="text-slate-600">{item.hindi}</span>
                   {item.bengali && item.bengali !== item.assamese && (
                     <>
-                      <span className="text-slate-300">•</span>
-                      <span className="font-bold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded text-[10px]">
-                        বাংলা
-                      </span>
-                      <span className="text-slate-500">{item.bengali}</span>
+                      <span className="text-slate-300 mx-1.5">•</span>
+                      <span className="text-slate-400">{item.bengali}</span>
                     </>
                   )}
                 </div>
