@@ -482,6 +482,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             fr: 'xx',
             sr: 'xx'
           };
+          const yestGameFr = yesterday ? (yesterday as any)[`${key}_fr`] : null;
+          const yestGameSr = yesterday ? (yesterday as any)[`${key}_sr`] : null;
 
           const isDeclared = game.fr !== 'xx' && game.sr !== 'xx';
           const isFrDeclared = game.fr !== 'xx' && game.sr === 'xx';
@@ -590,11 +592,20 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                       </div>
                     </div>
                   ) : (
-                    <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                      game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
-                    }`}>
-                      {game.fr}
-                    </span>
+                    <>
+                      <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                        game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
+                      }`}>
+                        {game.fr}
+                      </span>
+                      {viewMode === 'today' && game.fr === 'xx' && !isFrDrawing && yestGameFr && yestGameFr !== 'xx' && (
+                        <div className="mt-1 pt-1 border-t border-amber-200/50">
+                          <span className="text-[10px] text-slate-500 font-semibold">
+                            Prev: <span className="font-mono font-black text-slate-700">{yestGameFr}</span>
+                          </span>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -631,11 +642,20 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                       </div>
                     </div>
                   ) : (
-                    <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                      game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
-                    }`}>
-                      {game.sr}
-                    </span>
+                    <>
+                      <span className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                        game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
+                      }`}>
+                        {game.sr}
+                      </span>
+                      {viewMode === 'today' && game.sr === 'xx' && !isSrDrawing && yestGameSr && yestGameSr !== 'xx' && (
+                        <div className="mt-1 pt-1 border-t border-emerald-200/50">
+                          <span className="text-[10px] text-slate-500 font-semibold">
+                            Prev: <span className="font-mono font-black text-slate-700">{yestGameSr}</span>
+                          </span>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 

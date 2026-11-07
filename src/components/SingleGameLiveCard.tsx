@@ -112,6 +112,9 @@ export default function SingleGameLiveCard({
   const isSrDrawing = checkIsDrawing(gameKey, 'sr', game.sr, currentISTMinutes, viewMode === 'today', isSunday);
   const isAnyDrawing = (isFrDrawing || isSrDrawing) && viewMode === 'today' && !isSunday;
 
+  const yestFr = yesterday ? (yesterday as any)[`${gameKey}_fr`] : null;
+  const yestSr = yesterday ? (yesterday as any)[`${gameKey}_sr`] : null;
+
   // Real-time zero-refresh polling fetcher
   const fetchLatest = async (isManual = false) => {
     setIsRefreshing(true);
@@ -435,13 +438,22 @@ export default function SingleGameLiveCard({
               </div>
             </div>
           ) : (
-            <span
-              className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
-              }`}
-            >
-              {game.fr}
-            </span>
+            <>
+              <span
+                className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                  game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
+                }`}
+              >
+                {game.fr}
+              </span>
+              {viewMode === 'today' && game.fr === 'xx' && !isFrDrawing && yestFr && yestFr !== 'xx' && (
+                <div className="mt-1 pt-1 border-t border-amber-200/50">
+                  <span className="text-[10px] text-slate-500 font-semibold">
+                    Prev: <span className="font-mono font-black text-slate-700">{yestFr}</span>
+                  </span>
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -483,13 +495,22 @@ export default function SingleGameLiveCard({
               </div>
             </div>
           ) : (
-            <span
-              className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
-              }`}
-            >
-              {game.sr}
-            </span>
+            <>
+              <span
+                className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                  game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
+                }`}
+              >
+                {game.sr}
+              </span>
+              {viewMode === 'today' && game.sr === 'xx' && !isSrDrawing && yestSr && yestSr !== 'xx' && (
+                <div className="mt-1 pt-1 border-t border-emerald-200/50">
+                  <span className="text-[10px] text-slate-500 font-semibold">
+                    Prev: <span className="font-mono font-black text-slate-700">{yestSr}</span>
+                  </span>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
