@@ -1,15 +1,15 @@
 {
-  "date": "2026-11-07",
-  "updated_at": "2026-11-07T19:08:18.691Z",
+  "date": "2026-11-09",
+  "updated_at": "2026-11-09T04:30:31.400Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "25",
-      "sr": "47",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "03",
@@ -34,11 +34,11 @@
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "06",
-      "sr": "74",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "31",
@@ -63,11 +63,11 @@
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
-      "fr": "16",
-      "sr": "43",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "40",
@@ -92,11 +92,11 @@
     "night": {
       "name": "Shillong Night Teer",
       "location": "Shillong Club Night Archery Ground",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "10:30 PM",
       "sr_time": "11:30 PM",
-      "fr": "90",
-      "sr": "32",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "21",
