@@ -194,3 +194,55 @@ export async function fetchNightTeerDirect(): Promise<{ date: string; fr: string
   }
   return null;
 }
+
+
+// Source 5: Multi-Game Fallback Feed from teerresulttoday.org
+export async function fetchFromTeerResultToday(): Promise<{
+  shillong?: { fr: string; sr: string };
+  juwai?: { fr: string; sr: string };
+  khanapara?: { fr: string; sr: string };
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch('https://teerresulttoday.org', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const result: {
+      shillong: { fr: string; sr: string };
+      juwai: { fr: string; sr: string };
+      khanapara: { fr: string; sr: string };
+    } = {
+      shillong: { fr: 'xx', sr: 'xx' },
+      juwai: { fr: 'xx', sr: 'xx' },
+      khanapara: { fr: 'xx', sr: 'xx' }
+    };
+
+    const tables = [...html.matchAll(/<table[^>]*class="[^"]*trs-table[^"]*"[^>]*>([\s\S]*?)<\/table>/gi)];
+    for (const t of tables) {
+      const c = t[1];
+      let gameKey: 'shillong' | 'juwai' | 'khanapara' | null = null;
+      if (/Shillong/i.test(c)) gameKey = 'shillong';
+      else if (/Juwai/i.test(c)) gameKey = 'juwai';
+      else if (/Khanapara/i.test(c)) gameKey = 'khanapara';
+
+      if (!gameKey) continue;
+
+      const rows = [...c.matchAll(/<tr>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<\/tr>/gi)];
+      if (rows.length >= 2) {
+        result[gameKey].fr = cleanNumber(rows[1][1].replace(/<[^>]+>/g, '').trim());
+        result[gameKey].sr = cleanNumber(rows[1][2].replace(/<[^>]+>/g, '').trim());
+      }
+    }
+    return result;
+  } catch (err: any) {
+    return null;
+  }
+}

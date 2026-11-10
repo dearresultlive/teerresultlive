@@ -226,6 +226,47 @@ async function fetchNightTeerDirect() {
   return null;
 }
 
+
+// Source 4: Multi-Game Fallback Feed from teerresulttoday.org
+async function fetchFromTeerResultToday() {
+  try {
+    const res = await fetchWithTimeout('https://teerresulttoday.org', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+      }
+    }, 6000);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const result = {
+      shillong: { fr: 'xx', sr: 'xx' },
+      juwai: { fr: 'xx', sr: 'xx' },
+      khanapara: { fr: 'xx', sr: 'xx' }
+    };
+
+    const tables = [...html.matchAll(/<table[^>]*class="[^"]*trs-table[^"]*"[^>]*>([\s\S]*?)<\/table>/gi)];
+    for (const t of tables) {
+      const c = t[1];
+      let gameKey = null;
+      if (/Shillong/i.test(c)) gameKey = 'shillong';
+      else if (/Juwai/i.test(c)) gameKey = 'juwai';
+      else if (/Khanapara/i.test(c)) gameKey = 'khanapara';
+
+      if (!gameKey) continue;
+
+      const rows = [...c.matchAll(/<tr>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<\/tr>/gi)];
+      if (rows.length >= 2) {
+        result[gameKey].fr = cleanNumber(rows[1][1].replace(/<[^>]+>/g, '').trim());
+        result[gameKey].sr = cleanNumber(rows[1][2].replace(/<[^>]+>/g, '').trim());
+      }
+    }
+    return result;
+  } catch (err) {
+    console.warn('[TeerToday Poller] Fetch skipped:', err.message);
+    return null;
+  }
+}
+
 export async function runPoller() {
   const istNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   console.log(`[${istNow} IST] Starting Teer auto-poller...`);
@@ -249,11 +290,12 @@ export async function runPoller() {
   let updated = false;
 
   // 1. Fetch remote data sources (GAS -> Shillong CDN -> Aggregator)
-  const [gasData, shillongCDN, aggregatorData, nightDirect] = await Promise.all([
+  const [gasData, shillongCDN, aggregatorData, nightDirect, teerTodayData] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
     fetchAggregatorData(),
-    fetchNightTeerDirect()
+    fetchNightTeerDirect(),
+    fetchFromTeerResultToday()
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -388,6 +430,14 @@ export async function runPoller() {
     if (key === 'night' && nightDirect && nightDirect.date === liveData.date) {
       if (nightDirect.fr !== 'xx' && isRoundWindowOpen('night', 'fr')) targetFR = nightDirect.fr;
       if (nightDirect.sr !== 'xx' && isRoundWindowOpen('night', 'sr')) targetSR = nightDirect.sr;
+    }
+
+    
+    // Check Multi-Game Fallback Feed (teerresulttoday.org)
+    if (teerTodayData && teerTodayData[key]) {
+      const tt = teerTodayData[key];
+      if (tt.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = tt.fr;
+      if (tt.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = tt.sr;
     }
 
     // Physical safeguard: Only prevent premature updates for today's upcoming rounds

@@ -6,6 +6,7 @@ import {
   fetchShillongCDN,
   fetchAggregatorData,
   fetchNightTeerDirect,
+  fetchFromTeerResultToday,
   isRoundWindowOpen
 } from './liveTeerFetcher';
 
@@ -73,14 +74,15 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
       fetchFromGoogleAppsScript(),
       fetchShillongCDN(),
       fetchAggregatorData(),
-      fetchNightTeerDirect()
+      fetchNightTeerDirect(),
+      fetchFromTeerResultToday()
     ]);
 
     const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1200));
     const fetchResult = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (fetchResult) {
-      const [gasData, shillongCDN, aggregator, nightDirect] = fetchResult;
+      const [gasData, shillongCDN, aggregator, nightDirect, teerToday] = fetchResult;
 
       // 1. Apply Google Apps Script Data (Highest reliability, Google Datacenter IP)
       if (gasData?.date === result.date && gasData?.games) {
@@ -135,6 +137,22 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
         }
         if (result.games.night.sr === 'xx' && nightDirect.sr !== 'xx' && isRoundWindowOpen('night', 'sr')) {
           result.games.night.sr = nightDirect.sr;
+        }
+      }
+
+
+      // 5. Fallback / Augment from teerresulttoday.org (instant zero-delay multi-source)
+      if (teerToday) {
+        for (const key of ['juwai', 'shillong', 'khanapara']) {
+          const item = teerToday[key];
+          if (item) {
+            if (result.games[key].fr === 'xx' && item.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) {
+              result.games[key].fr = item.fr;
+            }
+            if (result.games[key].sr === 'xx' && item.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) {
+              result.games[key].sr = item.sr;
+            }
+          }
         }
       }
 

@@ -1,14 +1,14 @@
 {
   "date": "2026-11-10",
-  "updated_at": "2026-11-10T09:58:49.528Z",
+  "updated_at": "2026-11-10T10:18:30.218Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "xx",
+      "fr": "05",
       "sr": "xx",
       "common_numbers": {
         "direct": [
