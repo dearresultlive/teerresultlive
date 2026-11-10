@@ -172,13 +172,18 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
       }
 
       
-      // 7. Fallback / Augment Shillong from Instant Teer Results (instantteerresults.in)
-      if (instantData && result.games.shillong) {
-        if (result.games.shillong.fr === 'xx' && instantData.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) {
-          result.games.shillong.fr = instantData.fr;
-        }
-        if (result.games.shillong.sr === 'xx' && instantData.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) {
-          result.games.shillong.sr = instantData.sr;
+      // 7. Ultra-Fast Zero-Lag JSON Multi-Game Feed (instantteerresults.in/results.json)
+      if (instantData && instantData.date === result.date) {
+        for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+          const item = (instantData as any)[key];
+          if (item && result.games[key]) {
+            if (result.games[key].fr === 'xx' && item.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) {
+              result.games[key].fr = item.fr;
+            }
+            if (result.games[key].sr === 'xx' && item.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) {
+              result.games[key].sr = item.sr;
+            }
+          }
         }
       }
   

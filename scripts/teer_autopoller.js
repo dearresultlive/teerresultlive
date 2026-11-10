@@ -296,22 +296,31 @@ async function fetchKhanaparaOrg() {
 }
 
 
-// Source 6: Dedicated Instant Teer Results Feed (instantteerresults.in)
+// Source 6: Direct Real-Time Multi-Game JSON API (instantteerresults.in/results.json)
 async function fetchFromInstantTeerResults() {
   try {
-    const res = await fetchWithTimeout('https://instantteerresults.in/shillong-teer-result', {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    }, 8000);
+    const res = await fetchWithTimeout('https://instantteerresults.in/results.json?_t=' + Date.now(), {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json'
+      }
+    }, 5000);
     if (!res.ok) return null;
-    const text = await res.text();
-    const frMatch = text.match(/FIRST ROUND[\s\S]{1,100}?(\d{2})/i);
-    const srMatch = text.match(/SECOND ROUND[\s\S]{1,100}?(\d{2})/i);
-    if (frMatch || srMatch) {
-      return {
-        fr: frMatch ? cleanNumber(frMatch[1]) : 'xx',
-        sr: srMatch ? cleanNumber(srMatch[1]) : 'xx'
-      };
-    }
+    const data = await res.json();
+    if (!data || !data.date) return null;
+
+    const parseGame = (g) => ({
+      fr: cleanNumber(g?.fr),
+      sr: cleanNumber(g?.sr)
+    });
+
+    return {
+      date: data.date,
+      shillong: parseGame(data.shillong),
+      khanapara: parseGame(data.khanapara),
+      juwai: parseGame(data.juwai),
+      night: parseGame(data.night)
+    };
   } catch (e) {}
   return null;
 }
@@ -499,10 +508,11 @@ export async function runPoller() {
     }
 
     
-    // Check Instant Teer Results (instantteerresults.in)
-    if (key === 'shillong' && instantData) {
-      if (instantData.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) targetFR = instantData.fr;
-      if (instantData.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) targetSR = instantData.sr;
+    // Check Instant Real-Time JSON API (instantteerresults.in/results.json)
+    if (instantData && instantData.date === liveData.date && instantData[key]) {
+      const item = instantData[key];
+      if (item.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = item.fr;
+      if (item.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = item.sr;
     }
 
     // Physical safeguard: Only prevent premature updates for today's upcoming rounds
