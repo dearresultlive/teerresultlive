@@ -116,8 +116,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      const url = isManual ? `/api/teer/latest?refresh=1&t=${Date.now()}` : '/api/teer/latest';
-      const res = await fetch(url);
+      const url = `/api/teer/latest?refresh=${isManual ? '1' : '0'}&_t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const fresh: TeerData = await res.json();
         if (fresh && fresh.games) {
@@ -158,13 +158,26 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       const saved = localStorage.getItem('teer_latest_live_cache');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.games) {
-          setData(parsed);
+        if (parsed && parsed.date === initialData.date && parsed.games) {
+          // Verify cache does not downgrade any already declared initial numbers
+          let hasNewerNumber = false;
+          for (const k of ['shillong', 'khanapara', 'juwai', 'night']) {
+            const initG = initialData.games[k];
+            const cacheG = parsed.games[k];
+            if (initG && cacheG) {
+              if ((initG.fr === 'xx' && cacheG.fr !== 'xx') || (initG.sr === 'xx' && cacheG.sr !== 'xx')) {
+                hasNewerNumber = true;
+                break;
+              }
+            }
+          }
+          if (hasNewerNumber) {
+            setData(parsed);
+          }
         }
       }
     } catch (e) {}
 
-    // Immediate sync on page load so reload (F5) NEVER loses numbers
     fetchLatest(false);
   }, []);
 
@@ -179,7 +192,13 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     });
 
     // 15 seconds during active rounds; 60 seconds if everything is declared or Sunday
-    const intervalMs = areAllDeclared || isSunday ? 60000 : 15000;
+    const isAnyActiveDrawing = games.some(({ key }) => {
+      const g = data.games[key];
+      if (!g) return false;
+      return checkIsDrawing(key, 'fr', g.fr, currentISTMinutes, viewMode === 'today', isSunday) ||
+             checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, viewMode === 'today', isSunday);
+    });
+    const intervalMs = areAllDeclared || isSunday ? 60000 : (isAnyActiveDrawing ? 5000 : 12000);
 
     let timer: any = null;
 

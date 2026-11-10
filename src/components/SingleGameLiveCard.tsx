@@ -120,8 +120,8 @@ export default function SingleGameLiveCard({
     setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      const url = isManual ? `/api/teer/latest?refresh=1&t=${Date.now()}` : '/api/teer/latest';
-      const res = await fetch(url);
+      const url = `/api/teer/latest?refresh=${isManual ? '1' : '0'}&_t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const fresh: TeerData = await res.json();
         if (fresh && fresh.games) {
@@ -152,8 +152,13 @@ export default function SingleGameLiveCard({
       const saved = localStorage.getItem('teer_latest_live_cache');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.games) {
-          setData(parsed);
+        if (parsed && parsed.date === initialData.date && parsed.games) {
+          const initG = initialData.games[gameKey];
+          const cacheG = parsed.games[gameKey];
+          // Only adopt if cache has declared numbers and initial was 'xx'
+          if (initG && cacheG && ((initG.fr === 'xx' && cacheG.fr !== 'xx') || (initG.sr === 'xx' && cacheG.sr !== 'xx'))) {
+            setData(parsed);
+          }
         }
       }
     } catch (e) {}
@@ -166,7 +171,7 @@ export default function SingleGameLiveCard({
     setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
 
     const isAllDeclared = game.fr !== 'xx' && game.sr !== 'xx';
-    const intervalMs = isAllDeclared || isSunday ? 60000 : 15000;
+    const intervalMs = isAllDeclared || isSunday ? 60000 : (isAnyDrawing ? 5000 : 12000);
 
     let timer: any = null;
 
