@@ -267,6 +267,34 @@ async function fetchFromTeerResultToday() {
   }
 }
 
+
+// Source 5: Dedicated Official Khanapara Feed (khanaparateer.org)
+async function fetchKhanaparaOrg() {
+  try {
+    const res = await fetchWithTimeout('https://khanaparateer.org', {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, 5000);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const today = getTodayIST();
+    const [year, month, day] = today.split('-');
+    const dayInt = parseInt(day, 10);
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const curMonth = monthNames[parseInt(month, 10) - 1];
+    const hasToday = html.includes(`${curMonth} ${dayInt}, ${year}`) || html.includes(`${dayInt} ${curMonth} ${year}`);
+    if (!hasToday) return null;
+
+    const circleMatches = [...html.matchAll(/class=today-blue-circle>\s*([0-9]{1,2})\s*<\/div>/gi)];
+    if (circleMatches.length >= 1) {
+      return {
+        fr: cleanNumber(circleMatches[0][1]),
+        sr: circleMatches.length >= 2 ? cleanNumber(circleMatches[1][1]) : 'xx'
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
 export async function runPoller() {
   const istNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   console.log(`[${istNow} IST] Starting Teer auto-poller...`);
@@ -290,12 +318,13 @@ export async function runPoller() {
   let updated = false;
 
   // 1. Fetch remote data sources (GAS -> Shillong CDN -> Aggregator)
-  const [gasData, shillongCDN, aggregatorData, nightDirect, teerTodayData] = await Promise.all([
+  const [gasData, shillongCDN, aggregatorData, nightDirect, teerTodayData, khanaparaOrgData] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
     fetchAggregatorData(),
     fetchNightTeerDirect(),
-    fetchFromTeerResultToday()
+    fetchFromTeerResultToday(),
+    fetchKhanaparaOrg()
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -438,6 +467,13 @@ export async function runPoller() {
       const tt = teerTodayData[key];
       if (tt.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = tt.fr;
       if (tt.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = tt.sr;
+    }
+
+    
+    // Check Dedicated Khanapara Feed (khanaparateer.org)
+    if (key === 'khanapara' && khanaparaOrgData) {
+      if (khanaparaOrgData.fr !== 'xx' && isRoundWindowOpen('khanapara', 'fr')) targetFR = khanaparaOrgData.fr;
+      if (khanaparaOrgData.sr !== 'xx' && isRoundWindowOpen('khanapara', 'sr')) targetSR = khanaparaOrgData.sr;
     }
 
     // Physical safeguard: Only prevent premature updates for today's upcoming rounds

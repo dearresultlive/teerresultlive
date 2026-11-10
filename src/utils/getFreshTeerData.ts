@@ -7,6 +7,7 @@ import {
   fetchAggregatorData,
   fetchNightTeerDirect,
   fetchFromTeerResultToday,
+  fetchKhanaparaOrg,
   isRoundWindowOpen
 } from './liveTeerFetcher';
 
@@ -75,14 +76,15 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
       fetchShillongCDN(),
       fetchAggregatorData(),
       fetchNightTeerDirect(),
-      fetchFromTeerResultToday()
+      fetchFromTeerResultToday(),
+      fetchKhanaparaOrg()
     ]);
 
     const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1200));
     const fetchResult = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (fetchResult) {
-      const [gasData, shillongCDN, aggregator, nightDirect, teerToday] = fetchResult;
+      const [gasData, shillongCDN, aggregator, nightDirect, teerToday, khanaparaOrg] = fetchResult;
 
       // 1. Apply Google Apps Script Data (Highest reliability, Google Datacenter IP)
       if (gasData?.date === result.date && gasData?.games) {
@@ -153,6 +155,17 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
               result.games[key].sr = item.sr;
             }
           }
+        }
+      }
+
+      
+      // 6. Fallback / Augment Khanapara from Dedicated Official Portal (khanaparateer.org)
+      if (khanaparaOrg && result.games.khanapara) {
+        if (result.games.khanapara.fr === 'xx' && khanaparaOrg.fr !== 'xx' && isRoundWindowOpen('khanapara', 'fr')) {
+          result.games.khanapara.fr = khanaparaOrg.fr;
+        }
+        if (result.games.khanapara.sr === 'xx' && khanaparaOrg.sr !== 'xx' && isRoundWindowOpen('khanapara', 'sr')) {
+          result.games.khanapara.sr = khanaparaOrg.sr;
         }
       }
 

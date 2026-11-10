@@ -246,3 +246,44 @@ export async function fetchFromTeerResultToday(): Promise<{
     return null;
   }
 }
+
+
+// Source 6: Dedicated Official Khanapara Feed (khanaparateer.org)
+export async function fetchKhanaparaOrg(): Promise<{ fr: string; sr: string } | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch('https://khanaparateer.org', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    // Check if page corresponds to today's date
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+    const [year, month, day] = today.split('-');
+    const dayInt = parseInt(day, 10);
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const curMonth = monthNames[parseInt(month, 10) - 1];
+    
+    // Check if title or header contains today's date
+    const hasToday = html.includes(`${curMonth} ${dayInt}, ${year}`) || html.includes(`${dayInt} ${curMonth} ${year}`);
+    if (!hasToday) return null;
+
+    // Check Table 0: <div class=today-blue-circle> XX </div>
+    const circleMatches = [...html.matchAll(/class=today-blue-circle>\s*([0-9]{1,2})\s*<\/div>/gi)];
+    if (circleMatches.length >= 1) {
+      return {
+        fr: cleanNumber(circleMatches[0][1]),
+        sr: circleMatches.length >= 2 ? cleanNumber(circleMatches[1][1]) : 'xx'
+      };
+    }
+  } catch (err: any) {
+    // skip
+  }
+  return null;
+}
