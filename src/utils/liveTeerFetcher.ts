@@ -287,3 +287,29 @@ export async function fetchKhanaparaOrg(): Promise<{ fr: string; sr: string } | 
   }
   return null;
 }
+
+// Source 7: Dedicated Instant Teer Results Feed (instantteerresults.in)
+export async function fetchFromInstantTeerResults(): Promise<{ fr: string; sr: string } | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch('https://instantteerresults.in/shillong-teer-result', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const frMatch = text.match(/FIRST ROUND[\s\S]{1,100}?(\d{2})/i);
+    const srMatch = text.match(/SECOND ROUND[\s\S]{1,100}?(\d{2})/i);
+    if (frMatch || srMatch) {
+      return {
+        fr: frMatch ? cleanNumber(frMatch[1]) : 'xx',
+        sr: srMatch ? cleanNumber(srMatch[1]) : 'xx'
+      };
+    }
+  } catch (e) {}
+  return null;
+}

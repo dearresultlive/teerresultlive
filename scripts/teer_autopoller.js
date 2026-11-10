@@ -295,6 +295,27 @@ async function fetchKhanaparaOrg() {
   return null;
 }
 
+
+// Source 6: Dedicated Instant Teer Results Feed (instantteerresults.in)
+async function fetchFromInstantTeerResults() {
+  try {
+    const res = await fetchWithTimeout('https://instantteerresults.in/shillong-teer-result', {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, 8000);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const frMatch = text.match(/FIRST ROUND[\s\S]{1,100}?(\d{2})/i);
+    const srMatch = text.match(/SECOND ROUND[\s\S]{1,100}?(\d{2})/i);
+    if (frMatch || srMatch) {
+      return {
+        fr: frMatch ? cleanNumber(frMatch[1]) : 'xx',
+        sr: srMatch ? cleanNumber(srMatch[1]) : 'xx'
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
 export async function runPoller() {
   const istNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   console.log(`[${istNow} IST] Starting Teer auto-poller...`);
@@ -318,13 +339,14 @@ export async function runPoller() {
   let updated = false;
 
   // 1. Fetch remote data sources (GAS -> Shillong CDN -> Aggregator)
-  const [gasData, shillongCDN, aggregatorData, nightDirect, teerTodayData, khanaparaOrgData] = await Promise.all([
+  const [gasData, shillongCDN, aggregatorData, nightDirect, teerTodayData, khanaparaOrgData, instantData] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
     fetchAggregatorData(),
     fetchNightTeerDirect(),
     fetchFromTeerResultToday(),
-    fetchKhanaparaOrg()
+    fetchKhanaparaOrg(),
+    fetchFromInstantTeerResults()
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -474,6 +496,13 @@ export async function runPoller() {
     if (key === 'khanapara' && khanaparaOrgData) {
       if (khanaparaOrgData.fr !== 'xx' && isRoundWindowOpen('khanapara', 'fr')) targetFR = khanaparaOrgData.fr;
       if (khanaparaOrgData.sr !== 'xx' && isRoundWindowOpen('khanapara', 'sr')) targetSR = khanaparaOrgData.sr;
+    }
+
+    
+    // Check Instant Teer Results (instantteerresults.in)
+    if (key === 'shillong' && instantData) {
+      if (instantData.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) targetFR = instantData.fr;
+      if (instantData.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) targetSR = instantData.sr;
     }
 
     // Physical safeguard: Only prevent premature updates for today's upcoming rounds

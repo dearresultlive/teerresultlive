@@ -8,6 +8,7 @@ import {
   fetchNightTeerDirect,
   fetchFromTeerResultToday,
   fetchKhanaparaOrg,
+  fetchFromInstantTeerResults,
   isRoundWindowOpen
 } from './liveTeerFetcher';
 
@@ -77,14 +78,15 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
       fetchAggregatorData(),
       fetchNightTeerDirect(),
       fetchFromTeerResultToday(),
-      fetchKhanaparaOrg()
+      fetchKhanaparaOrg(),
+      fetchFromInstantTeerResults()
     ]);
 
     const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1200));
     const fetchResult = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (fetchResult) {
-      const [gasData, shillongCDN, aggregator, nightDirect, teerToday, khanaparaOrg] = fetchResult;
+      const [gasData, shillongCDN, aggregator, nightDirect, teerToday, khanaparaOrg, instantData] = fetchResult;
 
       // 1. Apply Google Apps Script Data (Highest reliability, Google Datacenter IP)
       if (gasData?.date === result.date && gasData?.games) {
@@ -169,6 +171,17 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
         }
       }
 
+      
+      // 7. Fallback / Augment Shillong from Instant Teer Results (instantteerresults.in)
+      if (instantData && result.games.shillong) {
+        if (result.games.shillong.fr === 'xx' && instantData.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) {
+          result.games.shillong.fr = instantData.fr;
+        }
+        if (result.games.shillong.sr === 'xx' && instantData.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) {
+          result.games.shillong.sr = instantData.sr;
+        }
+      }
+  
       // Compute status flags (Sunday Holiday vs Live shooting days)
       const istDay = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date());
       const isSunday = istDay === 'Sun';
