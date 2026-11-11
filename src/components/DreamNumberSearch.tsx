@@ -74,13 +74,16 @@ export default function DreamNumberSearch() {
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="font-bold text-slate-600">Popular:</span>
             {[
-              { label: 'সাপ (Snake)', val: 'Snake' },
-              { label: 'পানী (Water)', val: 'Water' },
-              { label: 'টকা (Money)', val: 'Money' },
-              { label: 'মাছ (Fish)', val: 'Fish' },
-              { label: 'জুই (Fire)', val: 'Fire' },
-              { label: 'কুকুৰ (Dog)', val: 'Dog' },
-              { label: 'বাঘ (Tiger)', val: 'Tiger' }
+              { label: '🐍 সাপ (Snake)', val: 'Snake' },
+              { label: '💀 মৃত্যু (Death)', val: 'Death' },
+              { label: '🌊 পানী (Water/River)', val: 'Water' },
+              { label: '🐟 মাছ (Fish)', val: 'Fish' },
+              { label: '💰 টকা (Money)', val: 'Money' },
+              { label: '👮 পুলিশ (Police)', val: 'Police' },
+              { label: '🩸 তেজ (Blood)', val: 'Blood' },
+              { label: '🚗 গাড়ী (Vehicle)', val: 'Car' },
+              { label: '🐸 ভেকুলী (Frog)', val: 'Frog' },
+              { label: '🔥 জুই (Fire)', val: 'Fire' }
             ].map((p) => (
               <button
                 key={p.val}
