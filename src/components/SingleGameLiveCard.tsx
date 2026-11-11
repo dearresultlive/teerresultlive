@@ -25,6 +25,15 @@ export default function SingleGameLiveCard({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
   const [currentISTMinutes, setCurrentISTMinutes] = useState<number>(() => getISTCurrentMinutes());
+  const [revisionNotice, setRevisionNotice] = useState<string | null>(null);
+
+  // Auto-dismiss revision notice after 12 seconds
+  useEffect(() => {
+    if (revisionNotice) {
+      const timer = setTimeout(() => setRevisionNotice(null), 12000);
+      return () => clearTimeout(timer);
+    }
+  }, [revisionNotice]);
 
   const isSunday = isSundayInIST();
 
@@ -125,7 +134,19 @@ export default function SingleGameLiveCard({
       if (res.ok) {
         const fresh: TeerData = await res.json();
         if (fresh && fresh.games) {
-          setData(fresh);
+          setData((prev) => {
+            const oldG = prev?.games?.[gameKey];
+            const newG = fresh?.games?.[gameKey];
+            if (oldG && newG) {
+              const gameTitle = meta.title;
+              if (oldG.fr !== 'xx' && newG.fr !== 'xx' && oldG.fr !== newG.fr) {
+                setRevisionNotice(`Official Update: ${gameTitle} 1st Round revised from ${oldG.fr} to ${newG.fr}`);
+              } else if (oldG.sr !== 'xx' && newG.sr !== 'xx' && oldG.sr !== newG.sr) {
+                setRevisionNotice(`Official Update: ${gameTitle} 2nd Round revised from ${oldG.sr} to ${newG.sr}`);
+              }
+            }
+            return fresh;
+          });
           try {
             localStorage.setItem('teer_latest_live_cache', JSON.stringify(fresh));
           } catch (e) {}
@@ -171,7 +192,8 @@ export default function SingleGameLiveCard({
     setLastCheck(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
 
     const isAllDeclared = game.fr !== 'xx' && game.sr !== 'xx';
-    const intervalMs = isAllDeclared || isSunday ? 60000 : (isAnyDrawing ? 5000 : 12000);
+    const isFastUpdate = game.fr_verification === 'FAST_UPDATE' || game.sr_verification === 'FAST_UPDATE';
+    const intervalMs = isAllDeclared || isSunday ? 60000 : ((isAnyDrawing || isFastUpdate) ? 5000 : 12000);
 
     let timer: any = null;
 
@@ -399,6 +421,24 @@ export default function SingleGameLiveCard({
         </div>
       )}
 
+      {/* Live Referee Revision Notice */}
+      {revisionNotice && (
+        <div className="bg-amber-500/15 border-2 border-amber-500/40 rounded-xl p-3 text-xs text-amber-950 flex items-center justify-between gap-2 shadow-xs animate-pulse max-w-md">
+          <div className="flex items-center gap-2">
+            <span className="text-base shrink-0">📢</span>
+            <span className="font-bold text-[12px] sm:text-xs leading-tight">{revisionNotice}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setRevisionNotice(null)}
+            className="text-amber-900 hover:text-black font-black px-2 py-0.5 rounded cursor-pointer shrink-0 text-sm"
+            title="Dismiss notice"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* FR & SR Result Box (Grid 2 cols) */}
       <div
         className={`grid grid-cols-2 gap-2 sm:gap-3 max-w-md transition-all rounded-2xl p-1 ${
@@ -443,13 +483,30 @@ export default function SingleGameLiveCard({
               </div>
             </div>
           ) : (
-            <span
-              className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
-              }`}
-            >
-              {game.fr}
-            </span>
+            <div>
+              <span
+                className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                  game.fr !== 'xx' ? 'text-amber-600' : 'text-slate-400'
+                }`}
+              >
+                {game.fr}
+              </span>
+              {game.fr !== 'xx' && (
+                <div className="flex items-center justify-center mt-1">
+                  {game.fr_verification === 'FAST_UPDATE' ? (
+                    <span className="inline-flex items-center gap-1 text-[9px] font-extrabold text-amber-800 bg-amber-100/95 border border-amber-300 px-1.5 py-0.5 rounded-full shadow-2xs animate-pulse" title="Fast-Tracked from verified referee source">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      ⚡ Fast Live
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/90 px-1.5 py-0.5 rounded-full shadow-2xs" title="Confirmed by independent sources">
+                      <svg className="w-2.5 h-2.5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                      Verified
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
 
@@ -491,13 +548,30 @@ export default function SingleGameLiveCard({
               </div>
             </div>
           ) : (
-            <span
-              className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
-                game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
-              }`}
-            >
-              {game.sr}
-            </span>
+            <div>
+              <span
+                className={`text-3xl sm:text-4xl font-black font-mono block mt-1 tracking-tight ${
+                  game.sr !== 'xx' ? 'text-emerald-600' : 'text-slate-400'
+                }`}
+              >
+                {game.sr}
+              </span>
+              {game.sr !== 'xx' && (
+                <div className="flex items-center justify-center mt-1">
+                  {game.sr_verification === 'FAST_UPDATE' ? (
+                    <span className="inline-flex items-center gap-1 text-[9px] font-extrabold text-emerald-800 bg-emerald-100/95 border border-emerald-300 px-1.5 py-0.5 rounded-full shadow-2xs animate-pulse" title="Fast-Tracked from verified referee source">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      ⚡ Fast Live
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/90 px-1.5 py-0.5 rounded-full shadow-2xs" title="Confirmed by independent sources">
+                      <svg className="w-2.5 h-2.5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                      Verified
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

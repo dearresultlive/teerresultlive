@@ -483,8 +483,10 @@ export async function fetchFromTeerResultsDotCom(targetDate?: string): Promise<{
     const expectedDate = targetDate
       ? targetDate.split('-').reverse().join('-')
       : new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata' }).format(new Date()).replace(/\//g, '-');
+    const expectedDateDot = expectedDate.replace(/-/g, '.');
+    const expectedDateSlash = expectedDate.replace(/-/g, '/');
 
-    if (!html.includes(expectedDate)) return null;
+    if (!html.includes(expectedDate) && !html.includes(expectedDateDot) && !html.includes(expectedDateSlash)) return null;
 
     const result: any = {};
     const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;

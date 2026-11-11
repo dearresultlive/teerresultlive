@@ -8,6 +8,10 @@ export interface GameResult {
   sr_time: string;
   fr: string;
   sr: string;
+  fr_verification?: 'VERIFIED' | 'FAST_UPDATE' | 'UNVERIFIED';
+  sr_verification?: 'VERIFIED' | 'FAST_UPDATE' | 'UNVERIFIED';
+  fr_sources?: string[];
+  sr_sources?: string[];
 }
 
 export interface TeerData {

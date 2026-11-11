@@ -445,8 +445,10 @@ async function fetchFromTeerResultsDotCom(targetDate) {
     const expectedDate = targetDate
       ? targetDate.split('-').reverse().join('-')
       : new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata' }).format(new Date()).replace(/\//g, '-');
+    const expectedDateDot = expectedDate.replace(/-/g, '.');
+    const expectedDateSlash = expectedDate.replace(/-/g, '/');
 
-    if (!html.includes(expectedDate)) return null;
+    if (!html.includes(expectedDate) && !html.includes(expectedDateDot) && !html.includes(expectedDateSlash)) return null;
 
     const result = {};
     const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;
@@ -758,6 +760,10 @@ export async function runPoller() {
       game.fr = targetFR;
       game.sr = targetSR;
       game.status = status;
+      game.fr_verification = cFR.verification_level;
+      game.sr_verification = cSR.verification_level;
+      game.fr_sources = cFR.sources;
+      game.sr_sources = cSR.sources;
       updated = true;
 
       // Broadcast to Telegram channel if a new confirmed number was declared or revised
@@ -811,6 +817,14 @@ export async function runPoller() {
         } catch (e) {
           console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
         }
+      }
+    } else {
+      if (game.fr_verification !== cFR.verification_level || game.sr_verification !== cSR.verification_level) {
+        game.fr_verification = cFR.verification_level;
+        game.sr_verification = cSR.verification_level;
+        game.fr_sources = cFR.sources;
+        game.sr_sources = cSR.sources;
+        updated = true;
       }
     }
   }

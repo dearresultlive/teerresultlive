@@ -21,6 +21,7 @@ export interface RoundConsensusResult {
   voteCount: number;
   sources: string[];
   status: 'PENDING' | 'WAITING_FOR_2ND_SOURCE' | 'CONSENSUS_REACHED' | 'OVERRIDDEN_BY_MAJORITY' | 'OVERRIDDEN_BY_CORRECTION' | 'STABLE';
+  verification_level?: 'VERIFIED' | 'FAST_UPDATE' | 'UNVERIFIED';
 }
 
 export interface GameConsensusResult {
@@ -82,13 +83,21 @@ export function resolveRoundConsensus(
     return 0;
   });
 
+  function buildResult(
+    declaredNumber: string,
+    voteCount: number,
+    sources: string[],
+    status: RoundConsensusResult['status']
+  ): RoundConsensusResult {
+    let verification_level: 'VERIFIED' | 'FAST_UPDATE' | 'UNVERIFIED' = 'UNVERIFIED';
+    if (declaredNumber && declaredNumber !== 'xx') {
+      verification_level = sources.length >= 2 ? 'VERIFIED' : 'FAST_UPDATE';
+    }
+    return { declaredNumber, voteCount, sources, status, verification_level };
+  }
+
   if (candidates.length === 0) {
-    return {
-      declaredNumber: currentVal || 'xx',
-      voteCount: 0,
-      sources: [],
-      status: 'PENDING'
-    };
+    return buildResult(currentVal || 'xx', 0, [], 'PENDING');
   }
 
   const topCandidate = candidates[0];
@@ -99,19 +108,9 @@ export function resolveRoundConsensus(
   if (!currentVal || currentVal === 'xx') {
     // Requires at least 2 votes (either 2 Tier 2 scrapers OR 1 Tier 1 direct API)
     if (topVotes >= 2) {
-      return {
-        declaredNumber: topCandidate,
-        voteCount: topVotes,
-        sources: topSources,
-        status: 'CONSENSUS_REACHED'
-      };
+      return buildResult(topCandidate, topVotes, topSources, 'CONSENSUS_REACHED');
     }
-    return {
-      declaredNumber: 'xx',
-      voteCount: topVotes,
-      sources: topSources,
-      status: 'WAITING_FOR_2ND_SOURCE'
-    };
+    return buildResult('xx', topVotes, topSources, 'WAITING_FOR_2ND_SOURCE');
   }
 
   // Case 2: Round already has a declared number. Check for Majority Override or Correction!
@@ -120,41 +119,26 @@ export function resolveRoundConsensus(
   if (topCandidate !== currentVal) {
     // Rule 2a: Official Tier 1 Machine Feed Overrides Unofficial Scrapers / Corrections
     if (voteMap[topCandidate].hasTier1 && !voteMap[currentVal]?.hasTier1 && topVotes >= 2) {
-      return {
-        declaredNumber: topCandidate,
-        voteCount: topVotes,
-        sources: topSources,
-        status: currentVotes === 0 ? 'OVERRIDDEN_BY_CORRECTION' : 'OVERRIDDEN_BY_MAJORITY'
-      };
+      return buildResult(
+        topCandidate,
+        topVotes,
+        topSources,
+        currentVotes === 0 ? 'OVERRIDDEN_BY_CORRECTION' : 'OVERRIDDEN_BY_MAJORITY'
+      );
     }
 
     // Rule 2b: Stronger Majority Override (Top candidate has >= 3 votes and beats current candidate)
     if (topVotes >= 3 && topVotes > currentVotes) {
-      return {
-        declaredNumber: topCandidate,
-        voteCount: topVotes,
-        sources: topSources,
-        status: 'OVERRIDDEN_BY_MAJORITY'
-      };
+      return buildResult(topCandidate, topVotes, topSources, 'OVERRIDDEN_BY_MAJORITY');
     }
 
     // Rule 3: Source Self-Correction (Current candidate lost quorum (<2 votes), and top candidate has consensus >= 2)
     if (currentVotes < 2 && topVotes >= 2) {
-      return {
-        declaredNumber: topCandidate,
-        voteCount: topVotes,
-        sources: topSources,
-        status: 'OVERRIDDEN_BY_CORRECTION'
-      };
+      return buildResult(topCandidate, topVotes, topSources, 'OVERRIDDEN_BY_CORRECTION');
     }
   }
 
-  return {
-    declaredNumber: currentVal,
-    voteCount: currentVotes,
-    sources: voteMap[currentVal]?.sources || [],
-    status: 'STABLE'
-  };
+  return buildResult(currentVal, currentVotes, voteMap[currentVal]?.sources || [], 'STABLE');
 }
 
 /**

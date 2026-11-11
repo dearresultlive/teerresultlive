@@ -1,6 +1,6 @@
 {
   "date": "2026-11-11",
-  "updated_at": "2026-11-11T10:33:15.823Z",
+  "updated_at": "2026-11-11T10:46:04.976Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -29,7 +29,17 @@
           8,
           2
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "UNVERIFIED",
+      "fr_sources": [
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "teerresults_com"
+      ],
+      "sr_sources": []
     },
     "khanapara": {
       "name": "Khanapara Teer",
@@ -58,7 +68,17 @@
           4,
           6
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "UNVERIFIED",
+      "fr_sources": [
+        "teerresult_agg",
+        "gas_datacenter",
+        "teerresults_com"
+      ],
+      "sr_sources": [
+        "teerground_com"
+      ]
     },
     "juwai": {
       "name": "Juwai Teer",
@@ -87,7 +107,21 @@
           2,
           7
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "teerresults_com"
+      ],
+      "sr_sources": [
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "teerresults_com"
+      ]
     },
     "night": {
       "name": "Shillong Night Teer",
@@ -116,7 +150,11 @@
           5,
           9
         ]
-      }
+      },
+      "fr_verification": "UNVERIFIED",
+      "sr_verification": "UNVERIFIED",
+      "fr_sources": [],
+      "sr_sources": []
     }
   }
 }
