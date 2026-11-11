@@ -7,6 +7,7 @@ import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import TeerPrizeCalculator from '../components/TeerPrizeCalculator';
 import DreamNumberSearch from '../components/DreamNumberSearch';
 import PreviousResultsTable from '../components/PreviousResultsTable';
+import LoanBannerCard from '../components/LoanBannerCard.astro';
 import { getFreshTeerData } from '../utils/getFreshTeerData';
 
 const liveData = await getFreshTeerData();
@@ -33,6 +34,11 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
     <!-- 1. Real-Time Zero-Refresh Teer Live Results Board -->
     <section id="live-results">
       <TeerLiveBoard client:idle initialData={liveData} />
+    </section>
+
+    <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->
+    <section id="instant-loan" aria-label="Personal Loan Assistance">
+      <LoanBannerCard />
     </section>
 
     <!-- Cross-Game & Dream Number Quick Navigation Hub -->

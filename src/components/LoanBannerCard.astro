@@ -1,0 +1,60 @@
+---
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+
+// Cuelinks MoneyView Tracking Link
+const affiliateUrl = "https://linksredirect.com/?cid=333938&source=linkkit&url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.whizdm.moneyview.loans";
+---
+
+<div class={`bg-gradient-to-r from-emerald-900 via-slate-900 to-emerald-950 text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-emerald-500/30 relative overflow-hidden ${className}`}>
+  <!-- Subtle decorative ambient glow -->
+  <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+    <!-- Left text section -->
+    <div class="space-y-1.5 flex-1">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-400/30 flex items-center gap-1">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          ইনস্ট্যান্ট লোন সুবিধা
+        </span>
+        <span class="text-[11px] text-slate-300 font-medium">
+          RBI Regulated NBFC Partners
+        </span>
+      </div>
+
+      <h3 class="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-1.5">
+        জরুরি টাকার প্রয়োজন? পান ₹5,000 – ₹5,00,000 পর্যন্ত পার্সোনাল লোন
+      </h3>
+
+      <p class="text-xs text-slate-300 leading-relaxed">
+        ১০০% ডিজিটাল ও পেপারলেস প্রসেস • ২ মিনিটে যোগ্যতা যাচাই • সরাসরি আপনার ব্যাংক অ্যাকাউন্টে টাকা।
+      </p>
+
+      <div class="flex items-center gap-3 text-[11px] text-emerald-200/80 font-medium pt-0.5">
+        <span>✓ কোনো গ্যারান্টার ছাড়া</span>
+        <span>✓ সহজ মাসিক কিস্তি (EMI)</span>
+        <span>✓ আধার ও প্যান কার্ডে লোন</span>
+      </div>
+    </div>
+
+    <!-- Right Action Button -->
+    <div class="w-full sm:w-auto shrink-0 flex flex-col items-stretch sm:items-end gap-1">
+      <a
+        href={affiliateUrl}
+        target="_blank"
+        rel="sponsored nofollow noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95 text-center"
+      >
+        <span>যোগ্যতা চেক করুন</span>
+        <span class="text-base leading-none">→</span>
+      </a>
+      <span class="text-[10px] text-slate-400 text-center sm:text-right">
+        *Sponsored • লোন ব্যাংকের শর্তাধীন
+      </span>
+    </div>
+  </div>
+</div>
