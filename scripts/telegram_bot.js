@@ -93,7 +93,16 @@ export async function broadcastTeerResult({
 
   let message = '';
 
-  if (roundType === 'FULL') {
+  if (roundType === 'UPDATE' || roundType === 'CORRECTION') {
+    message = `🔄 <b>${displayName} RESULT UPDATED / REVISED</b>\n` +
+      `📅 Date: <b>${formattedDate}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚡ <b>1st Round (FR):</b>  <code>[ ${fr} ]</code>\n` +
+      `⚡ <b>2nd Round (SR):</b> <code>[ ${sr} ]</code>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `✅ <i>Verified by Multi-Source Consensus Quorum</i>\n\n` +
+      `👉 <a href="${gameUrl}">${gameUrl}</a>`;
+  } else if (roundType === 'FULL') {
     message = `🎯 <b>${displayName} OFFICIAL RESULT</b>\n` +
       `📅 Date: <b>${formattedDate}</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━\n` +

@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install Dependencies
@@ -49,9 +49,10 @@ jobs:
           git config --global user.email "support@teerresultlive.in"
           if [ -n "$(git status --porcelain src/data/)" ]; then
             git add src/data/
-            git commit -m "Auto-update Teer live numbers"
-            git pull --rebase origin main || true
-            git push origin main
+            git commit -m "Auto-update Teer live numbers [skip ci]"
+            for i in 1 2 3; do
+              git pull --rebase -X ours origin main && git push origin main && break || sleep 2
+            done
           else
             echo "No data changes detected."
           fi

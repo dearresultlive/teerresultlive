@@ -685,11 +685,28 @@ export async function runPoller() {
       game.status = status;
       updated = true;
 
-      // Broadcast to Telegram channel if a new confirmed number was declared
+      // Broadcast to Telegram channel if a new confirmed number was declared or revised
       const frJustDeclared = oldFR === 'xx' && targetFR !== 'xx';
       const srJustDeclared = oldSR === 'xx' && targetSR !== 'xx';
+      const frRevised = oldFR !== 'xx' && targetFR !== 'xx' && oldFR !== targetFR;
+      const srRevised = oldSR !== 'xx' && targetSR !== 'xx' && oldSR !== targetSR;
 
-      if (srJustDeclared) {
+      if (frRevised || srRevised) {
+        try {
+          await broadcastTeerResult({
+            gameKey: key,
+            gameName: game.name,
+            date: liveData.date || todayIST,
+            fr: targetFR,
+            sr: targetSR,
+            frTime: game.fr_time,
+            srTime: game.sr_time,
+            roundType: 'UPDATE'
+          });
+        } catch (e) {
+          console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
+        }
+      } else if (srJustDeclared) {
         try {
           await broadcastTeerResult({
             gameKey: key,
