@@ -103,7 +103,17 @@ export function resolveRoundConsensus(
   const currentVotes = voteMap[currentVal] ? voteMap[currentVal].count : 0;
 
   if (topCandidate !== currentVal) {
-    // Rule 2: Stronger Majority Override (Top candidate has >= 3 votes and beats current candidate)
+    // Rule 2a: Official Tier 1 Machine Feed Overrides Unofficial Scrapers
+    if (voteMap[topCandidate].hasTier1 && !voteMap[currentVal]?.hasTier1 && topVotes >= 2) {
+      return {
+        declaredNumber: topCandidate,
+        voteCount: topVotes,
+        sources: topSources,
+        status: 'OVERRIDDEN_BY_MAJORITY'
+      };
+    }
+
+    // Rule 2b: Stronger Majority Override (Top candidate has >= 3 votes and beats current candidate)
     if (topVotes >= 3 && topVotes > currentVotes) {
       return {
         declaredNumber: topCandidate,

@@ -10,7 +10,7 @@ import { evaluateMultiSourceConsensus } from './teerConsensusEngine';
 let cachedData: TeerData | null = null;
 let lastFetchTime = 0;
 
-function isArcheryShootingHour(): boolean {
+export function isArcheryShootingHour(): boolean {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Asia/Kolkata',
     hour: 'numeric',
