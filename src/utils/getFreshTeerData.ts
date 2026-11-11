@@ -9,7 +9,23 @@ import { evaluateMultiSourceConsensus } from './teerConsensusEngine';
 
 let cachedData: TeerData | null = null;
 let lastFetchTime = 0;
-const CACHE_TTL_MS = 15 * 1000; // 15 seconds in-memory edge cache
+
+function isArcheryShootingHour(): boolean {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    hourCycle: 'h23'
+  }).formatToParts(new Date());
+  const h = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
+  const m = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
+  const mins = h * 60 + m;
+  // Day Archery: 1:30 PM to 5:30 PM IST (Juwai, Shillong, Khanapara)
+  const isDayDraw = mins >= (13 * 60 + 30) && mins <= (17 * 60 + 30);
+  // Night Archery: 10:00 PM to 11:55 PM IST
+  const isNightDraw = mins >= (22 * 60) && mins <= (23 * 60 + 55);
+  return isDayDraw || isNightDraw;
+}
 
 /**
  * High-performance, edge-cached real-time Teer data resolver.
@@ -24,7 +40,9 @@ const CACHE_TTL_MS = 15 * 1000; // 15 seconds in-memory edge cache
  */
 export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> {
   const now = Date.now();
-  const ttl = forceRefresh ? 3000 : CACHE_TTL_MS;
+  // Tight 4-second TTL during live shooting windows; 15s during off-hours; 2s on manual refresh
+  const isLiveWindow = isArcheryShootingHour();
+  const ttl = forceRefresh ? 2000 : (isLiveWindow ? 4000 : 15000);
 
   // 1. Fast in-memory edge cache return (< 0.1ms)
   if (cachedData && (now - lastFetchTime < ttl)) {

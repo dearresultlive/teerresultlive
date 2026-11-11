@@ -26,7 +26,7 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
   }
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES: Record<string, { fr: number; sr: number }> = {
-    juwai: { fr: 13 * 60 + 40, sr: 14 * 60 + 25 },    // 1:40 PM / 2:25 PM (Jowai timing)
+    juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },    // 1:35 PM / 2:20 PM (Jowai timing)
     shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM (Polo Ground real shooting start)
     khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM (Khanapara real shooting start)
     night: { fr: 22 * 60 + 15, sr: 23 * 60 + 15 }     // 10:15 PM / 11:15 PM (Night Archery real shooting start)
@@ -198,7 +198,7 @@ export async function fetchNightTeerDirect(): Promise<{ date: string; fr: string
 
 
 // Source 5: Multi-Game Fallback Feed from teerresulttoday.org
-export async function fetchFromTeerResultToday(): Promise<{
+export async function fetchFromTeerResultToday(targetDate?: string): Promise<{
   shillong?: { fr: string; sr: string };
   juwai?: { fr: string; sr: string };
   khanapara?: { fr: string; sr: string };
@@ -209,12 +209,17 @@ export async function fetchFromTeerResultToday(): Promise<{
     const res = await fetch('https://teerresulttoday.org', {
       signal: controller.signal,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       }
     });
     clearTimeout(timeout);
     if (!res.ok) return null;
     const html = await res.text();
+
+    const tDate = targetDate || new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+    const [y, m, d] = tDate.split('-');
+    const monthsFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const expectedDate = `${parseInt(d, 10)} ${monthsFull[parseInt(m, 10) - 1]} ${y}`; // e.g. "11 November 2026"
 
     const result: {
       shillong: { fr: string; sr: string };
@@ -226,17 +231,20 @@ export async function fetchFromTeerResultToday(): Promise<{
       khanapara: { fr: 'xx', sr: 'xx' }
     };
 
-    const tables = [...html.matchAll(/<table[^>]*class="[^"]*trs-table[^"]*"[^>]*>([\s\S]*?)<\/table>/gi)];
-    for (const t of tables) {
-      const c = t[1];
+    const cards = [...html.matchAll(/<span class="trs-result-date">([^<]+)<\/span>[\s\S]*?<table[^>]*class="[^"]*trs-table[^"]*"[^>]*>([\s\S]*?)<\/table>/gi)];
+    for (const card of cards) {
+      const cardDate = card[1].trim();
+      if (cardDate !== expectedDate) continue; // Skip stale yesterday boards!
+
+      const tableContent = card[2];
       let gameKey: 'shillong' | 'juwai' | 'khanapara' | null = null;
-      if (/Shillong/i.test(c)) gameKey = 'shillong';
-      else if (/Juwai/i.test(c)) gameKey = 'juwai';
-      else if (/Khanapara/i.test(c)) gameKey = 'khanapara';
+      if (/Shillong/i.test(tableContent)) gameKey = 'shillong';
+      else if (/Juwai/i.test(tableContent)) gameKey = 'juwai';
+      else if (/Khanapara/i.test(tableContent)) gameKey = 'khanapara';
 
       if (!gameKey) continue;
 
-      const rows = [...c.matchAll(/<tr>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<\/tr>/gi)];
+      const rows = [...tableContent.matchAll(/<tr>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<\/tr>/gi)];
       if (rows.length >= 2) {
         result[gameKey].fr = cleanNumber(rows[1][1].replace(/<[^>]+>/g, '').trim());
         result[gameKey].sr = cleanNumber(rows[1][2].replace(/<[^>]+>/g, '').trim());
@@ -344,13 +352,24 @@ export async function fetchTeerResultsNet(targetDate?: string): Promise<{
     if (!res.ok) return null;
     const html = await res.text();
 
+    const tDate = targetDate || new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+    const [year, month, day] = tDate.split('-');
+    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const expectedShortDate = `${parseInt(day, 10)} ${monthsShort[parseInt(month, 10) - 1]} ${year}`.toLowerCase(); // e.g. "11 nov 2026"
+
     const m = html.match(/Shillong Teer Result Today[\s\S]*?Date:\s*([0-9]{1,2}\s+[A-Za-z]{3}\s+[0-9]{4})[\s\S]*?<tr>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>/i);
     if (m) {
       const rawDate = m[1].trim();
-      const fr = cleanNumber(m[2]);
-      const sr = cleanNumber(m[3]);
+      // Date verification: must match today's date!
+      if (rawDate.toLowerCase().replace(/\s+/g, ' ') !== expectedShortDate) {
+        return null;
+      }
       return {
-        shillong: { date: rawDate, fr, sr }
+        shillong: {
+          date: rawDate,
+          fr: cleanNumber(m[2]),
+          sr: cleanNumber(m[3])
+        }
       };
     }
   } catch (e) {}
@@ -443,7 +462,7 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
   const results = await Promise.allSettled([
     fetchFromInstantTeerResults(),     // 0. InstantTeer API (Tier 1)
     fetchShillongCDN(),                // 1. Polo Ground CDN (Tier 1)
-    fetchFromTeerResultToday(),        // 2. TeerResultToday (Tier 2)
+    fetchFromTeerResultToday(targetDate),        // 2. TeerResultToday (Tier 2)
     fetchAggregatorData(),             // 3. TeerResult Aggregator (Tier 2)
     fetchKhanaparaOrg(),               // 4. KhanaparaTeer.org (Tier 2)
     fetchNightTeerDirect(),            // 5. NightTeer.com (Tier 2)
