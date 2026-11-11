@@ -1,15 +1,15 @@
 {
   "date": "2026-11-11",
-  "updated_at": "2026-11-11T11:10:16.017Z",
+  "updated_at": "2026-11-11T11:14:39.901Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
       "fr": "11",
-      "sr": "xx",
+      "sr": "29",
       "common_numbers": {
         "direct": [
           "03",
@@ -31,15 +31,25 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "UNVERIFIED",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
+        "instantteer_api",
         "polo_ground_cdn",
         "teerresulttoday",
         "teerresult_agg",
+        "teertarget_com",
         "gas_datacenter",
         "teerresults_com"
       ],
-      "sr_sources": []
+      "sr_sources": [
+        "instantteer_api",
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "teertarget_com",
+        "gas_datacenter",
+        "teerresults_com"
+      ]
     },
     "khanapara": {
       "name": "Khanapara Teer",
