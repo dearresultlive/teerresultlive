@@ -50,8 +50,21 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
     }
   }
 
-  // Rank candidate numbers by total votes descending
-  const candidates = Object.keys(voteMap).sort((a, b) => voteMap[b].count - voteMap[a].count);
+  // Rank candidate numbers by total votes descending, with Tier 1 and stability tie-breakers
+  const candidates = Object.keys(voteMap).sort((a, b) => {
+    // 1. Primary: Highest total vote count
+    if (voteMap[b].count !== voteMap[a].count) {
+      return voteMap[b].count - voteMap[a].count;
+    }
+    // 2. Tie-breaker: Verified Tier 1 referee feed always beats unofficial 3rd-party scrapers
+    if (voteMap[b].hasTier1 !== voteMap[a].hasTier1) {
+      return voteMap[b].hasTier1 ? 1 : -1;
+    }
+    // 3. Tie-breaker: Stability preference (keep current value if tied to avoid visual jitter)
+    if (a === currentVal) return -1;
+    if (b === currentVal) return 1;
+    return 0;
+  });
 
   if (candidates.length === 0) {
     return {

@@ -480,10 +480,13 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
     gasRes
   ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
+  const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+  const isToday = targetDate === todayIST;
+
   const addReport = (game: string, source: string, tier: 1 | 2, fr: string, sr: string) => {
     if (!reports[game]) return;
-    const cleanFR = isRoundWindowOpen(game, 'fr') ? cleanNumber(fr) : 'xx';
-    const cleanSR = isRoundWindowOpen(game, 'sr') ? cleanNumber(sr) : 'xx';
+    const cleanFR = (isToday && !isRoundWindowOpen(game, 'fr')) ? 'xx' : cleanNumber(fr);
+    const cleanSR = (isToday && !isRoundWindowOpen(game, 'sr')) ? 'xx' : cleanNumber(sr);
     if (cleanFR !== 'xx' || cleanSR !== 'xx') {
       reports[game].push({
         source,

@@ -562,10 +562,11 @@ export async function runPoller() {
     night: []
   };
 
+  const isToday = liveData.date === todayIST;
   const addReport = (game, source, tier, fr, sr) => {
     if (!allReports[game]) return;
-    const cleanFR = isRoundWindowOpen(game, 'fr') ? cleanNumber(fr) : 'xx';
-    const cleanSR = isRoundWindowOpen(game, 'sr') ? cleanNumber(sr) : 'xx';
+    const cleanFR = (isToday && !isRoundWindowOpen(game, 'fr')) ? 'xx' : cleanNumber(fr);
+    const cleanSR = (isToday && !isRoundWindowOpen(game, 'sr')) ? 'xx' : cleanNumber(sr);
     if (cleanFR !== 'xx' || cleanSR !== 'xx') {
       allReports[game].push({ source, tier, fr: cleanFR, sr: cleanSR });
     }

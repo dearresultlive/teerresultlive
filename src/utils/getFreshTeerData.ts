@@ -22,8 +22,8 @@ export function isArcheryShootingHour(): boolean {
   const mins = h * 60 + m;
   // Day Archery: 1:30 PM to 5:30 PM IST (Juwai, Shillong, Khanapara)
   const isDayDraw = mins >= (13 * 60 + 30) && mins <= (17 * 60 + 30);
-  // Night Archery: 10:00 PM to 11:55 PM IST
-  const isNightDraw = mins >= (22 * 60) && mins <= (23 * 60 + 55);
+  // Night Archery: 10:00 PM to 12:30 AM IST (including midnight rollover)
+  const isNightDraw = mins >= (22 * 60) || mins <= 30;
   return isDayDraw || isNightDraw;
 }
 
@@ -72,12 +72,12 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   if (result.date !== todayIST && isMorningRolloverTime) {
     const priorRecord = {
       date: result.date,
-      shillong_fr: result.games.shillong.fr,
-      shillong_sr: result.games.shillong.sr,
-      khanapara_fr: result.games.khanapara.fr,
-      khanapara_sr: result.games.khanapara.sr,
-      juwai_fr: result.games.juwai.fr,
-      juwai_sr: result.games.juwai.sr,
+      shillong_fr: result.games.shillong?.fr || 'xx',
+      shillong_sr: result.games.shillong?.sr || 'xx',
+      khanapara_fr: result.games.khanapara?.fr || 'xx',
+      khanapara_sr: result.games.khanapara?.sr || 'xx',
+      juwai_fr: result.games.juwai?.fr || 'xx',
+      juwai_sr: result.games.juwai?.sr || 'xx',
       night_fr: result.games.night?.fr || 'xx',
       night_sr: result.games.night?.sr || 'xx'
     };
@@ -104,9 +104,9 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
     if (allReports) {
       const consensus = evaluateMultiSourceConsensus(
         {
-          shillong: { fr: result.games.shillong.fr, sr: result.games.shillong.sr },
-          khanapara: { fr: result.games.khanapara.fr, sr: result.games.khanapara.sr },
-          juwai: { fr: result.games.juwai.fr, sr: result.games.juwai.sr },
+          shillong: { fr: result.games.shillong?.fr || 'xx', sr: result.games.shillong?.sr || 'xx' },
+          khanapara: { fr: result.games.khanapara?.fr || 'xx', sr: result.games.khanapara?.sr || 'xx' },
+          juwai: { fr: result.games.juwai?.fr || 'xx', sr: result.games.juwai?.sr || 'xx' },
           night: { fr: result.games.night?.fr || 'xx', sr: result.games.night?.sr || 'xx' }
         },
         allReports
