@@ -102,13 +102,13 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
   const currentVotes = voteMap[currentVal] ? voteMap[currentVal].count : 0;
 
   if (topCandidate !== currentVal) {
-    // Rule 2a: Official Tier 1 Machine Feed Overrides Unofficial Scrapers
+    // Rule 2a: Official Tier 1 Machine Feed Overrides Unofficial Scrapers / Corrections
     if (voteMap[topCandidate].hasTier1 && !voteMap[currentVal]?.hasTier1 && topVotes >= 2) {
       return {
         declaredNumber: topCandidate,
         voteCount: topVotes,
         sources: topSources,
-        status: 'OVERRIDDEN_BY_MAJORITY'
+        status: currentVotes === 0 ? 'OVERRIDDEN_BY_CORRECTION' : 'OVERRIDDEN_BY_MAJORITY'
       };
     }
 

@@ -609,14 +609,14 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
     }
   }
 
-  // 5. KhanaparaTeer.org (Tier 2)
+  // 5. KhanaparaTeer.org Official Direct Feed (Tier 1 Fast-Track)
   if (khanaparaRes) {
-    addReport('khanapara', 'khanaparateer_org', 2, khanaparaRes.fr, khanaparaRes.sr);
+    addReport('khanapara', 'khanaparateer_org', 1, khanaparaRes.fr, khanaparaRes.sr);
   }
 
-  // 6. NightTeer.com Direct (Tier 2)
+  // 6. NightTeer.com Official Direct Feed (Tier 1 Fast-Track)
   if (nightDirectRes && nightDirectRes.date === targetDate) {
-    addReport('night', 'nightteer_direct', 2, nightDirectRes.fr, nightDirectRes.sr);
+    addReport('night', 'nightteer_direct', 1, nightDirectRes.fr, nightDirectRes.sr);
   }
 
   // 7. TeerResults.net (Tier 2)
@@ -646,12 +646,12 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
   }
 
   
-  // 11. TeerResults.com Ultra-Fast Feed (Juwai, Shillong, Khanapara, Night)
+  // 11. TeerResults.com Ultra-Fast Trusted VIP Feed (Juwai, Shillong, Khanapara, Night) - Tier 1 Fast-Track
   if (teerResultsComRes) {
-    if (teerResultsComRes.juwai) addReport('juwai', 'teerresults_com', 2, teerResultsComRes.juwai.fr, teerResultsComRes.juwai.sr);
-    if (teerResultsComRes.shillong) addReport('shillong', 'teerresults_com', 2, teerResultsComRes.shillong.fr, teerResultsComRes.shillong.sr);
-    if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 2, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
-    if (teerResultsComRes.night) addReport('night', 'teerresults_com', 2, teerResultsComRes.night.fr, teerResultsComRes.night.sr);
+    if (teerResultsComRes.juwai) addReport('juwai', 'teerresults_com', 1, teerResultsComRes.juwai.fr, teerResultsComRes.juwai.sr);
+    if (teerResultsComRes.shillong) addReport('shillong', 'teerresults_com', 1, teerResultsComRes.shillong.fr, teerResultsComRes.shillong.sr);
+    if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
+    if (teerResultsComRes.night) addReport('night', 'teerresults_com', 1, teerResultsComRes.night.fr, teerResultsComRes.night.sr);
   }
 
   return reports;

@@ -677,14 +677,14 @@ export async function runPoller() {
     }
   }
 
-  // 5. KhanaparaTeer.org (Tier 2)
+  // 5. KhanaparaTeer.org Official Direct Feed (Tier 1 Fast-Track)
   if (khanaparaOrgData) {
-    addReport('khanapara', 'khanaparateer_org', 2, khanaparaOrgData.fr, khanaparaOrgData.sr);
+    addReport('khanapara', 'khanaparateer_org', 1, khanaparaOrgData.fr, khanaparaOrgData.sr);
   }
 
-  // 6. NightTeer.com Direct (Tier 2)
+  // 6. NightTeer.com Official Direct Feed (Tier 1 Fast-Track)
   if (nightDirect && nightDirect.date === liveData.date) {
-    addReport('night', 'nightteer_direct', 2, nightDirect.fr, nightDirect.sr);
+    addReport('night', 'nightteer_direct', 1, nightDirect.fr, nightDirect.sr);
   }
 
   // 7. TeerResults.net (Tier 2)
@@ -713,12 +713,12 @@ export async function runPoller() {
     }
   }
 
-  // 11. TeerResults.com Ultra-Fast Feed (Juwai, Shillong, Khanapara, Night)
+  // 11. TeerResults.com Ultra-Fast Trusted VIP Feed (Juwai, Shillong, Khanapara, Night) - Tier 1 Fast-Track
   if (teerResultsComData) {
-    if (teerResultsComData.juwai) addReport('juwai', 'teerresults_com', 2, teerResultsComData.juwai.fr, teerResultsComData.juwai.sr);
-    if (teerResultsComData.shillong) addReport('shillong', 'teerresults_com', 2, teerResultsComData.shillong.fr, teerResultsComData.shillong.sr);
-    if (teerResultsComData.khanapara) addReport('khanapara', 'teerresults_com', 2, teerResultsComData.khanapara.fr, teerResultsComData.khanapara.sr);
-    if (teerResultsComData.night) addReport('night', 'teerresults_com', 2, teerResultsComData.night.fr, teerResultsComData.night.sr);
+    if (teerResultsComData.juwai) addReport('juwai', 'teerresults_com', 1, teerResultsComData.juwai.fr, teerResultsComData.juwai.sr);
+    if (teerResultsComData.shillong) addReport('shillong', 'teerresults_com', 1, teerResultsComData.shillong.fr, teerResultsComData.shillong.sr);
+    if (teerResultsComData.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComData.khanapara.fr, teerResultsComData.khanapara.sr);
+    if (teerResultsComData.night) addReport('night', 'teerresults_com', 1, teerResultsComData.night.fr, teerResultsComData.night.sr);
   }
 
   for (const key of gameKeys) {
