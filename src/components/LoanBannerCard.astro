@@ -9,52 +9,84 @@ const { className = '' } = Astro.props;
 const affiliateUrl = "https://linksredirect.com/?cid=333938&source=linkkit&url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.whizdm.moneyview.loans";
 ---
 
-<div class={`bg-gradient-to-r from-emerald-900 via-slate-900 to-emerald-950 text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-emerald-500/30 relative overflow-hidden ${className}`}>
-  <!-- Subtle decorative ambient glow -->
-  <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+<aside 
+  class={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-4 sm:p-5 shadow-xl border-2 border-amber-400/30 ring-4 ring-amber-400/5 ${className}`}
+  aria-label="Personal Loan Assistance"
+>
+  <!-- Ambient Gold & Emerald Glow Highlights -->
+  <div class="absolute -right-8 -top-8 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl pointer-events-none"></div>
+  <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-emerald-500/15 rounded-full blur-2xl pointer-events-none"></div>
 
-  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
-    <!-- Left text section -->
-    <div class="space-y-1.5 flex-1">
-      <div class="flex items-center gap-2 flex-wrap">
-        <span class="bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-400/30 flex items-center gap-1">
-          <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+  <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 relative z-10">
+    
+    <!-- Left Section: Headline, Social Proof & Highlights -->
+    <div class="space-y-2 flex-1">
+      
+      <!-- Top Social Proof & Trust Badges -->
+      <div class="flex items-center gap-2 flex-wrap text-[11px]">
+        <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-400/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           ইনস্ট্যান্ট লোন সুবিধা
         </span>
-        <span class="text-[11px] text-slate-300 font-medium">
-          RBI Regulated NBFC Partners
+        <span class="inline-flex items-center gap-1 bg-amber-400/15 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-400/25">
+          ⭐ 4.5+ রেটিং (১ কোটি+ ইউজার)
+        </span>
+        <span class="text-slate-400 font-medium hidden sm:inline">
+          🛡️ RBI Regulated NBFC
         </span>
       </div>
 
-      <h3 class="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-1.5">
-        জরুরি টাকার প্রয়োজন? পান ₹5,000 – ₹5,00,000 পর্যন্ত পার্সোনাল লোন
-      </h3>
+      <!-- Main Headline with Golden Cash Amount Highlight -->
+      <div class="pt-0.5">
+        <h3 class="text-base sm:text-lg md:text-xl font-black text-white tracking-tight leading-snug flex items-center flex-wrap gap-2">
+          <span>জরুরি টাকার প্রয়োজন? পান</span>
+          <span class="inline-block bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg shadow-sm text-sm sm:text-base ring-1 ring-amber-200">
+            ₹5,000 থেকে ₹5,00,000
+          </span>
+          <span>পার্সোনাল লোন</span>
+        </h3>
+      </div>
 
+      <!-- Subtext -->
       <p class="text-xs text-slate-300 leading-relaxed">
-        ১০০% ডিজিটাল ও পেপারলেস প্রসেস • ২ মিনিটে যোগ্যতা যাচাই • সরাসরি আপনার ব্যাংক অ্যাকাউন্টে টাকা।
+        ১০০% ডিজিটাল ও পেপারলেস প্রসেস • ২ মিনিটে যোগ্যতা যাচাই • সরাসরি আপনার ব্যাংক অ্যাকাউন্টে টাকা জমা।
       </p>
 
-      <div class="flex items-center gap-3 text-[11px] text-emerald-200/80 font-medium pt-0.5">
-        <span>✓ কোনো গ্যারান্টার ছাড়া</span>
-        <span>✓ সহজ মাসিক কিস্তি (EMI)</span>
-        <span>✓ আধার ও প্যান কার্ডে লোন</span>
+      <!-- 3 Visual Benefit Pills -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap text-[11px] pt-1">
+        <span class="inline-flex items-center gap-1 bg-slate-800/80 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700">
+          <span class="text-emerald-400 font-bold">✓</span> কোনো গ্যারান্টার ছাড়া
+        </span>
+        <span class="inline-flex items-center gap-1 bg-slate-800/80 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700">
+          <span class="text-emerald-400 font-bold">✓</span> আধার ও প্যান কার্ডে লোন
+        </span>
+        <span class="inline-flex items-center gap-1 bg-slate-800/80 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700">
+          <span class="text-amber-400 font-bold">⚡</span> সহজ মাসিক কিস্তি (EMI)
+        </span>
       </div>
     </div>
 
-    <!-- Right Action Button -->
-    <div class="w-full sm:w-auto shrink-0 flex flex-col items-stretch sm:items-end gap-1">
+    <!-- Right Section: Big High-Converting CTA Button -->
+    <div class="w-full lg:w-auto shrink-0 flex flex-col items-stretch lg:items-end justify-center gap-1.5 pt-1 lg:pt-0">
       <a
         href={affiliateUrl}
         target="_blank"
         rel="sponsored nofollow noopener noreferrer"
-        class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95 text-center"
+        class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 active:scale-95 text-slate-950 font-black text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg shadow-amber-500/20 transition-all text-center border border-amber-300"
       >
-        <span>যোগ্যতা চেক করুন</span>
-        <span class="text-base leading-none">→</span>
+        <span class="text-base">⚡</span>
+        <span class="tracking-tight">এখনই লোন চেক করুন (ফ্রি)</span>
+        <span class="text-base group-hover:translate-x-1 transition-transform">→</span>
       </a>
-      <span class="text-[10px] text-slate-400 text-center sm:text-right">
-        *Sponsored • লোন ব্যাংকের শর্তাধীন
-      </span>
+
+      <div class="flex items-center justify-between sm:justify-end gap-2 text-[10px] text-slate-400 px-1">
+        <span>*Sponsored</span>
+        <span>•</span>
+        <span>২ মিনিটে অনুমোদন</span>
+        <span>•</span>
+        <span>শর্তাবলী প্রযোজ্য</span>
+      </div>
     </div>
+
   </div>
-</div>
+</aside>
