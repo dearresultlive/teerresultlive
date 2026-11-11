@@ -208,13 +208,13 @@ async function fetchNightTeerDirect() {
     if (dateMatch) {
       date = dateMatch[3] + '-' + dateMatch[2].padStart(2, '0') + '-' + dateMatch[1].padStart(2, '0');
     }
-    const rowMatch = text.match(/<tr style="[^"]*background-color:\s*cream[^"]*">\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>/i);
+    const rowMatch = text.match(/<tr style="[^"]*background-color:\s*cream[^"]*">\s*<td align="center">([\s\S]*?)<\/td>\s*<td align="center">([\s\S]*?)<\/td>/i);
     if (date && rowMatch) {
-      return {
-        date,
-        fr: cleanNumber(rowMatch[1]),
-        sr: cleanNumber(rowMatch[2])
-      };
+      const fr = cleanNumber(rowMatch[1].replace(/<[^>]+>/g, '').trim());
+      const sr = cleanNumber(rowMatch[2].replace(/<[^>]+>/g, '').trim());
+      if (fr !== 'xx' || sr !== 'xx') {
+        return { date, fr, sr };
+      }
     }
   } catch (err) {
     console.warn('[Night Poller] Direct night teer fetch skipped:', err.message);
@@ -287,12 +287,13 @@ async function fetchKhanaparaOrg() {
     const hasToday = html.includes(`${curMonth} ${dayInt}, ${year}`) || html.includes(`${dayInt} ${curMonth} ${year}`);
     if (!hasToday) return null;
 
-    const circleMatches = [...html.matchAll(/class=today-blue-circle>\s*([0-9]{1,2})\s*<\/div>/gi)];
+    const circleMatches = [...html.matchAll(/class=["']?today-blue-circle["']?[^>]*>([\s\S]*?)<\/div>/gi)];
     if (circleMatches.length >= 1) {
-      return {
-        fr: cleanNumber(circleMatches[0][1]),
-        sr: circleMatches.length >= 2 ? cleanNumber(circleMatches[1][1]) : 'xx'
-      };
+      const fr = cleanNumber(circleMatches[0][1].replace(/<[^>]+>/g, '').trim());
+      const sr = circleMatches.length >= 2 ? cleanNumber(circleMatches[1][1].replace(/<[^>]+>/g, '').trim()) : 'xx';
+      if (fr !== 'xx' || sr !== 'xx') {
+        return { fr, sr };
+      }
     }
   } catch (e) {}
   return null;
@@ -343,19 +344,23 @@ async function fetchTeerResultsNet(targetDate) {
     const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const expectedShortDate = `${parseInt(day, 10)} ${monthsShort[parseInt(month, 10) - 1]} ${year}`.toLowerCase();
 
-    const m = html.match(/Shillong Teer Result Today[\s\S]*?Date:\s*([0-9]{1,2}\s+[A-Za-z]{3}\s+[0-9]{4})[\s\S]*?<tr>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>/i);
+    const m = html.match(/Shillong Teer Result Today[\s\S]*?Date:\s*([0-9]{1,2}\s+[A-Za-z]{3}\s+[0-9]{4})[\s\S]*?<tr>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>/i);
     if (m) {
       const rawDate = m[1].trim();
       if (rawDate.toLowerCase().replace(/\s+/g, ' ') !== expectedShortDate) {
         return null;
       }
-      return {
-        shillong: {
-          date: rawDate,
-          fr: cleanNumber(m[2]),
-          sr: cleanNumber(m[3])
-        }
-      };
+      const fr = cleanNumber(m[2].replace(/<[^>]+>/g, '').trim());
+      const sr = cleanNumber(m[3].replace(/<[^>]+>/g, '').trim());
+      if (fr !== 'xx' || sr !== 'xx') {
+        return {
+          shillong: {
+            date: rawDate,
+            fr,
+            sr
+          }
+        };
+      }
     }
   } catch (e) {}
   return null;
@@ -375,13 +380,17 @@ async function fetchTeerGroundCom() {
       const game = b[1].toLowerCase();
       const table = b[2];
       const dateMatch = table.match(/(\d{4}-\d{2}-\d{2})/);
-      const nums = [...table.matchAll(/<td[^>]*class="py-2">([0-9]{1,2}|xx|\?\?)<\/td>/gi)].map(m => m[1]);
-      if (nums.length >= 2) {
-        result[game] = {
-          date: dateMatch ? dateMatch[1] : '',
-          fr: cleanNumber(nums[0]),
-          sr: cleanNumber(nums[1])
-        };
+      const rowMatch = table.match(/<tbody>\s*<tr>\s*<td[^>]*>([\s\S]*?)<\/td>\s*<td[^>]*>([\s\S]*?)<\/td>/i);
+      if (rowMatch) {
+        const fr = cleanNumber(rowMatch[1].replace(/<[^>]+>/g, '').trim());
+        const sr = cleanNumber(rowMatch[2].replace(/<[^>]+>/g, '').trim());
+        if (fr !== 'xx' || sr !== 'xx') {
+          result[game] = {
+            date: dateMatch ? dateMatch[1] : '',
+            fr,
+            sr
+          };
+        }
       }
     }
     return Object.keys(result).length > 0 ? result : null;
@@ -403,15 +412,19 @@ async function fetchTeerTargetCom(targetDate) {
 
     if (!html.includes(todayParts)) return null;
 
-    const rowMatch = html.match(new RegExp(todayParts + '\\s*<\\/td>\\s*<td[^>]*>\\s*([0-9]{1,2}|xx)\\s*<\\/td>\\s*<td[^>]*>\\s*([0-9]{1,2}|xx)\\s*<\\/td>', 'i'));
+    const rowMatch = html.match(new RegExp(todayParts + '\\s*<\\/td>\\s*<td[^>]*>\\s*([\\s\\S]*?)\\s*<\\/td>\\s*<td[^>]*>\\s*([\\s\\S]*?)\\s*<\\/td>', 'i'));
     if (rowMatch) {
-      return {
-        shillong: {
-          date: targetDate || todayParts,
-          fr: cleanNumber(rowMatch[1]),
-          sr: cleanNumber(rowMatch[2])
-        }
-      };
+      const fr = cleanNumber(rowMatch[1].replace(/<[^>]+>/g, '').trim());
+      const sr = cleanNumber(rowMatch[2].replace(/<[^>]+>/g, '').trim());
+      if (fr !== 'xx' || sr !== 'xx') {
+        return {
+          shillong: {
+            date: targetDate || todayParts,
+            fr,
+            sr
+          }
+        };
+      }
     }
   } catch (e) {}
   return null;
