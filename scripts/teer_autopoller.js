@@ -64,7 +64,7 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
   }
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES = {
-    juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },    // 1:35 PM / 2:20 PM
+    juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM
     shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM
     khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM
     night: { fr: 22 * 60 + 15, sr: 23 * 60 + 15 }     // 10:15 PM / 11:15 PM
@@ -430,6 +430,62 @@ async function fetchTeerTargetCom(targetDate) {
   return null;
 }
 
+
+// Source 10: Dedicated Ultra-Fast Feed from teerresults.com (Juwai, Shillong, Khanapara, Night)
+async function fetchFromTeerResultsDotCom(targetDate) {
+  try {
+    const res = await fetchWithTimeout('https://www.teerresults.com/', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    }, 5000);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const expectedDate = targetDate
+      ? targetDate.split('-').reverse().join('-')
+      : new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata' }).format(new Date()).replace(/\//g, '-');
+
+    if (!html.includes(expectedDate)) return null;
+
+    const result = {};
+    const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;
+    const tables = [...html.matchAll(tableRegex)];
+
+    for (const t of tables) {
+      const tableHtml = t[0];
+      let gameKey = null;
+      if (/Juwai\s*Teer/i.test(tableHtml)) gameKey = 'juwai';
+      else if (/Shillong\s*Teer/i.test(tableHtml)) gameKey = 'shillong';
+      else if (/Khanapara\s*Teer/i.test(tableHtml)) gameKey = 'khanapara';
+      else if (/Night\s*Teer/i.test(tableHtml)) gameKey = 'night';
+
+      if (!gameKey) continue;
+
+      const rows = [...tableHtml.matchAll(/<tr>[\s\S]*?<\/tr>/gi)];
+      if (rows.length >= 3) {
+        const resultRow = rows[2][0];
+        const cells = [...resultRow.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)];
+        if (cells.length >= 2) {
+          const fr = cleanNumber(cells[0][1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, '').trim());
+          const sr = cleanNumber(cells[1][1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, '').trim());
+          if (fr !== 'xx' || sr !== 'xx') {
+            result[gameKey] = {
+              date: targetDate || expectedDate.split('-').reverse().join('-'),
+              fr,
+              sr
+            };
+          }
+        }
+      }
+    }
+
+    return Object.keys(result).length > 0 ? result : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 export async function runPoller() {
   const istNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   console.log(`[${istNow} IST] Starting Teer auto-poller...`);
@@ -463,7 +519,8 @@ export async function runPoller() {
     instantData,
     netData,
     groundData,
-    targetData
+    targetData,
+    teerResultsComData
   ] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
@@ -474,7 +531,8 @@ export async function runPoller() {
     fetchFromInstantTeerResults(),
     fetchTeerResultsNet(todayIST),
     fetchTeerGroundCom(),
-    fetchTeerTargetCom(todayIST)
+    fetchTeerTargetCom(todayIST),
+    fetchFromTeerResultsDotCom(todayIST)
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -550,7 +608,9 @@ export async function runPoller() {
     // Reset live data for new day
     liveData.date = todayIST;
     const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
-    for (const key of gameKeys) {
+
+
+  for (const key of gameKeys) {
       if (liveData.games[key]) {
         if (isSunday) {
           liveData.games[key].status = 'SUNDAY OFF';
@@ -651,6 +711,14 @@ export async function runPoller() {
         addReport(g, 'gas_datacenter', 2, gasData.games[g].fr, gasData.games[g].sr);
       }
     }
+  }
+
+  // 11. TeerResults.com Ultra-Fast Feed (Juwai, Shillong, Khanapara, Night)
+  if (teerResultsComData) {
+    if (teerResultsComData.juwai) addReport('juwai', 'teerresults_com', 2, teerResultsComData.juwai.fr, teerResultsComData.juwai.sr);
+    if (teerResultsComData.shillong) addReport('shillong', 'teerresults_com', 2, teerResultsComData.shillong.fr, teerResultsComData.shillong.sr);
+    if (teerResultsComData.khanapara) addReport('khanapara', 'teerresults_com', 2, teerResultsComData.khanapara.fr, teerResultsComData.khanapara.sr);
+    if (teerResultsComData.night) addReport('night', 'teerresults_com', 2, teerResultsComData.night.fr, teerResultsComData.night.sr);
   }
 
   for (const key of gameKeys) {

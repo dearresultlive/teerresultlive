@@ -26,7 +26,7 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
   }
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES: Record<string, { fr: number; sr: number }> = {
-    juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },    // 1:35 PM / 2:20 PM (Jowai timing)
+    juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM (Jowai timing)
     shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM (Polo Ground real shooting start)
     khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM (Khanapara real shooting start)
     night: { fr: 22 * 60 + 15, sr: 23 * 60 + 15 }     // 10:15 PM / 11:15 PM (Night Archery real shooting start)
@@ -459,6 +459,71 @@ export async function fetchTeerTargetCom(targetDate?: string): Promise<{
 /**
  * Collects reports from all 10 sources across all games for the consensus engine.
  */
+
+// Source 10: Dedicated Ultra-Fast Feed from teerresults.com (Juwai, Shillong, Khanapara, Night)
+export async function fetchFromTeerResultsDotCom(targetDate?: string): Promise<{
+  juwai?: { date: string; fr: string; sr: string };
+  shillong?: { date: string; fr: string; sr: string };
+  khanapara?: { date: string; fr: string; sr: string };
+  night?: { date: string; fr: string; sr: string };
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch('https://www.teerresults.com/', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const expectedDate = targetDate
+      ? targetDate.split('-').reverse().join('-')
+      : new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata' }).format(new Date()).replace(/\//g, '-');
+
+    if (!html.includes(expectedDate)) return null;
+
+    const result: any = {};
+    const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;
+    const tables = [...html.matchAll(tableRegex)];
+
+    for (const t of tables) {
+      const tableHtml = t[0];
+      let gameKey: string | null = null;
+      if (/Juwai\s*Teer/i.test(tableHtml)) gameKey = 'juwai';
+      else if (/Shillong\s*Teer/i.test(tableHtml)) gameKey = 'shillong';
+      else if (/Khanapara\s*Teer/i.test(tableHtml)) gameKey = 'khanapara';
+      else if (/Night\s*Teer/i.test(tableHtml)) gameKey = 'night';
+
+      if (!gameKey) continue;
+
+      const rows = [...tableHtml.matchAll(/<tr>[\s\S]*?<\/tr>/gi)];
+      if (rows.length >= 3) {
+        const resultRow = rows[2][0];
+        const cells = [...resultRow.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)];
+        if (cells.length >= 2) {
+          const fr = cleanNumber(cells[0][1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, '').trim());
+          const sr = cleanNumber(cells[1][1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, '').trim());
+          if (fr !== 'xx' || sr !== 'xx') {
+            result[gameKey] = {
+              date: targetDate || expectedDate.split('-').reverse().join('-'),
+              fr,
+              sr
+            };
+          }
+        }
+      }
+    }
+
+    return Object.keys(result).length > 0 ? result : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 export async function collectAllSourceReports(targetDate: string): Promise<Record<string, SourceReport[]>> {
   const reports: Record<string, SourceReport[]> = {
     shillong: [],
@@ -477,7 +542,8 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
     fetchTeerResultsNet(targetDate),   // 6. TeerResults.net (Tier 2)
     fetchTeerGroundCom(),              // 7. TeerGround.com (Tier 2)
     fetchTeerTargetCom(targetDate),    // 8. TeerTarget.com (Tier 2)
-    fetchFromGoogleAppsScript()        // 9. Google Apps Script Proxy (Tier 2)
+    fetchFromGoogleAppsScript(),       // 9. Google Apps Script Proxy (Tier 2)
+    fetchFromTeerResultsDotCom(targetDate) // 10. TeerResults.com Ultra-Fast Juwai/Multi-Game (Tier 2)
   ]);
 
   const [
@@ -490,7 +556,8 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
     netRes,
     groundRes,
     targetRes,
-    gasRes
+    gasRes,
+    teerResultsComRes
   ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
@@ -576,6 +643,15 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
         addReport(g, 'gas_datacenter', 2, gasRes.games[g].fr, gasRes.games[g].sr);
       }
     }
+  }
+
+  
+  // 11. TeerResults.com Ultra-Fast Feed (Juwai, Shillong, Khanapara, Night)
+  if (teerResultsComRes) {
+    if (teerResultsComRes.juwai) addReport('juwai', 'teerresults_com', 2, teerResultsComRes.juwai.fr, teerResultsComRes.juwai.sr);
+    if (teerResultsComRes.shillong) addReport('shillong', 'teerresults_com', 2, teerResultsComRes.shillong.fr, teerResultsComRes.shillong.sr);
+    if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 2, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
+    if (teerResultsComRes.night) addReport('night', 'teerresults_com', 2, teerResultsComRes.night.fr, teerResultsComRes.night.sr);
   }
 
   return reports;
