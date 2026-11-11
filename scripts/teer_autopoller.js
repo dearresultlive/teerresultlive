@@ -15,6 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dns from 'node:dns';
 import { broadcastTeerResult } from './telegram_bot.js';
+import { resolveRoundConsensus, evaluateMultiSourceConsensus } from '../src/utils/teerConsensusEngine.js';
 
 // Force IPv4 first to avoid IPv6 connect timeouts on Node 18+
 dns.setDefaultResultOrder('ipv4first');
@@ -325,6 +326,85 @@ async function fetchFromInstantTeerResults() {
   return null;
 }
 
+
+// Source 7: TeerResults.net Table Parser (Shillong)
+async function fetchTeerResultsNet(targetDate) {
+  try {
+    const res = await fetchWithTimeout('https://teerresults.net', {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, 5000);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const m = html.match(/Shillong Teer Result Today[\s\S]*?Date:\s*([0-9]{1,2}\s+[A-Za-z]{3}\s+[0-9]{4})[\s\S]*?<tr>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>/i);
+    if (m) {
+      return {
+        shillong: {
+          date: m[1].trim(),
+          fr: cleanNumber(m[2]),
+          sr: cleanNumber(m[3])
+        }
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
+// Source 8: TeerGround.com Live Feeder (Shillong, Khanapara, Juwai)
+async function fetchTeerGroundCom() {
+  try {
+    const res = await fetchWithTimeout('https://teerground.com', {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, 5000);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const blocks = [...html.matchAll(/(Shillong|Khanapara|Juwai)<!-- -->\s*Teer Result[\s\S]*?<table[^>]*>([\s\S]*?)<\/table>/gi)];
+    const result = {};
+    for (const b of blocks) {
+      const game = b[1].toLowerCase();
+      const table = b[2];
+      const dateMatch = table.match(/(\d{4}-\d{2}-\d{2})/);
+      const nums = [...table.matchAll(/<td[^>]*class="py-2">([0-9]{1,2}|xx|\?\?)<\/td>/gi)].map(m => m[1]);
+      if (nums.length >= 2) {
+        result[game] = {
+          date: dateMatch ? dateMatch[1] : '',
+          fr: cleanNumber(nums[0]),
+          sr: cleanNumber(nums[1])
+        };
+      }
+    }
+    return Object.keys(result).length > 0 ? result : null;
+  } catch (e) {}
+  return null;
+}
+
+// Source 9: TeerTarget.com Live Hits (Shillong)
+async function fetchTeerTargetCom(targetDate) {
+  try {
+    const res = await fetchWithTimeout('https://teertarget.com', {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, 5000);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const todayParts = targetDate
+      ? targetDate.split('-').reverse().join('-')
+      : new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata' }).format(new Date()).replace(/\//g, '-');
+
+    if (!html.includes(todayParts)) return null;
+
+    const rowMatch = html.match(new RegExp(todayParts + '\\s*<\\/td>\\s*<td[^>]*>\\s*([0-9]{1,2}|xx)\\s*<\\/td>\\s*<td[^>]*>\\s*([0-9]{1,2}|xx)\\s*<\\/td>', 'i'));
+    if (rowMatch) {
+      return {
+        shillong: {
+          date: targetDate || todayParts,
+          fr: cleanNumber(rowMatch[1]),
+          sr: cleanNumber(rowMatch[2])
+        }
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
 export async function runPoller() {
   const istNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   console.log(`[${istNow} IST] Starting Teer auto-poller...`);
@@ -348,14 +428,28 @@ export async function runPoller() {
   let updated = false;
 
   // 1. Fetch remote data sources (GAS -> Shillong CDN -> Aggregator)
-  const [gasData, shillongCDN, aggregatorData, nightDirect, teerTodayData, khanaparaOrgData, instantData] = await Promise.all([
+  const [
+    gasData,
+    shillongCDN,
+    aggregatorData,
+    nightDirect,
+    teerTodayData,
+    khanaparaOrgData,
+    instantData,
+    netData,
+    groundData,
+    targetData
+  ] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
     fetchAggregatorData(),
     fetchNightTeerDirect(),
     fetchFromTeerResultToday(),
     fetchKhanaparaOrg(),
-    fetchFromInstantTeerResults()
+    fetchFromInstantTeerResults(),
+    fetchTeerResultsNet(todayIST),
+    fetchTeerGroundCom(),
+    fetchTeerTargetCom(todayIST)
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -447,82 +541,114 @@ export async function runPoller() {
     updated = true;
   }
 
-  // 3. Update declared numbers for Today (if announced)
+  // 3. Update declared numbers for Today using 10-Source Byzantine Fault Tolerant Consensus Engine
   const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
+
+  // Collect reports across all 10 sources
+  const allReports = {
+    shillong: [],
+    khanapara: [],
+    juwai: [],
+    night: []
+  };
+
+  const addReport = (game, source, tier, fr, sr) => {
+    if (!allReports[game]) return;
+    const cleanFR = isRoundWindowOpen(game, 'fr') ? cleanNumber(fr) : 'xx';
+    const cleanSR = isRoundWindowOpen(game, 'sr') ? cleanNumber(sr) : 'xx';
+    if (cleanFR !== 'xx' || cleanSR !== 'xx') {
+      allReports[game].push({ source, tier, fr: cleanFR, sr: cleanSR });
+    }
+  };
+
+  // 1. InstantTeer API (Tier 1 verified machine feed)
+  if (instantData && instantData.date === liveData.date) {
+    if (instantData.shillong) addReport('shillong', 'instantteer_api', 1, instantData.shillong.fr, instantData.shillong.sr);
+    if (instantData.khanapara) addReport('khanapara', 'instantteer_api', 1, instantData.khanapara.fr, instantData.khanapara.sr);
+    if (instantData.juwai) addReport('juwai', 'instantteer_api', 1, instantData.juwai.fr, instantData.juwai.sr);
+    if (instantData.night) addReport('night', 'instantteer_api', 1, instantData.night.fr, instantData.night.sr);
+  }
+
+  // 2. Polo Ground CDN (Tier 1 direct machine feed)
+  if (shillongCDN && shillongCDN.date === liveData.date) {
+    addReport('shillong', 'polo_ground_cdn', 1, shillongCDN.fr, shillongCDN.sr);
+  }
+
+  // 3. TeerResultToday (Tier 2)
+  if (teerTodayData) {
+    if (teerTodayData.shillong) addReport('shillong', 'teerresulttoday', 2, teerTodayData.shillong.fr, teerTodayData.shillong.sr);
+    if (teerTodayData.khanapara) addReport('khanapara', 'teerresulttoday', 2, teerTodayData.khanapara.fr, teerTodayData.khanapara.sr);
+    if (teerTodayData.juwai) addReport('juwai', 'teerresulttoday', 2, teerTodayData.juwai.fr, teerTodayData.juwai.sr);
+  }
+
+  // 4. TeerResult Aggregator (Tier 2)
+  if (aggregatorData) {
+    for (const g of gameKeys) {
+      const agg = aggregatorData[g];
+      if (agg?.currentDate === liveData.date && agg.today) {
+        addReport(g, 'teerresult_agg', 2, agg.today.fr, agg.today.sr);
+      } else if (agg?.previous?.date === liveData.date) {
+        addReport(g, 'teerresult_agg', 2, agg.previous.fr, agg.previous.sr);
+      }
+    }
+  }
+
+  // 5. KhanaparaTeer.org (Tier 2)
+  if (khanaparaOrgData) {
+    addReport('khanapara', 'khanaparateer_org', 2, khanaparaOrgData.fr, khanaparaOrgData.sr);
+  }
+
+  // 6. NightTeer.com Direct (Tier 2)
+  if (nightDirect && nightDirect.date === liveData.date) {
+    addReport('night', 'nightteer_direct', 2, nightDirect.fr, nightDirect.sr);
+  }
+
+  // 7. TeerResults.net (Tier 2)
+  if (netData && netData.shillong) {
+    addReport('shillong', 'teerresults_net', 2, netData.shillong.fr, netData.shillong.sr);
+  }
+
+  // 8. TeerGround.com (Tier 2)
+  if (groundData) {
+    if (groundData.shillong && groundData.shillong.date === liveData.date) addReport('shillong', 'teerground_com', 2, groundData.shillong.fr, groundData.shillong.sr);
+    if (groundData.khanapara && groundData.khanapara.date === liveData.date) addReport('khanapara', 'teerground_com', 2, groundData.khanapara.fr, groundData.khanapara.sr);
+    if (groundData.juwai && groundData.juwai.date === liveData.date) addReport('juwai', 'teerground_com', 2, groundData.juwai.fr, groundData.juwai.sr);
+  }
+
+  // 9. TeerTarget.com (Tier 2)
+  if (targetData && targetData.shillong) {
+    addReport('shillong', 'teertarget_com', 2, targetData.shillong.fr, targetData.shillong.sr);
+  }
+
+  // 10. Google Apps Script Proxy (Tier 2)
+  if (gasData && gasData.date === liveData.date && gasData.games) {
+    for (const g of gameKeys) {
+      if (gasData.games[g]) {
+        addReport(g, 'gas_datacenter', 2, gasData.games[g].fr, gasData.games[g].sr);
+      }
+    }
+  }
 
   for (const key of gameKeys) {
     const game = liveData.games[key];
     if (!game) continue;
 
-    let targetFR = game.fr;
-    let targetSR = game.sr;
+    const cFR = resolveRoundConsensus(key, 'fr', game.fr, allReports[key]);
+    const cSR = resolveRoundConsensus(key, 'sr', game.sr, allReports[key]);
 
-    // Check Google Apps Script (highest priority, Google datacenter IP)
-    if (gasData && gasData.date === liveData.date && gasData.games && gasData.games[key]) {
-      const gasGame = gasData.games[key];
-      if (gasGame.fr && gasGame.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = gasGame.fr;
-      if (gasGame.sr && gasGame.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = gasGame.sr;
-    }
+    let targetFR = cFR.declaredNumber;
+    let targetSR = cSR.declaredNumber;
 
-    // Check Aggregator with strict date verification
-    if (aggregatorData && aggregatorData[key]) {
-      const agg = aggregatorData[key];
-      // 1. Live active round for this date
-      if (agg.currentDate === liveData.date && agg.today) {
-        if (agg.today.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = agg.today.fr;
-        if (agg.today.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = agg.today.sr;
-      }
-      // 2. Concluded round archived for this date (e.g. Night Teer concluding after midnight)
-      else if (agg.previous && agg.previous.date === liveData.date) {
-        if (agg.previous.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = agg.previous.fr;
-        if (agg.previous.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = agg.previous.sr;
-      }
-    }
-
-    // Check Shillong CDN directly
-    if (key === 'shillong' && shillongCDN && shillongCDN.date === liveData.date) {
-      if (shillongCDN.fr !== 'xx' && isRoundWindowOpen('shillong', 'fr')) targetFR = shillongCDN.fr;
-      if (shillongCDN.sr !== 'xx' && isRoundWindowOpen('shillong', 'sr')) targetSR = shillongCDN.sr;
-    }
-
-
-    // Check Dedicated Night Teer Direct Feed
-    if (key === 'night' && nightDirect && nightDirect.date === liveData.date) {
-      if (nightDirect.fr !== 'xx' && isRoundWindowOpen('night', 'fr')) targetFR = nightDirect.fr;
-      if (nightDirect.sr !== 'xx' && isRoundWindowOpen('night', 'sr')) targetSR = nightDirect.sr;
-    }
-
-    
-    // Check Multi-Game Fallback Feed (teerresulttoday.org)
-    if (teerTodayData && teerTodayData[key]) {
-      const tt = teerTodayData[key];
-      if (tt.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = tt.fr;
-      if (tt.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = tt.sr;
-    }
-
-    
-    // Check Dedicated Khanapara Feed (khanaparateer.org)
-    if (key === 'khanapara' && khanaparaOrgData) {
-      if (khanaparaOrgData.fr !== 'xx' && isRoundWindowOpen('khanapara', 'fr')) targetFR = khanaparaOrgData.fr;
-      if (khanaparaOrgData.sr !== 'xx' && isRoundWindowOpen('khanapara', 'sr')) targetSR = khanaparaOrgData.sr;
-    }
-
-    
-    // Check Instant Real-Time JSON API (instantteerresults.in/results.json)
-    if (instantData && instantData.date === liveData.date && instantData[key]) {
-      const item = instantData[key];
-      if (item.fr !== 'xx' && isRoundWindowOpen(key, 'fr')) targetFR = item.fr;
-      if (item.sr !== 'xx' && isRoundWindowOpen(key, 'sr')) targetSR = item.sr;
+    if (cFR.status !== 'PENDING' || cSR.status !== 'PENDING') {
+      console.log(`[Consensus ${key.toUpperCase()}] FR=${targetFR} (status: ${cFR.status}, votes: ${cFR.voteCount}, sources: [${cFR.sources.join(', ')}]) | SR=${targetSR} (status: ${cSR.status}, votes: ${cSR.voteCount}, sources: [${cSR.sources.join(', ')}])`);
     }
 
     // Physical safeguard: Only prevent premature updates for today's upcoming rounds
-    // NEVER overwrite or delete an already-declared confirmed number!
     if (liveData.date === todayIST) {
       if (game.fr === 'xx' && !isRoundWindowOpen(key, 'fr')) targetFR = 'xx';
       if (game.sr === 'xx' && !isRoundWindowOpen(key, 'sr')) targetSR = 'xx';
     }
 
-    // Update game status
     let status = 'UPCOMING';
     if (targetFR !== 'xx' && targetSR !== 'xx') {
       status = 'DECLARED';

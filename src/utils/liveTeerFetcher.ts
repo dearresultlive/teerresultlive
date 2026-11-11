@@ -1,4 +1,5 @@
 // Browser & Cloudflare Worker compatible live Teer result fetcher
+import type { SourceReport } from './teerConsensusEngine';
 
 export const GAS_SCRAPER_URL = 'https://script.google.com/macros/s/AKfycbwmWnd4UFGtupP0c_pi1wAUZ1VRifXuor3hG6WUFym2MZ2aaoPBbk4mrm47eAglgKA/exec';
 
@@ -326,4 +327,226 @@ export async function fetchFromInstantTeerResults(): Promise<{
   } catch (e) {
     return null;
   }
+}
+
+// Source 7: TeerResults.net Table Parser (Shillong)
+export async function fetchTeerResultsNet(targetDate?: string): Promise<{
+  shillong?: { date: string; fr: string; sr: string };
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch('https://teerresults.net', {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const m = html.match(/Shillong Teer Result Today[\s\S]*?Date:\s*([0-9]{1,2}\s+[A-Za-z]{3}\s+[0-9]{4})[\s\S]*?<tr>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>[\s\S]*?<td[^>]*>([0-9]{1,2}|xx|\?\?)<\/td>/i);
+    if (m) {
+      const rawDate = m[1].trim();
+      const fr = cleanNumber(m[2]);
+      const sr = cleanNumber(m[3]);
+      return {
+        shillong: { date: rawDate, fr, sr }
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
+// Source 8: TeerGround.com Live Feeder (Shillong, Khanapara, Juwai)
+export async function fetchTeerGroundCom(): Promise<{
+  shillong?: { date: string; fr: string; sr: string };
+  khanapara?: { date: string; fr: string; sr: string };
+  juwai?: { date: string; fr: string; sr: string };
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch('https://teerground.com', {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const blocks = [...html.matchAll(/(Shillong|Khanapara|Juwai)<!-- -->\s*Teer Result[\s\S]*?<table[^>]*>([\s\S]*?)<\/table>/gi)];
+    const result: any = {};
+    for (const b of blocks) {
+      const game = b[1].toLowerCase();
+      const table = b[2];
+      const dateMatch = table.match(/(\d{4}-\d{2}-\d{2})/);
+      const nums = [...table.matchAll(/<td[^>]*class="py-2">([0-9]{1,2}|xx|\?\?)<\/td>/gi)].map(m => m[1]);
+      if (nums.length >= 2) {
+        result[game] = {
+          date: dateMatch ? dateMatch[1] : '',
+          fr: cleanNumber(nums[0]),
+          sr: cleanNumber(nums[1])
+        };
+      }
+    }
+    return Object.keys(result).length > 0 ? result : null;
+  } catch (e) {}
+  return null;
+}
+
+// Source 9: TeerTarget.com Live Hits (Shillong)
+export async function fetchTeerTargetCom(targetDate?: string): Promise<{
+  shillong?: { date: string; fr: string; sr: string };
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch('https://teertarget.com', {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const todayParts = targetDate
+      ? targetDate.split('-').reverse().join('-')
+      : new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata' }).format(new Date()).replace(/\//g, '-');
+
+    if (!html.includes(todayParts)) return null;
+
+    const rowMatch = html.match(new RegExp(todayParts + '\\s*<\\/td>\\s*<td[^>]*>\\s*([0-9]{1,2}|xx)\\s*<\\/td>\\s*<td[^>]*>\\s*([0-9]{1,2}|xx)\\s*<\\/td>', 'i'));
+    if (rowMatch) {
+      return {
+        shillong: {
+          date: targetDate || todayParts,
+          fr: cleanNumber(rowMatch[1]),
+          sr: cleanNumber(rowMatch[2])
+        }
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
+/**
+ * Collects reports from all 10 sources across all games for the consensus engine.
+ */
+export async function collectAllSourceReports(targetDate: string): Promise<Record<string, SourceReport[]>> {
+  const reports: Record<string, SourceReport[]> = {
+    shillong: [],
+    khanapara: [],
+    juwai: [],
+    night: []
+  };
+
+  const results = await Promise.allSettled([
+    fetchFromInstantTeerResults(),     // 0. InstantTeer API (Tier 1)
+    fetchShillongCDN(),                // 1. Polo Ground CDN (Tier 1)
+    fetchFromTeerResultToday(),        // 2. TeerResultToday (Tier 2)
+    fetchAggregatorData(),             // 3. TeerResult Aggregator (Tier 2)
+    fetchKhanaparaOrg(),               // 4. KhanaparaTeer.org (Tier 2)
+    fetchNightTeerDirect(),            // 5. NightTeer.com (Tier 2)
+    fetchTeerResultsNet(targetDate),   // 6. TeerResults.net (Tier 2)
+    fetchTeerGroundCom(),              // 7. TeerGround.com (Tier 2)
+    fetchTeerTargetCom(targetDate),    // 8. TeerTarget.com (Tier 2)
+    fetchFromGoogleAppsScript()        // 9. Google Apps Script Proxy (Tier 2)
+  ]);
+
+  const [
+    instantRes,
+    cdnRes,
+    teerTodayRes,
+    aggRes,
+    khanaparaRes,
+    nightDirectRes,
+    netRes,
+    groundRes,
+    targetRes,
+    gasRes
+  ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
+
+  const addReport = (game: string, source: string, tier: 1 | 2, fr: string, sr: string) => {
+    if (!reports[game]) return;
+    const cleanFR = isRoundWindowOpen(game, 'fr') ? cleanNumber(fr) : 'xx';
+    const cleanSR = isRoundWindowOpen(game, 'sr') ? cleanNumber(sr) : 'xx';
+    if (cleanFR !== 'xx' || cleanSR !== 'xx') {
+      reports[game].push({
+        source,
+        tier,
+        fr: cleanFR,
+        sr: cleanSR
+      });
+    }
+  };
+
+  // 1. InstantTeer (Tier 1 verified machine feed)
+  if (instantRes && instantRes.date === targetDate) {
+    if (instantRes.shillong) addReport('shillong', 'instantteer_api', 1, instantRes.shillong.fr, instantRes.shillong.sr);
+    if (instantRes.khanapara) addReport('khanapara', 'instantteer_api', 1, instantRes.khanapara.fr, instantRes.khanapara.sr);
+    if (instantRes.juwai) addReport('juwai', 'instantteer_api', 1, instantRes.juwai.fr, instantRes.juwai.sr);
+    if (instantRes.night) addReport('night', 'instantteer_api', 1, instantRes.night.fr, instantRes.night.sr);
+  }
+
+  // 2. Polo Ground CDN (Tier 1 direct machine feed)
+  if (cdnRes && cdnRes.date === targetDate) {
+    addReport('shillong', 'polo_ground_cdn', 1, cdnRes.fr, cdnRes.sr);
+  }
+
+  // 3. TeerResultToday (Tier 2 web scraper)
+  if (teerTodayRes) {
+    if (teerTodayRes.shillong) addReport('shillong', 'teerresulttoday', 2, teerTodayRes.shillong.fr, teerTodayRes.shillong.sr);
+    if (teerTodayRes.khanapara) addReport('khanapara', 'teerresulttoday', 2, teerTodayRes.khanapara.fr, teerTodayRes.khanapara.sr);
+    if (teerTodayRes.juwai) addReport('juwai', 'teerresulttoday', 2, teerTodayRes.juwai.fr, teerTodayRes.juwai.sr);
+  }
+
+  // 4. TeerResult Aggregator (Tier 2)
+  if (aggRes) {
+    for (const g of ['shillong', 'khanapara', 'juwai', 'night']) {
+      const agg = aggRes[g];
+      if (agg?.currentDate === targetDate && agg.today) {
+        addReport(g, 'teerresult_agg', 2, agg.today.fr, agg.today.sr);
+      } else if (agg?.previous?.date === targetDate) {
+        addReport(g, 'teerresult_agg', 2, agg.previous.fr, agg.previous.sr);
+      }
+    }
+  }
+
+  // 5. KhanaparaTeer.org (Tier 2)
+  if (khanaparaRes) {
+    addReport('khanapara', 'khanaparateer_org', 2, khanaparaRes.fr, khanaparaRes.sr);
+  }
+
+  // 6. NightTeer.com Direct (Tier 2)
+  if (nightDirectRes && nightDirectRes.date === targetDate) {
+    addReport('night', 'nightteer_direct', 2, nightDirectRes.fr, nightDirectRes.sr);
+  }
+
+  // 7. TeerResults.net (Tier 2)
+  if (netRes && netRes.shillong) {
+    addReport('shillong', 'teerresults_net', 2, netRes.shillong.fr, netRes.shillong.sr);
+  }
+
+  // 8. TeerGround.com (Tier 2)
+  if (groundRes) {
+    if (groundRes.shillong && groundRes.shillong.date === targetDate) addReport('shillong', 'teerground_com', 2, groundRes.shillong.fr, groundRes.shillong.sr);
+    if (groundRes.khanapara && groundRes.khanapara.date === targetDate) addReport('khanapara', 'teerground_com', 2, groundRes.khanapara.fr, groundRes.khanapara.sr);
+    if (groundRes.juwai && groundRes.juwai.date === targetDate) addReport('juwai', 'teerground_com', 2, groundRes.juwai.fr, groundRes.juwai.sr);
+  }
+
+  // 9. TeerTarget.com (Tier 2)
+  if (targetRes && targetRes.shillong) {
+    addReport('shillong', 'teertarget_com', 2, targetRes.shillong.fr, targetRes.shillong.sr);
+  }
+
+  // 10. Google Apps Script Proxy (Tier 2)
+  if (gasRes && gasRes.date === targetDate && gasRes.games) {
+    for (const g of ['shillong', 'khanapara', 'juwai', 'night']) {
+      if (gasRes.games[g]) {
+        addReport(g, 'gas_datacenter', 2, gasRes.games[g].fr, gasRes.games[g].sr);
+      }
+    }
+  }
+
+  return reports;
 }
