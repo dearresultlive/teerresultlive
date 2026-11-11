@@ -71,7 +71,9 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           sr: yesterday.shillong_sr || 'xx',
           fr_time: '3:45 PM',
           sr_time: '4:45 PM',
-          status: (yesterday.shillong_fr && yesterday.shillong_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+          status: (yesterday.shillong_fr && yesterday.shillong_fr !== 'xx') ? 'DECLARED' : 'UPCOMING',
+          fr_verification: (yesterday.shillong_fr && yesterday.shillong_fr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED',
+          sr_verification: (yesterday.shillong_sr && yesterday.shillong_sr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED'
         },
         khanapara: {
           name: 'Khanapara Teer',
@@ -80,7 +82,9 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           sr: yesterday.khanapara_sr || 'xx',
           fr_time: '4:00 PM',
           sr_time: '4:30 PM',
-          status: (yesterday.khanapara_fr && yesterday.khanapara_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+          status: (yesterday.khanapara_fr && yesterday.khanapara_fr !== 'xx') ? 'DECLARED' : 'UPCOMING',
+          fr_verification: (yesterday.khanapara_fr && yesterday.khanapara_fr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED',
+          sr_verification: (yesterday.khanapara_sr && yesterday.khanapara_sr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED'
         },
         juwai: {
           name: 'Juwai Teer',
@@ -89,7 +93,9 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           sr: yesterday.juwai_sr || 'xx',
           fr_time: '1:45 PM',
           sr_time: '2:30 PM',
-          status: (yesterday.juwai_fr && yesterday.juwai_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+          status: (yesterday.juwai_fr && yesterday.juwai_fr !== 'xx') ? 'DECLARED' : 'UPCOMING',
+          fr_verification: (yesterday.juwai_fr && yesterday.juwai_fr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED',
+          sr_verification: (yesterday.juwai_sr && yesterday.juwai_sr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED'
         },
         night: {
           name: 'Shillong Night Teer',
@@ -98,7 +104,9 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           sr: yesterday.night_sr || 'xx',
           fr_time: '10:30 PM',
           sr_time: '11:30 PM',
-          status: (yesterday.night_fr && yesterday.night_fr !== 'xx') ? 'DECLARED' : 'UPCOMING'
+          status: (yesterday.night_fr && yesterday.night_fr !== 'xx') ? 'DECLARED' : 'UPCOMING',
+          fr_verification: (yesterday.night_fr && yesterday.night_fr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED',
+          sr_verification: (yesterday.night_sr && yesterday.night_sr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED'
         }
       };
     }

@@ -99,7 +99,9 @@ export default function SingleGameLiveCard({
         sr: srVal,
         fr_time: meta.defaultFrTime,
         sr_time: meta.defaultSrTime,
-        status: frVal !== 'xx' ? 'DECLARED' : 'UPCOMING'
+        status: frVal !== 'xx' ? 'DECLARED' : 'UPCOMING',
+        fr_verification: frVal !== 'xx' ? 'VERIFIED' : 'UNVERIFIED',
+        sr_verification: srVal !== 'xx' ? 'VERIFIED' : 'UNVERIFIED'
       };
     }
     return data.games[gameKey] || {
@@ -109,7 +111,9 @@ export default function SingleGameLiveCard({
       fr_time: meta.defaultFrTime,
       sr_time: meta.defaultSrTime,
       fr: 'xx',
-      sr: 'xx'
+      sr: 'xx',
+      fr_verification: 'UNVERIFIED',
+      sr_verification: 'UNVERIFIED'
     };
   }, [viewMode, yesterday, data.games, gameKey, meta]);
 

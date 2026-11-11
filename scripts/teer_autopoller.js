@@ -831,13 +831,18 @@ export async function runPoller() {
         }
       }
     } else {
-      if (game.fr_verification !== cFR.verification_level || game.sr_verification !== cSR.verification_level) {
+      let changed = false;
+      if (cFR.sources.length > 0 && game.fr_verification !== cFR.verification_level) {
         game.fr_verification = cFR.verification_level;
-        game.sr_verification = cSR.verification_level;
         game.fr_sources = cFR.sources;
-        game.sr_sources = cSR.sources;
-        updated = true;
+        changed = true;
       }
+      if (cSR.sources.length > 0 && game.sr_verification !== cSR.verification_level) {
+        game.sr_verification = cSR.verification_level;
+        game.sr_sources = cSR.sources;
+        changed = true;
+      }
+      if (changed) updated = true;
     }
   }
 

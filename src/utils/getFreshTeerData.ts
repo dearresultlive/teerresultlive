@@ -117,10 +117,14 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
         if (c && result.games[key]) {
           result.games[key].fr = c.fr.declaredNumber;
           result.games[key].sr = c.sr.declaredNumber;
-          result.games[key].fr_verification = c.fr.verification_level;
-          result.games[key].sr_verification = c.sr.verification_level;
-          result.games[key].fr_sources = c.fr.sources;
-          result.games[key].sr_sources = c.sr.sources;
+          if (c.fr.sources.length > 0) {
+            result.games[key].fr_verification = c.fr.verification_level;
+            result.games[key].fr_sources = c.fr.sources;
+          }
+          if (c.sr.sources.length > 0) {
+            result.games[key].sr_verification = c.sr.verification_level;
+            result.games[key].sr_sources = c.sr.sources;
+          }
         }
       }
 

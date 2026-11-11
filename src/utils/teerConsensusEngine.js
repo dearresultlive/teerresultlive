@@ -75,7 +75,10 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
   }
 
   if (candidates.length === 0) {
-    return buildResult(currentVal || 'xx', 0, [], 'PENDING');
+    if (currentVal && currentVal !== 'xx') {
+      return buildResult(currentVal, 0, [], 'STABLE');
+    }
+    return buildResult('xx', 0, [], 'PENDING');
   }
 
   const topCandidate = candidates[0];
