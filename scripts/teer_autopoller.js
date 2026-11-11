@@ -638,10 +638,22 @@ export async function runPoller() {
   };
 
   const isToday = liveData.date === todayIST;
+  const yesterdayRecord = archive.find(item => item.date < liveData.date) || archive[0];
+
   const addReport = (game, source, tier, fr, sr) => {
     if (!allReports[game]) return;
     const cleanFR = (isToday && !isRoundWindowOpen(game, 'fr')) ? 'xx' : cleanNumber(fr);
     const cleanSR = (isToday && !isRoundWindowOpen(game, 'sr')) ? 'xx' : cleanNumber(sr);
+    // Stale uncleared yesterday table guard
+    if (tier === 2 && yesterdayRecord) {
+      const yFR = cleanNumber(yesterdayRecord[`${game}_fr`]);
+      const ySR = cleanNumber(yesterdayRecord[`${game}_sr`]);
+      const rawFR = cleanNumber(fr);
+      const rawSR = cleanNumber(sr);
+      if (yFR !== 'xx' && ySR !== 'xx' && rawFR === yFR && rawSR === ySR) {
+        return;
+      }
+    }
     if (cleanFR !== 'xx' || cleanSR !== 'xx') {
       allReports[game].push({ source, tier, fr: cleanFR, sr: cleanSR });
     }

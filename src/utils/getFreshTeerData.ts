@@ -97,7 +97,7 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
 
   // 3. Fast multi-source consensus evaluation across top 10 fleet with 1500ms timeout
   try {
-    const fetchPromise = collectAllSourceReports(result.date);
+    const fetchPromise = collectAllSourceReports(result.date, result.yesterday);
     const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
     const allReports = await Promise.race([fetchPromise, timeoutPromise]);
 

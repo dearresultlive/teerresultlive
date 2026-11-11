@@ -526,7 +526,7 @@ export async function fetchFromTeerResultsDotCom(targetDate?: string): Promise<{
   }
 }
 
-export async function collectAllSourceReports(targetDate: string): Promise<Record<string, SourceReport[]>> {
+export async function collectAllSourceReports(targetDate: string, yesterdayRecord?: any): Promise<Record<string, SourceReport[]>> {
   const reports: Record<string, SourceReport[]> = {
     shillong: [],
     khanapara: [],
@@ -569,6 +569,16 @@ export async function collectAllSourceReports(targetDate: string): Promise<Recor
     if (!reports[game]) return;
     const cleanFR = (isToday && !isRoundWindowOpen(game, 'fr')) ? 'xx' : cleanNumber(fr);
     const cleanSR = (isToday && !isRoundWindowOpen(game, 'sr')) ? 'xx' : cleanNumber(sr);
+    // Stale uncleared yesterday table guard
+    if (tier === 2 && yesterdayRecord) {
+      const yFR = cleanNumber(yesterdayRecord[`${game}_fr`]);
+      const ySR = cleanNumber(yesterdayRecord[`${game}_sr`]);
+      const rawFR = cleanNumber(fr);
+      const rawSR = cleanNumber(sr);
+      if (yFR !== 'xx' && ySR !== 'xx' && rawFR === yFR && rawSR === ySR) {
+        return;
+      }
+    }
     if (cleanFR !== 'xx' || cleanSR !== 'xx') {
       reports[game].push({
         source,
