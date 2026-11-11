@@ -95,6 +95,23 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
     result.yesterday = priorDay || ((archiveData && archiveData.length > 0) ? archiveData[0] : null);
   }
 
+  // Fast short-circuit: If all games relevant for this time of day are already fully declared,
+  // return immediately in < 0.1ms without blocking on external scrapers
+  const dayGamesDeclared = ['shillong', 'khanapara', 'juwai'].every((k) => {
+    const g = result.games[k];
+    return g && g.fr !== 'xx' && g.sr !== 'xx';
+  });
+  const minsNow = currentISTHour * 60 + parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
+  const isNightWindow = minsNow >= (22 * 60) || minsNow <= 30;
+  const nightDeclared = result.games.night?.fr !== 'xx' && result.games.night?.sr !== 'xx';
+  const allCurrentGamesDeclared = isNightWindow ? (dayGamesDeclared && nightDeclared) : dayGamesDeclared;
+
+  if (allCurrentGamesDeclared && !forceRefresh && !isSunday) {
+    cachedData = result;
+    lastFetchTime = now;
+    return result;
+  }
+
   // 3. Fast multi-source consensus evaluation across top 10 fleet with 1500ms timeout
   try {
     const fetchPromise = collectAllSourceReports(result.date, result.yesterday);

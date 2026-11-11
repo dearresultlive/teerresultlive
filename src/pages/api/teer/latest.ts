@@ -9,12 +9,28 @@ export const GET: APIRoute = async ({ request }) => {
 
   const data = await getFreshTeerData(isForceRefresh);
 
-  const isLiveWindow = isArcheryShootingHour();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    hourCycle: 'h23'
+  }).formatToParts(new Date());
+  const h = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
+  const m = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
+  const mins = h * 60 + m;
+
+  const areAllDayGamesDeclared = ['shillong', 'khanapara', 'juwai'].every((k) => {
+    const g = data.games?.[k];
+    return g && g.fr !== 'xx' && g.sr !== 'xx';
+  });
+  const isNightWindow = mins >= (22 * 60) || mins <= 30;
+  const isActivelyDrawing = isArcheryShootingHour() && (!areAllDayGamesDeclared || isNightWindow);
+
   const cacheHeader = isForceRefresh
     ? 'no-store, no-cache, must-revalidate, max-age=0'
-    : (isLiveWindow
+    : (isActivelyDrawing
       ? 'public, max-age=2, s-maxage=3, stale-while-revalidate=5'
-      : 'public, max-age=10, s-maxage=15, stale-while-revalidate=30');
+      : 'public, max-age=15, s-maxage=30, stale-while-revalidate=60');
 
   return new Response(JSON.stringify(data), {
     status: 200,
