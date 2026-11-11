@@ -77,16 +77,11 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
 
 // Strictly validate and clean 2-digit numbers (00-99 only)
 export function cleanNumber(val) {
-  if (!val) return 'xx';
-  const str = String(val).trim();
-  if (str === '—' || str === '-' || str === 'xx' || str === '??' || str === 'null') return 'xx';
-  
-  // Must be strictly 1 or 2 digits (0 to 99)
+  if (val === undefined || val === null) return 'xx';
+  const str = String(val).trim().toLowerCase();
+  if (!str || str === '—' || str === '-' || str === '--' || str === '---' || str === 'xx' || str === '??' || str === 'null' || str === 'undefined' || str === 'nan') return 'xx';
   const match = str.match(/^(\d{1,2})$/);
-  if (match) {
-    return match[1].padStart(2, '0');
-  }
-  return 'xx';
+  return match ? match[1].padStart(2, '0') : 'xx';
 }
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
@@ -541,8 +536,6 @@ export async function runPoller() {
 
     // Reset live data for new day
     liveData.date = todayIST;
-    const istDateObj = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-    const isSunday = istDateObj.getDay() === 0;
     const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
     for (const key of gameKeys) {
       if (liveData.games[key]) {

@@ -12,9 +12,11 @@
  * Strictly validate and clean 2-digit numbers (00-99 only)
  */
 export function cleanNumber(val) {
-  if (!val) return 'xx';
-  const str = String(val).trim();
-  if (str === '—' || str === '-' || str === 'xx' || str === '??' || str === 'null') return 'xx';
+  if (val === undefined || val === null) return 'xx';
+  const str = String(val).trim().toLowerCase();
+  if (!str || str === '—' || str === '-' || str === '--' || str === '---' || str === 'xx' || str === '??' || str === 'null' || str === 'undefined' || str === 'nan') {
+    return 'xx';
+  }
   const match = str.match(/^(\d{1,2})$/);
   return match ? match[1].padStart(2, '0') : 'xx';
 }

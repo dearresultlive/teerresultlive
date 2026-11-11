@@ -52,14 +52,24 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   // 2. Clone baseline data from disk
   const result: TeerData = JSON.parse(JSON.stringify(liveData));
 
-  // Determine current date in IST
-  const istDateParts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).formatToParts(new Date());
-  const isSunday = istDateParts.find(p => p.type === 'weekday')?.value === 'Sun';
+  // Determine current date, day and hour in IST
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    weekday: 'short',
+    hourCycle: 'h23'
+  }).formatToParts(new Date());
+  const isSunday = parts.find((p) => p.type === 'weekday')?.value === 'Sun';
+  const currentISTHour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
 
-  // Automatic midnight date rollover in case Git has not run morning commit yet
-  // NOTE: On Sundays, archery is suspended; preserve Saturday's latest declared results
-  if (result.date !== todayIST && !isSunday) {
+  // Morning rollover occurs only at 9:00 AM IST on shooting days (Monday to Saturday)
+  // This preserves Night Teer and yesterday's confirmed results through late-night & early-morning hours (11 PM - 8:59 AM)
+  // On Sundays, archery is suspended; preserve Saturday's latest declared results
+  const isMorningRolloverTime = currentISTHour >= 9 && !isSunday;
+
+  if (result.date !== todayIST && isMorningRolloverTime) {
     const priorRecord = {
       date: result.date,
       shillong_fr: result.games.shillong.fr,

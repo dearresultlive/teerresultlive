@@ -37,16 +37,11 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
 }
 
 export function cleanNumber(val: any): string {
-  if (!val) return 'xx';
-  const str = String(val).trim();
-  if (str === '—' || str === '-' || str === 'xx' || str === '??' || str === 'null') return 'xx';
-  
-  // Must be strictly 1 or 2 digits (0 to 99)
+  if (val === undefined || val === null) return 'xx';
+  const str = String(val).trim().toLowerCase();
+  if (!str || str === '—' || str === '-' || str === '--' || str === '---' || str === 'xx' || str === '??' || str === 'null' || str === 'undefined' || str === 'nan') return 'xx';
   const match = str.match(/^(\d{1,2})$/);
-  if (match) {
-    return match[1].padStart(2, '0');
-  }
-  return 'xx';
+  return match ? match[1].padStart(2, '0') : 'xx';
 }
 
 // Source 1: Google Apps Script Web App (Hosted on Google datacenter, immune to Cloudflare bot blocks)
