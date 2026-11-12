@@ -131,7 +131,7 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
 export function evaluateMultiSourceConsensus(currentGames, allReports) {
   const result = {};
 
-  for (const gameKey of ['shillong', 'khanapara', 'juwai', 'night']) {
+  for (const gameKey of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
     const curFR = currentGames[gameKey]?.fr || 'xx';
     const curSR = currentGames[gameKey]?.sr || 'xx';
     const reps = allReports[gameKey] || [];

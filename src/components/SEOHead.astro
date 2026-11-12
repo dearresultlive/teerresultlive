@@ -44,7 +44,7 @@ const websiteSchema = {
 };
 
 // Determine page category for contextual schemas
-const isSportsPage = ['/', '/shillong-teer', '/khanapara-teer', '/juwai-teer', '/shillong-night-teer'].includes(cleanPath);
+const isSportsPage = ['/', '/shillong-teer', '/khanapara-teer', '/juwai-teer', '/juwai-morning-teer', '/shillong-night-teer'].includes(cleanPath);
 const isNewsArticle = isSportsPage || ['/previous-results', '/dream-numbers'].includes(cleanPath);
 const isAboutPage = cleanPath === '/about';
 const isContactPage = cleanPath === '/contact';
@@ -203,6 +203,29 @@ if (cleanPath === '/shillong-teer') {
     },
     {
       q: "What is the payout for Juwai Teer?",
+      a: "A direct 2-digit number win pays 80:1 (₹80 for ₹1 bet), while House or Ending pays 9:1 (₹9 for ₹1 bet)."
+    }
+  ];
+} else if (cleanPath === '/juwai-morning-teer') {
+  pageFaqs = [
+    {
+      q: "What time is Juwai Morning Teer result declared today?",
+      a: "Juwai Morning Teer 1st Round is declared at 10:30 AM IST and 2nd Round at 11:30 AM IST, Monday to Saturday."
+    },
+    {
+      q: "Where is Juwai Morning Teer conducted?",
+      a: "Juwai Morning Teer is conducted at the Jowai Archery Ground in West Jaintia Hills, Meghalaya."
+    },
+    {
+      q: "How is the Juwai Morning winning number determined?",
+      a: "Traditional archers shoot cane arrows at a circular straw target. The total number of arrows hitting the target are counted, and the last two digits become the official winning number (e.g. 827 arrows = number 27)."
+    },
+    {
+      q: "Is Juwai Morning Teer held on Sundays?",
+      a: "No, Sunday is an official archery holiday across Meghalaya. Juwai Morning Teer runs only Monday through Saturday."
+    },
+    {
+      q: "What is the payout for Juwai Morning Teer?",
       a: "A direct 2-digit number win pays 80:1 (₹80 for ₹1 bet), while House or Ending pays 9:1 (₹9 for ₹1 bet)."
     }
   ];
@@ -391,7 +414,7 @@ if (isSportsPage) {
     },
     "organizer": {
       "@type": "SportsOrganization",
-      "name": cleanPath === '/khanapara-teer' ? "Khanapara Archery Association" : cleanPath === '/juwai-teer' ? "Juwai Archery Club" : cleanPath === '/shillong-night-teer' ? "Shillong Night Traditional Archery Association" : "Khasi Hills Archery Sports Association (KHASA)",
+      "name": cleanPath === '/khanapara-teer' ? "Khanapara Archery Association" : cleanPath === '/juwai-teer' ? "Juwai Archery Club" : cleanPath === '/juwai-morning-teer' ? "Jowai Morning Archery Association" : cleanPath === '/shillong-night-teer' ? "Shillong Night Traditional Archery Association" : "Khasi Hills Archery Sports Association (KHASA)",
       "url": host
     },
     "performer": {

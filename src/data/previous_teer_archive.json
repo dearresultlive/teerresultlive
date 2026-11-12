@@ -8,7 +8,9 @@
     "juwai_fr": "89",
     "juwai_sr": "45",
     "night_fr": "78",
-    "night_sr": "65"
+    "night_sr": "65",
+    "juwai_morning_fr": "24",
+    "juwai_morning_sr": "41"
   },
   {
     "date": "2026-11-10",
@@ -19,7 +21,9 @@
     "juwai_fr": "05",
     "juwai_sr": "19",
     "night_fr": "36",
-    "night_sr": "97"
+    "night_sr": "97",
+    "juwai_morning_fr": "46",
+    "juwai_morning_sr": "70"
   },
   {
     "date": "2026-11-09",
@@ -30,7 +34,9 @@
     "juwai_fr": "73",
     "juwai_sr": "58",
     "night_fr": "16",
-    "night_sr": "97"
+    "night_sr": "97",
+    "juwai_morning_fr": "87",
+    "juwai_morning_sr": "27"
   },
   {
     "date": "2026-11-07",
@@ -41,7 +47,9 @@
     "juwai_fr": "16",
     "juwai_sr": "43",
     "night_fr": "82",
-    "night_sr": "90"
+    "night_sr": "90",
+    "juwai_morning_fr": "17",
+    "juwai_morning_sr": "44"
   },
   {
     "date": "2026-11-06",
@@ -52,7 +60,9 @@
     "juwai_fr": "39",
     "juwai_sr": "86",
     "night_fr": "26",
-    "night_sr": "73"
+    "night_sr": "73",
+    "juwai_morning_fr": "61",
+    "juwai_morning_sr": "01"
   },
   {
     "date": "2026-11-05",
@@ -63,7 +73,9 @@
     "juwai_fr": "96",
     "juwai_sr": "74",
     "night_fr": "23",
-    "night_sr": "79"
+    "night_sr": "79",
+    "juwai_morning_fr": "19",
+    "juwai_morning_sr": "72"
   },
   {
     "date": "2026-11-04",
@@ -74,7 +86,9 @@
     "juwai_fr": "34",
     "juwai_sr": "79",
     "night_fr": "87",
-    "night_sr": "72"
+    "night_sr": "72",
+    "juwai_morning_fr": "97",
+    "juwai_morning_sr": "20"
   },
   {
     "date": "2026-11-03",
@@ -85,7 +99,9 @@
     "juwai_fr": "34",
     "juwai_sr": "79",
     "night_fr": "15",
-    "night_sr": "72"
+    "night_sr": "72",
+    "juwai_morning_fr": "27",
+    "juwai_morning_sr": "04"
   },
   {
     "date": "2026-11-02",
@@ -96,7 +112,9 @@
     "juwai_fr": "86",
     "juwai_sr": "05",
     "night_fr": "21",
-    "night_sr": "45"
+    "night_sr": "45",
+    "juwai_morning_fr": "35",
+    "juwai_morning_sr": "15"
   },
   {
     "date": "2026-10-31",
@@ -107,7 +125,9 @@
     "juwai_fr": "36",
     "juwai_sr": "94",
     "night_fr": "05",
-    "night_sr": "19"
+    "night_sr": "19",
+    "juwai_morning_fr": "37",
+    "juwai_morning_sr": "51"
   },
   {
     "date": "2026-10-30",
@@ -118,7 +138,9 @@
     "juwai_fr": "36",
     "juwai_sr": "94",
     "night_fr": "77",
-    "night_sr": "88"
+    "night_sr": "88",
+    "juwai_morning_fr": "13",
+    "juwai_morning_sr": "74"
   },
   {
     "date": "2026-10-29",
@@ -129,7 +151,9 @@
     "juwai_fr": "14",
     "juwai_sr": "31",
     "night_fr": "16",
-    "night_sr": "88"
+    "night_sr": "88",
+    "juwai_morning_fr": "63",
+    "juwai_morning_sr": "62"
   },
   {
     "date": "2026-10-28",
@@ -140,7 +164,9 @@
     "juwai_fr": "26",
     "juwai_sr": "93",
     "night_fr": "28",
-    "night_sr": "99"
+    "night_sr": "99",
+    "juwai_morning_fr": "01",
+    "juwai_morning_sr": "37"
   },
   {
     "date": "2026-10-27",
@@ -151,7 +177,9 @@
     "juwai_fr": "41",
     "juwai_sr": "87",
     "night_fr": "28",
-    "night_sr": "99"
+    "night_sr": "99",
+    "juwai_morning_fr": "17",
+    "juwai_morning_sr": "59"
   },
   {
     "date": "2026-10-26",
@@ -162,7 +190,9 @@
     "juwai_fr": "39",
     "juwai_sr": "17",
     "night_fr": "28",
-    "night_sr": "99"
+    "night_sr": "99",
+    "juwai_morning_fr": "51",
+    "juwai_morning_sr": "35"
   },
   {
     "date": "2026-10-24",
@@ -173,7 +203,9 @@
     "juwai_fr": "94",
     "juwai_sr": "58",
     "night_fr": "30",
-    "night_sr": "22"
+    "night_sr": "22",
+    "juwai_morning_fr": "89",
+    "juwai_morning_sr": "04"
   },
   {
     "date": "2026-10-23",
@@ -184,7 +216,9 @@
     "juwai_fr": "83",
     "juwai_sr": "28",
     "night_fr": "88",
-    "night_sr": "86"
+    "night_sr": "86",
+    "juwai_morning_fr": "98",
+    "juwai_morning_sr": "36"
   },
   {
     "date": "2026-10-22",
@@ -195,7 +229,9 @@
     "juwai_fr": "72",
     "juwai_sr": "36",
     "night_fr": "14",
-    "night_sr": "62"
+    "night_sr": "62",
+    "juwai_morning_fr": "21",
+    "juwai_morning_sr": "95"
   },
   {
     "date": "2026-10-21",
@@ -206,7 +242,9 @@
     "juwai_fr": "15",
     "juwai_sr": "90",
     "night_fr": "87",
-    "night_sr": "43"
+    "night_sr": "43",
+    "juwai_morning_fr": "26",
+    "juwai_morning_sr": "54"
   },
   {
     "date": "2026-10-20",
@@ -217,7 +255,9 @@
     "juwai_fr": "60",
     "juwai_sr": "27",
     "night_fr": "05",
-    "night_sr": "99"
+    "night_sr": "99",
+    "juwai_morning_fr": "90",
+    "juwai_morning_sr": "48"
   },
   {
     "date": "2026-10-19",
@@ -228,7 +268,9 @@
     "juwai_fr": "44",
     "juwai_sr": "11",
     "night_fr": "56",
-    "night_sr": "38"
+    "night_sr": "38",
+    "juwai_morning_fr": "27",
+    "juwai_morning_sr": "02"
   },
   {
     "date": "2026-10-17",
@@ -239,7 +281,9 @@
     "juwai_fr": "98",
     "juwai_sr": "54",
     "night_fr": "29",
-    "night_sr": "80"
+    "night_sr": "80",
+    "juwai_morning_fr": "92",
+    "juwai_morning_sr": "53"
   },
   {
     "date": "2026-10-16",
@@ -250,7 +294,9 @@
     "juwai_fr": "21",
     "juwai_sr": "77",
     "night_fr": "73",
-    "night_sr": "15"
+    "night_sr": "15",
+    "juwai_morning_fr": "67",
+    "juwai_morning_sr": "61"
   },
   {
     "date": "2026-10-15",
@@ -261,7 +307,9 @@
     "juwai_fr": "37",
     "juwai_sr": "89",
     "night_fr": "40",
-    "night_sr": "92"
+    "night_sr": "92",
+    "juwai_morning_fr": "62",
+    "juwai_morning_sr": "50"
   },
   {
     "date": "2026-10-14",
@@ -272,7 +320,9 @@
     "juwai_fr": "05",
     "juwai_sr": "63",
     "night_fr": "18",
-    "night_sr": "47"
+    "night_sr": "47",
+    "juwai_morning_fr": "36",
+    "juwai_morning_sr": "00"
   },
   {
     "date": "2026-10-13",
@@ -283,6 +333,8 @@
     "juwai_fr": "86",
     "juwai_sr": "32",
     "night_fr": "65",
-    "night_sr": "01"
+    "night_sr": "01",
+    "juwai_morning_fr": "xx",
+    "juwai_morning_sr": "xx"
   }
 ]

@@ -22,6 +22,10 @@ export interface TeerData {
 }
 
 export const GAME_SCHEDULE: Record<string, { frStart: number; srStart: number }> = {
+  juwai_morning: {
+    frStart: 10 * 60 + 28, // 10:28 AM (10:30 AM round)
+    srStart: 11 * 60 + 28  // 11:28 AM (11:30 AM round)
+  },
   juwai: {
     frStart: 13 * 60 + 42, // 1:42 PM (aligned with Jowai ground delay)
     srStart: 14 * 60 + 27  // 2:27 PM
@@ -61,6 +65,12 @@ export const ALL_GAMES_METADATA: Record<
     defaultFrTime: '1:45 PM',
     defaultSrTime: '2:30 PM',
     location: 'Ladrymbai traditional Ground'
+  },
+  juwai_morning: {
+    title: 'JUWAI MORNING TEER',
+    defaultFrTime: '10:30 AM',
+    defaultSrTime: '11:30 AM',
+    location: 'Jowai Archery Ground'
   },
   night: {
     title: 'SHILLONG NIGHT TEER',
@@ -123,36 +133,41 @@ export function checkIsDrawing(
 export function getDynamicGameOrder(nowMin: number, viewMode: 'today' | 'yesterday', isSunday: boolean): string[] {
   // If viewing yesterday or Sunday holiday, keep standard canonical order
   if (viewMode === 'yesterday' || isSunday) {
-    return ['shillong', 'khanapara', 'juwai', 'night'];
+    return ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
+  }
+
+  // 10:15 AM to 12:00 PM: Juwai Morning Teer Live Window (Draws at 10:30 AM & 11:30 AM)
+  if (nowMin >= 10 * 60 + 15 && nowMin < 12 * 60) {
+    return ['juwai_morning', 'shillong', 'khanapara', 'juwai', 'night'];
   }
 
   // 1:15 PM to 3:15 PM: Juwai Teer Live Window (Draws at 1:45 PM & 2:30 PM)
   if (nowMin >= 13 * 60 + 15 && nowMin < 15 * 60 + 15) {
-    return ['juwai', 'shillong', 'khanapara', 'night'];
+    return ['juwai', 'shillong', 'khanapara', 'juwai_morning', 'night'];
   }
 
   // 3:15 PM to 4:00 PM: Shillong 1st Round Mega-Peak (Draws at 3:45 PM)
   if (nowMin >= 15 * 60 + 15 && nowMin < 16 * 60) {
-    return ['shillong', 'khanapara', 'juwai', 'night'];
+    return ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
   }
 
   // 4:00 PM to 4:35 PM: Khanapara Active Window (Draws at 4:00 PM & 4:30 PM)
   if (nowMin >= 16 * 60 && nowMin < 16 * 60 + 30) {
-    return ['khanapara', 'shillong', 'juwai', 'night'];
+    return ['khanapara', 'shillong', 'juwai', 'juwai_morning', 'night'];
   }
 
   // 4:30 PM to 5:30 PM: Shillong 2nd Round Peak (Shooting starts 4:30 PM, Draws at 4:45 PM)
   if (nowMin >= 16 * 60 + 30 && nowMin < 17 * 60 + 30) {
-    return ['shillong', 'khanapara', 'juwai', 'night'];
+    return ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
   }
 
   // 9:30 PM onwards to 1:00 AM (or early morning before 6:00 AM): Night Teer Window (10:30 PM & 11:30 PM)
   if (nowMin >= 21 * 60 + 30 || nowMin < 6 * 60) {
-    return ['night', 'shillong', 'khanapara', 'juwai'];
+    return ['night', 'shillong', 'khanapara', 'juwai', 'juwai_morning'];
   }
 
-  // Default Daytime (Morning 6:00 AM to 1:15 PM & Evening 5:30 PM to 9:30 PM): Flagship Shillong first
-  return ['shillong', 'khanapara', 'juwai', 'night'];
+  // Default Daytime (Morning 6:00 AM to 10:15 AM & Evening 5:30 PM to 9:30 PM): Flagship Shillong first
+  return ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
 }
 
 export const WhatsAppIcon = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (

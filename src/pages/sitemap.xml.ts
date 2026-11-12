@@ -9,6 +9,7 @@ export const GET: APIRoute = async () => {
     { path: '/shillong-teer', changefreq: 'hourly', priority: '0.9' },
     { path: '/khanapara-teer', changefreq: 'hourly', priority: '0.9' },
     { path: '/juwai-teer', changefreq: 'hourly', priority: '0.9' },
+    { path: '/juwai-morning-teer', changefreq: 'hourly', priority: '0.9' },
     { path: '/shillong-night-teer', changefreq: 'hourly', priority: '0.9' },
     { path: '/dream-numbers', changefreq: 'daily', priority: '0.9' },
     { path: '/previous-results', changefreq: 'daily', priority: '0.8' },

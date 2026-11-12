@@ -153,7 +153,7 @@ export function evaluateMultiSourceConsensus(
 ): Record<string, GameConsensusResult> {
   const result: Record<string, GameConsensusResult> = {};
 
-  for (const gameKey of ['shillong', 'khanapara', 'juwai', 'night']) {
+  for (const gameKey of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
     const curFR = currentGames[gameKey]?.fr || 'xx';
     const curSR = currentGames[gameKey]?.sr || 'xx';
     const reps = allReports[gameKey] || [];

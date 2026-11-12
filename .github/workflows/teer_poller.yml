@@ -8,6 +8,8 @@ on:
     - cron: '30 1 * * *'
     # 03:30 UTC = 9:00 AM IST: Morning sync
     - cron: '30 3 * * *'
+    # 05:00 UTC to 06:45 UTC = 10:30 AM to 12:15 PM IST (Mon-Sat Juwai Morning Teer every 5 mins)
+    - cron: '*/5 5-6 * * 1-6'
     # 08:00 UTC to 12:45 UTC = 1:30 PM to 6:15 PM IST (Mon-Sat Day Draws: Juwai, Shillong, Khanapara every 5 mins)
     - cron: '*/5 8-12 * * 1-6'
     # 16:00 UTC to 20:30 UTC = 9:30 PM to 2:00 AM IST (Night Teer every 5 mins uninterrupted)

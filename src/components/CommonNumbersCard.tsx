@@ -3,7 +3,7 @@ import { Copy, Check } from 'lucide-react';
 import liveData from '../data/teer_live_results.json';
 
 interface CommonNumbersCardProps {
-  filterGame?: 'all' | 'shillong' | 'khanapara' | 'juwai' | 'night';
+  filterGame?: 'all' | 'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night';
 }
 
 interface CommonData {
@@ -31,6 +31,12 @@ const DEFAULT_TARGETS: Record<string, { title: string; color: string; badge: str
     badge: 'West Jaintia Formula',
     common: { direct: ['40', '92', '57', '05', '29', '74'], house: [4, 9, 5], ending: [0, 2, 7] }
   },
+  juwai_morning: {
+    title: 'Juwai Morning Targets',
+    color: 'teal',
+    badge: 'Morning Archery Formula',
+    common: { direct: ['27', '41', '68', '19', '53', '80'], house: [2, 4, 6], ending: [7, 1, 8] }
+  },
   night: {
     title: 'Night Teer Targets',
     color: 'purple',
@@ -40,7 +46,7 @@ const DEFAULT_TARGETS: Record<string, { title: string; color: string; badge: str
 };
 
 export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersCardProps) {
-  const [activeTab, setActiveTab] = useState<'shillong' | 'khanapara' | 'juwai' | 'night'>(
+  const [activeTab, setActiveTab] = useState<'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night'>(
     filterGame === 'all' ? 'shillong' : filterGame
   );
   const [copiedGame, setCopiedGame] = useState<string | null>(null);
@@ -93,9 +99,9 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
 
       {/* Game Selector Pills */}
       <div className="flex items-center gap-1 overflow-x-auto text-xs pb-1 sm:pb-0 bg-slate-50 border border-slate-200/80 rounded-xl p-1.5">
-        {(['shillong', 'khanapara', 'juwai', 'night'] as const).map((key) => {
+        {(['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'] as const).map((key) => {
           const isActive = activeTab === key;
-          const label = key === 'shillong' ? 'Shillong' : key === 'khanapara' ? 'Khanapara' : key === 'juwai' ? 'Juwai' : 'Night';
+          const label = key === 'shillong' ? 'Shillong' : key === 'khanapara' ? 'Khanapara' : key === 'juwai' ? 'Juwai' : key === 'juwai_morning' ? 'Juwai Morning' : 'Night';
           return (
             <button
               key={key}
@@ -109,6 +115,8 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
                     ? 'bg-emerald-600 text-white shadow-xs'
                     : key === 'juwai'
                     ? 'bg-blue-600 text-white shadow-xs'
+                    : key === 'juwai_morning'
+                    ? 'bg-teal-600 text-white shadow-xs'
                     : 'bg-purple-600 text-white shadow-xs'
                   : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
               }`}
@@ -134,6 +142,8 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
                 ? 'bg-emerald-50/40 border-emerald-200/80'
                 : activeTab === 'juwai'
                 ? 'bg-blue-50/40 border-blue-200/80'
+                : activeTab === 'juwai_morning'
+                ? 'bg-teal-50/40 border-teal-200/80'
                 : 'bg-purple-50/40 border-purple-200/80'
             }`}
           >

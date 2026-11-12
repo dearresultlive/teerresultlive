@@ -32,6 +32,14 @@ export const GET: APIRoute = async () => {
       venue: 'Juwai Traditional Ground, Meghalaya'
     },
     {
+      key: 'juwai_morning',
+      title: `Juwai Morning Teer Result Today (${todayFormatted}) • Morning Archery Hits`,
+      link: `${host}/juwai-morning-teer`,
+      data: (liveData.games as any).juwai_morning,
+      schedule: '1st Round: 10:30 AM | 2nd Round: 11:30 AM',
+      venue: 'Jowai Archery Ground, Meghalaya'
+    },
+    {
       key: 'night',
       title: `Shillong Night Teer Result Today (${todayFormatted}) • Night Archery Hits`,
       link: `${host}/`,

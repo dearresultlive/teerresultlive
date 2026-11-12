@@ -20,11 +20,13 @@ export function isArcheryShootingHour(): boolean {
   const h = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
   const m = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
   const mins = h * 60 + m;
+  // Morning Archery: 10:15 AM to 12:00 PM IST (Juwai Morning)
+  const isMorningDraw = mins >= (10 * 60 + 15) && mins <= (12 * 60);
   // Day Archery: 1:30 PM to 5:30 PM IST (Juwai, Shillong, Khanapara)
   const isDayDraw = mins >= (13 * 60 + 30) && mins <= (17 * 60 + 30);
   // Night Archery: 10:00 PM to 12:30 AM IST (including midnight rollover)
   const isNightDraw = mins >= (22 * 60) || mins <= 30;
-  return isDayDraw || isNightDraw;
+  return isMorningDraw || isDayDraw || isNightDraw;
 }
 
 /**
@@ -78,12 +80,14 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
       khanapara_sr: result.games.khanapara?.sr || 'xx',
       juwai_fr: result.games.juwai?.fr || 'xx',
       juwai_sr: result.games.juwai?.sr || 'xx',
+      juwai_morning_fr: result.games.juwai_morning?.fr || 'xx',
+      juwai_morning_sr: result.games.juwai_morning?.sr || 'xx',
       night_fr: result.games.night?.fr || 'xx',
       night_sr: result.games.night?.sr || 'xx'
     };
     result.yesterday = priorRecord;
     result.date = todayIST;
-    for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+    for (const key of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
       if (result.games[key]) {
         result.games[key].fr = 'xx';
         result.games[key].sr = 'xx';
@@ -101,21 +105,21 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
 
   // Fast short-circuit: If all games relevant for this time of day are already fully declared,
   // return immediately in < 0.1ms without blocking on external scrapers
+  const morningDeclared = result.games.juwai_morning?.fr !== 'xx' && result.games.juwai_morning?.sr !== 'xx';
   const dayGamesDeclared = ['shillong', 'khanapara', 'juwai'].every((k) => {
     const g = result.games[k];
     return g && g.fr !== 'xx' && g.sr !== 'xx';
   });
   const minsNow = currentISTHour * 60 + parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
-  // Night draw takes place from 10:15 PM to 11:45 PM IST.
-  // In the late-night window between 10:00 PM (1320 mins) and 1:30 AM (90 mins),
-  // Night Teer must be declared before short-circuiting.
   const isNightTeerPeriod = minsNow >= (22 * 60) || minsNow < 90;
   const nightDeclared = result.games.night?.fr !== 'xx' && result.games.night?.sr !== 'xx';
-  const allCurrentGamesDeclared = isNightTeerPeriod ? (dayGamesDeclared && nightDeclared) : dayGamesDeclared;
+  const allCurrentGamesDeclared = isNightTeerPeriod
+    ? (dayGamesDeclared && morningDeclared && nightDeclared)
+    : (dayGamesDeclared && morningDeclared);
 
-  // Before the first draw window of the day (Juwai at 1:15 PM / 795 mins), all games are UPCOMING for today.
+  // Before the first draw window of the day (Juwai Morning at 10:15 AM / 615 mins), all games are UPCOMING for today.
   // Short-circuit immediately in <0.1ms to prevent unnecessary external network calls during early morning.
-  const isBeforeFirstDraw = minsNow >= (2 * 60) && minsNow < (13 * 60 + 15);
+  const isBeforeFirstDraw = minsNow >= (2 * 60) && minsNow < (10 * 60 + 15);
 
   if ((allCurrentGamesDeclared || isBeforeFirstDraw) && !forceRefresh && !isSunday) {
     cachedData = result;

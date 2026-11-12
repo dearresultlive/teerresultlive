@@ -1,6 +1,6 @@
 ---
 interface Props {
-  currentGame?: 'shillong' | 'khanapara' | 'juwai' | 'night' | 'dream' | 'archive';
+  currentGame?: 'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night' | 'dream' | 'archive';
 }
 
 const { currentGame } = Astro.props;
@@ -42,6 +42,15 @@ const allLinks = [
     border: 'border-blue-300',
     text: 'text-blue-800',
     hover: 'hover:bg-blue-50 active:bg-blue-100'
+  },
+  {
+    key: 'juwai_morning',
+    href: '/juwai-morning-teer',
+    name: 'Juwai Morning (10:30 AM)',
+    icon: '🌅',
+    border: 'border-teal-300',
+    text: 'text-teal-800',
+    hover: 'hover:bg-teal-50 active:bg-teal-100'
   },
   {
     key: 'night',

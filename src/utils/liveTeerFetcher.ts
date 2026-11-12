@@ -22,6 +22,7 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
   const cur = getISTCurrentMinutes(now);
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES: Record<string, { fr: number; sr: number }> = {
+    juwai_morning: { fr: 10 * 60 + 20, sr: 11 * 60 + 20 }, // 10:20 AM / 11:20 AM
     juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM (Jowai timing)
     shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM (Polo Ground real shooting start)
     khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM (Khanapara real shooting start)
@@ -183,6 +184,36 @@ export async function fetchNightTeerDirect(): Promise<{ date: string; fr: string
         date,
         fr: cleanNumber(rowMatch[1].replace(/<[^>]+>/g, '').trim()),
         sr: cleanNumber(rowMatch[2].replace(/<[^>]+>/g, '').trim())
+      };
+    }
+  } catch (err: any) {
+    // skip
+  }
+  return null;
+}
+
+// Source 4B: Dedicated Juwai Morning Teer Direct Feed (juwaimorningteer.com)
+export async function fetchJuwaiMorningDirect(): Promise<{ date: string; fr: string; sr: string } | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch('https://juwaimorningteer.com', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const titleMatch = text.match(/(\d{4})-(\d{2})-(\d{2})/);
+    const date = titleMatch ? titleMatch[0] : '';
+    const boxMatch = text.match(/<div class=["']result_box["'][^>]*background:#fff[\s\S]*?<b[^>]*>([\s\S]*?)<\/b>[\s\S]*?<b[^>]*>([\s\S]*?)<\/b>/i);
+    if (date && boxMatch) {
+      return {
+        date,
+        fr: cleanNumber(boxMatch[1].replace(/<[^>]+>/g, '').trim()),
+        sr: cleanNumber(boxMatch[2].replace(/<[^>]+>/g, '').trim())
       };
     }
   } catch (err: any) {
@@ -531,6 +562,7 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     shillong: [],
     khanapara: [],
     juwai: [],
+    juwai_morning: [],
     night: []
   };
 
@@ -545,7 +577,8 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     fetchTeerGroundCom(),              // 7. TeerGround.com (Tier 2)
     fetchTeerTargetCom(targetDate),    // 8. TeerTarget.com (Tier 2)
     fetchFromGoogleAppsScript(),       // 9. Google Apps Script Proxy (Tier 2)
-    fetchFromTeerResultsDotCom(targetDate) // 10. TeerResults.com Ultra-Fast Juwai/Multi-Game (Tier 2)
+    fetchFromTeerResultsDotCom(targetDate), // 10. TeerResults.com Ultra-Fast Juwai/Multi-Game (Tier 2)
+    fetchJuwaiMorningDirect()          // 11. JuwaiMorningTeer.com Official Direct Feed (Tier 1)
   ]);
 
   const [
@@ -559,7 +592,8 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     groundRes,
     targetRes,
     gasRes,
-    teerResultsComRes
+    teerResultsComRes,
+    juwaiMorningRes
   ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
@@ -663,6 +697,11 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     if (teerResultsComRes.juwai) addReport('juwai', 'teerresults_com', 1, teerResultsComRes.juwai.fr, teerResultsComRes.juwai.sr);
     if (teerResultsComRes.shillong) addReport('shillong', 'teerresults_com', 1, teerResultsComRes.shillong.fr, teerResultsComRes.shillong.sr);
     if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
+  }
+
+  // 12. JuwaiMorningTeer.com Official Direct Feed (Tier 1 Fast-Track)
+  if (juwaiMorningRes && juwaiMorningRes.date === targetDate) {
+    addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningRes.fr, juwaiMorningRes.sr);
   }
 
   return reports;

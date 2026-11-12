@@ -11,9 +11,9 @@ import {
 } from '../utils/teerShared';
 
 interface SingleGameLiveCardProps {
-  gameKey: 'shillong' | 'khanapara' | 'juwai' | 'night';
+  gameKey: 'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night';
   initialData: TeerData;
-  themeColor?: 'amber' | 'emerald' | 'blue' | 'indigo';
+  themeColor?: 'amber' | 'emerald' | 'blue' | 'indigo' | 'teal';
 }
 
 export default function SingleGameLiveCard({
@@ -277,7 +277,11 @@ export default function SingleGameLiveCard({
 
     shareText += `▶ 1st Round (${game.fr_time}): *${game.fr}*\n`;
     shareText += `▶ 2nd Round (${game.sr_time}): *${game.sr}*\n`;
-    const pageUrl = gameKey === 'night' ? 'https://teerresultlive.in/shillong-night-teer' : `https://teerresultlive.in/${gameKey}-teer`;
+    const pageUrl = gameKey === 'night'
+      ? 'https://teerresultlive.in/shillong-night-teer'
+      : gameKey === 'juwai_morning'
+      ? 'https://teerresultlive.in/juwai-morning-teer'
+      : `https://teerresultlive.in/${gameKey}-teer`;
     shareText += `\n⚡ Check official live numbers:\n👉 ${pageUrl}`;
 
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
@@ -287,7 +291,7 @@ export default function SingleGameLiveCard({
         .share({
           title: `${meta.title} Live Result`,
           text: shareText,
-          url: gameKey === 'night' ? 'https://teerresultlive.in/shillong-night-teer' : `https://teerresultlive.in/${gameKey}-teer`
+          url: pageUrl
         })
         .catch(() => {
           window.open(whatsappUrl, '_blank');

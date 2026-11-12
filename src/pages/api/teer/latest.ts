@@ -19,7 +19,7 @@ export const GET: APIRoute = async ({ request }) => {
   const m = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
   const mins = h * 60 + m;
 
-  const areAllDayGamesDeclared = ['shillong', 'khanapara', 'juwai'].every((k) => {
+  const areAllDayGamesDeclared = ['shillong', 'khanapara', 'juwai', 'juwai_morning'].every((k) => {
     const g = data.games?.[k];
     return g && g.fr !== 'xx' && g.sr !== 'xx';
   });

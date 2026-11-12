@@ -119,6 +119,17 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           fr_verification: (yesterday.juwai_fr && yesterday.juwai_fr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED',
           sr_verification: (yesterday.juwai_sr && yesterday.juwai_sr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED'
         },
+        juwai_morning: {
+          name: 'Juwai Morning Teer',
+          location: 'Jowai Archery Ground',
+          fr: yesterday.juwai_morning_fr || 'xx',
+          sr: yesterday.juwai_morning_sr || 'xx',
+          fr_time: '10:30 AM',
+          sr_time: '11:30 AM',
+          status: (yesterday.juwai_morning_fr && yesterday.juwai_morning_fr !== 'xx') ? 'DECLARED' : 'UPCOMING',
+          fr_verification: (yesterday.juwai_morning_fr && yesterday.juwai_morning_fr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED',
+          sr_verification: (yesterday.juwai_morning_sr && yesterday.juwai_morning_sr !== 'xx') ? 'VERIFIED' : 'UNVERIFIED'
+        },
         night: {
           name: 'Shillong Night Teer',
           location: 'Night Archery Ground',
@@ -162,7 +173,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         if (fresh && fresh.games) {
           setData((prev) => {
             if (prev && prev.games) {
-              for (const k of ['shillong', 'khanapara', 'juwai', 'night']) {
+              for (const k of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
                 const oldG = prev.games[k];
                 const newG = fresh.games[k];
                 if (oldG && newG) {
@@ -216,7 +227,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         if (parsed && parsed.date === initialData.date && parsed.games) {
           // Verify cache does not downgrade any already declared initial numbers
           let hasNewerNumber = false;
-          for (const k of ['shillong', 'khanapara', 'juwai', 'night']) {
+          for (const k of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
             const initG = initialData.games[k];
             const cacheG = parsed.games[k];
             if (initG && cacheG) {

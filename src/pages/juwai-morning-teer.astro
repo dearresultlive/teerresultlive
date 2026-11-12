@@ -1,0 +1,180 @@
+---
+import QuickSwitch from '../components/QuickSwitch.astro';
+import Layout from '../layouts/Layout.astro';
+import SingleGameLiveCard from '../components/SingleGameLiveCard';
+import { getFreshTeerData } from '../utils/getFreshTeerData';
+
+const liveData = await getFreshTeerData();
+import archiveData from '../data/previous_teer_archive.json';
+import CommonNumbersCard from '../components/CommonNumbersCard';
+import PreviousResultsTable from '../components/PreviousResultsTable';
+import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import LoanBannerCard from '../components/LoanBannerCard.astro';
+
+const game = (liveData.games as any)?.juwai_morning;
+const todayDateStr = liveData.date.split('-').reverse().join('/');
+const yesterday = (archiveData && archiveData.find((item) => item.date < liveData.date)) || (archiveData && archiveData.length > 0 ? archiveData[0] : null);
+const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/') : '';
+---
+
+<Layout
+  title={`Juwai Morning Teer Result Today Live • ${todayDateStr} | Teer Live`}
+  description={`Fastest Juwai Morning Teer results today live (${todayDateStr}) for 1st Round (10:30 AM) and 2nd Round (11:30 AM) direct from Jowai Archery Ground, Meghalaya.`}
+>
+  <div class="space-y-6">
+    <Breadcrumbs items={[{ name: 'Juwai Morning Teer' }]} />
+
+    <header class="bg-white border-2 border-teal-500 rounded-2xl p-3 sm:p-6 text-slate-900 space-y-3 shadow-xs ring-4 ring-teal-50">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          Juwai Morning Teer Result <span id="game-live-label">Today Live</span> • <span id="game-date-label">{todayDateStr}</span>
+        </h1>
+        <span class="text-xs bg-teal-50 text-teal-800 font-black border border-teal-300 px-2.5 py-1 rounded-full shadow-2xs">
+          ● Jowai Morning Feed
+        </span>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-500 font-medium">
+        Conducted officially at Jowai Archery Ground, West Jaintia Hills district, Meghalaya.
+      </p>
+
+      <!-- Interactive Zero-Refresh Live Result Card with Arrow Counting Animation -->
+      <SingleGameLiveCard
+        client:load
+        gameKey="juwai_morning"
+        initialData={liveData}
+        themeColor="teal"
+      />
+    </header>
+
+    <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->
+    <section id="instant-loan" aria-label="Personal Loan Assistance">
+      <LoanBannerCard />
+    </section>
+
+    <QuickSwitch currentGame="juwai_morning" />
+
+    <!-- Today's Juwai Morning Common Numbers -->
+    <CommonNumbersCard client:visible filterGame="juwai_morning" />
+
+    <!-- Interactive Teer Formula & Target Calculator -->
+    <TeerFormulaCalculator client:visible />
+
+    <!-- Historical Hit Archive Filtered to Juwai Morning -->
+    <PreviousResultsTable client:visible initialGame="juwai_morning" />
+
+    <!-- In-Depth SEO Gazette for Juwai Morning Teer -->
+    <section class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 text-slate-700 space-y-5 text-xs sm:text-sm leading-relaxed shadow-xs">
+      <header class="border-b border-slate-100 pb-3">
+        <h2 class="text-base sm:text-xl font-black text-slate-900">
+          Guide to Juwai Morning Teer Results (West Jaintia Hills)
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">
+          The earliest daily traditional archery event in Meghalaya, starting each morning at Jowai Ground.
+        </p>
+      </header>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Official Shooting Schedule &amp; Morning Timings
+        </h3>
+        <p class="text-slate-600">
+          Juwai Morning Teer gives enthusiasts an early start before afternoon draws begin:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>First Round (FR):</strong> Archers start shooting at 10:15 AM IST, with official numbers declared at <strong>10:30 AM IST</strong>.</li>
+          <li><strong>Second Round (SR):</strong> Second round shooting begins at 11:15 AM IST, with final numbers announced at <strong>11:30 AM IST</strong>.</li>
+          <li><strong>Days of Operation:</strong> Conducted Monday through Saturday. Sunday is an official archery rest day across Meghalaya.</li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Cultural Heritage of Jaintia Archery
+        </h3>
+        <p class="text-slate-600">
+          In the Pnar culture of the Jaintia Hills, archery is deeply intertwined with ancient seasonal traditions and community games. Skilled archers gather each morning to shoot bamboo arrows into a circular straw cylinder target, preserving authentic Khasi-Jaintia indigenous sportsmanship.
+        </p>
+      </div>
+
+      <!-- Official Prize & Payout Structure -->
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Juwai Morning Teer Official Prize Rates &amp; Returns
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden font-mono mt-2">
+            <thead class="bg-teal-50 text-teal-950 font-black uppercase text-[11px] border-b border-teal-200">
+              <tr>
+                <th class="p-2.5 sm:p-3">Bet Type</th>
+                <th class="p-2.5 sm:p-3">Sample Bet</th>
+                <th class="p-2.5 sm:p-3">Return Ratio</th>
+                <th class="p-2.5 sm:p-3">Payout</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-teal-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Single / Direct Hit (FR or SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on "27"</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">80 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹800</td>
+              </tr>
+              <tr class="hover:bg-teal-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">House (Tens Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on House 2</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-teal-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Ending (Units Digit)</td>
+                <td class="p-2.5 sm:p-3">₹10 on Ending 7</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">9 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹90</td>
+              </tr>
+              <tr class="hover:bg-teal-50/40">
+                <td class="p-2.5 sm:p-3 font-bold text-slate-900">Forecast / Both Rounds (FR + SR)</td>
+                <td class="p-2.5 sm:p-3">₹10 on FR 27 + SR 41</td>
+                <td class="p-2.5 sm:p-3 font-black text-emerald-700">4,000 : 1</td>
+                <td class="p-2.5 sm:p-3 font-black text-slate-900">₹40,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          How to Calculate Winning Numbers
+        </h3>
+        <p class="text-slate-600">
+          Archers shoot cane arrows at a circular straw target. Once shooting ceases, officials gather and count all arrows that successfully struck within the target bounds. The last two digits of the total count constitute the official winning number (for example, 727 arrows counted = winning number 27).
+        </p>
+      </div>
+
+      <!-- Quick FAQs -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+          Frequently Asked Questions (FAQs)
+        </h3>
+        <div class="space-y-2">
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">What time is Juwai Morning Teer declared today?</summary>
+            <p class="mt-2 text-xs text-slate-600">Juwai Morning Teer First Round (FR) is declared at 10:30 AM IST and Second Round (SR) at 11:30 AM IST, Monday to Saturday.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Where is Juwai Morning Teer conducted?</summary>
+            <p class="mt-2 text-xs text-slate-600">It is officially held at Jowai Archery Ground in the West Jaintia Hills district of Meghalaya.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Is Juwai Morning Teer conducted on Sundays?</summary>
+            <p class="mt-2 text-xs text-slate-600">No. Archery activities are closed on Sundays throughout Meghalaya. Games resume Monday morning at 10:30 AM IST.</p>
+          </details>
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 cursor-pointer">
+            <summary class="font-bold text-slate-800 text-xs sm:text-sm">Where can I see previous Juwai Morning hit results?</summary>
+            <p class="mt-2 text-xs text-slate-600">Use our historical archive table above to search any 2-digit number or switch games to view daily confirmed outcomes.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

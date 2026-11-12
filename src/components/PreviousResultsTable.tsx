@@ -2,12 +2,12 @@ import React, { useState, useMemo } from 'react';
 import archive from '../data/previous_teer_archive.json';
 
 interface PreviousResultsTableProps {
-  initialGame?: 'all' | 'shillong' | 'khanapara' | 'juwai' | 'night';
+  initialGame?: 'all' | 'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night';
 }
 
 export default function PreviousResultsTable({ initialGame = 'all' }: PreviousResultsTableProps) {
   const [searchNumber, setSearchNumber] = useState('');
-  const [activeGame, setActiveGame] = useState<'all' | 'shillong' | 'khanapara' | 'juwai' | 'night'>(initialGame);
+  const [activeGame, setActiveGame] = useState<'all' | 'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night'>(initialGame);
   const [showAll, setShowAll] = useState(false);
 
   // Filtered rows based on game and number query
@@ -16,7 +16,7 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
     const q = searchNumber.trim();
 
     if (q) {
-      rows = rows.filter((row) => {
+      rows = rows.filter((row: any) => {
         if (activeGame === 'shillong') {
           return row.shillong_fr?.includes(q) || row.shillong_sr?.includes(q);
         }
@@ -25,6 +25,9 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
         }
         if (activeGame === 'juwai') {
           return row.juwai_fr?.includes(q) || row.juwai_sr?.includes(q);
+        }
+        if (activeGame === 'juwai_morning') {
+          return row.juwai_morning_fr?.includes(q) || row.juwai_morning_sr?.includes(q);
         }
         if (activeGame === 'night') {
           return row.night_fr?.includes(q) || row.night_sr?.includes(q);
@@ -36,6 +39,8 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
           row.khanapara_sr?.includes(q) ||
           row.juwai_fr?.includes(q) ||
           row.juwai_sr?.includes(q) ||
+          row.juwai_morning_fr?.includes(q) ||
+          row.juwai_morning_sr?.includes(q) ||
           row.night_fr?.includes(q) ||
           row.night_sr?.includes(q)
         );
@@ -51,9 +56,9 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
     if (!q || q.length < 1) return null;
 
     let totalHits = 0;
-    const gameHits: Record<string, number> = { shillong: 0, khanapara: 0, juwai: 0, night: 0 };
+    const gameHits: Record<string, number> = { shillong: 0, khanapara: 0, juwai: 0, juwai_morning: 0, night: 0 };
 
-    for (const row of archive) {
+    for (const row of archive as any[]) {
       if (row.shillong_fr === q || row.shillong_sr === q) {
         totalHits++;
         gameHits.shillong++;
@@ -65,6 +70,10 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
       if (row.juwai_fr === q || row.juwai_sr === q) {
         totalHits++;
         gameHits.juwai++;
+      }
+      if (row.juwai_morning_fr === q || row.juwai_morning_sr === q) {
+        totalHits++;
+        gameHits.juwai_morning++;
       }
       if (row.night_fr === q || row.night_sr === q) {
         totalHits++;
@@ -155,6 +164,17 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
           </button>
           <button
             type="button"
+            onClick={() => setActiveGame('juwai_morning')}
+            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeGame === 'juwai_morning'
+                ? 'bg-teal-600 text-white shadow-xs'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
+            }`}
+          >
+            Juwai Morning
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveGame('night')}
             className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               activeGame === 'night'
@@ -203,7 +223,7 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
             </span>
           </div>
           <span className="text-[11px] text-amber-800 font-semibold">
-            Shillong: {hitStats.gameHits.shillong}x • Khanapara: {hitStats.gameHits.khanapara}x • Juwai: {hitStats.gameHits.juwai}x • Night: {hitStats.gameHits.night}x
+            Shillong: {hitStats.gameHits.shillong}x • Khanapara: {hitStats.gameHits.khanapara}x • Juwai: {hitStats.gameHits.juwai}x • Juwai Morning: {hitStats.gameHits.juwai_morning}x • Night: {hitStats.gameHits.night}x
           </span>
         </div>
       )}
@@ -222,6 +242,9 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
               )}
               {(activeGame === 'all' || activeGame === 'juwai') && (
                 <th className="p-2.5 sm:p-3 text-blue-800">Juwai (FR / SR)</th>
+              )}
+              {(activeGame === 'all' || activeGame === 'juwai_morning') && (
+                <th className="p-2.5 sm:p-3 text-teal-800">Juwai Morning (FR / SR)</th>
               )}
               {(activeGame === 'all' || activeGame === 'night') && (
                 <th className="p-2.5 sm:p-3 text-purple-800">Night (FR / SR)</th>
@@ -274,6 +297,20 @@ export default function PreviousResultsTable({ initialGame = 'all' }: PreviousRe
                       {' / '}
                       <span className={isMatched(row.juwai_sr) ? 'bg-blue-300 px-1 rounded' : ''}>
                         {row.juwai_sr}
+                      </span>
+                    </td>
+                  )}
+
+                  {(activeGame === 'all' || activeGame === 'juwai_morning') && (
+                    <td className={`p-2.5 sm:p-3 font-black text-teal-700 ${
+                      isMatched((row as any).juwai_morning_fr) || isMatched((row as any).juwai_morning_sr) ? 'bg-teal-100/70 font-extrabold' : ''
+                    }`}>
+                      <span className={isMatched((row as any).juwai_morning_fr) ? 'bg-teal-300 px-1 rounded' : ''}>
+                        {(row as any).juwai_morning_fr || 'xx'}
+                      </span>
+                      {' / '}
+                      <span className={isMatched((row as any).juwai_morning_sr) ? 'bg-teal-300 px-1 rounded' : ''}>
+                        {(row as any).juwai_morning_sr || 'xx'}
                       </span>
                     </td>
                   )}

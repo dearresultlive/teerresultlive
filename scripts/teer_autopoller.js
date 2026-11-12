@@ -60,6 +60,7 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
   const cur = getISTCurrentMinutes(now);
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES = {
+    juwai_morning: { fr: 10 * 60 + 20, sr: 11 * 60 + 20 }, // 10:20 AM / 11:20 AM
     juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM
     shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM
     khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM
@@ -218,6 +219,32 @@ async function fetchNightTeerDirect() {
     }
   } catch (err) {
     console.warn('[Night Poller] Direct night teer fetch skipped:', err.message);
+  }
+  return null;
+}
+
+// Source 3B: Dedicated Juwai Morning Teer Direct Feed (juwaimorningteer.com)
+async function fetchJuwaiMorningDirect() {
+  try {
+    const res = await fetchWithTimeout('https://juwaimorningteer.com', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    }, 6000);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const titleMatch = text.match(/(\d{4})-(\d{2})-(\d{2})/);
+    const date = titleMatch ? titleMatch[0] : '';
+    const boxMatch = text.match(/<div class=["']result_box["'][^>]*background:#fff[\s\S]*?<b[^>]*>([\s\S]*?)<\/b>[\s\S]*?<b[^>]*>([\s\S]*?)<\/b>/i);
+    if (date && boxMatch) {
+      const fr = cleanNumber(boxMatch[1].replace(/<[^>]+>/g, '').trim());
+      const sr = cleanNumber(boxMatch[2].replace(/<[^>]+>/g, '').trim());
+      if (fr !== 'xx' || sr !== 'xx') {
+        return { date, fr, sr };
+      }
+    }
+  } catch (err) {
+    console.warn('[Juwai Morning Poller] Direct juwai morning fetch skipped:', err.message);
   }
   return null;
 }
@@ -522,7 +549,8 @@ export async function runPoller() {
     netData,
     groundData,
     targetData,
-    teerResultsComData
+    teerResultsComData,
+    juwaiMorningDirect
   ] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
@@ -534,7 +562,8 @@ export async function runPoller() {
     fetchTeerResultsNet(liveData.date),
     fetchTeerGroundCom(),
     fetchTeerTargetCom(liveData.date),
-    fetchFromTeerResultsDotCom(liveData.date)
+    fetchFromTeerResultsDotCom(liveData.date),
+    fetchJuwaiMorningDirect()
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -560,6 +589,8 @@ export async function runPoller() {
     let prevKhanaparaSR = liveData.games.khanapara?.sr || 'xx';
     let prevJuwaiFR = liveData.games.juwai?.fr || 'xx';
     let prevJuwaiSR = liveData.games.juwai?.sr || 'xx';
+    let prevJuwaiMorningFR = liveData.games.juwai_morning?.fr || 'xx';
+    let prevJuwaiMorningSR = liveData.games.juwai_morning?.sr || 'xx';
     let prevNightFR = liveData.games.night?.fr || 'xx';
     let prevNightSR = liveData.games.night?.sr || 'xx';
 
@@ -593,6 +624,8 @@ export async function runPoller() {
       khanapara_sr: prevKhanaparaSR,
       juwai_fr: prevJuwaiFR,
       juwai_sr: prevJuwaiSR,
+      juwai_morning_fr: prevJuwaiMorningFR,
+      juwai_morning_sr: prevJuwaiMorningSR,
       night_fr: prevNightFR,
       night_sr: prevNightSR
     };
@@ -609,7 +642,7 @@ export async function runPoller() {
 
     // Reset live data for new day
     liveData.date = todayIST;
-    const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
+    const gameKeys = ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
 
     for (const key of gameKeys) {
       if (liveData.games[key]) {
@@ -630,13 +663,14 @@ export async function runPoller() {
   }
 
   // 3. Update declared numbers for Today using 10-Source Byzantine Fault Tolerant Consensus Engine
-  const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
+  const gameKeys = ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
 
   // Collect reports across all 10 sources
   const allReports = {
     shillong: [],
     khanapara: [],
     juwai: [],
+    juwai_morning: [],
     night: []
   };
 
@@ -735,6 +769,11 @@ export async function runPoller() {
     if (teerResultsComData.juwai) addReport('juwai', 'teerresults_com', 1, teerResultsComData.juwai.fr, teerResultsComData.juwai.sr);
     if (teerResultsComData.shillong) addReport('shillong', 'teerresults_com', 1, teerResultsComData.shillong.fr, teerResultsComData.shillong.sr);
     if (teerResultsComData.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComData.khanapara.fr, teerResultsComData.khanapara.sr);
+  }
+
+  // 12. JuwaiMorningTeer.com Official Direct Feed (Tier 1 Fast-Track)
+  if (juwaiMorningDirect && juwaiMorningDirect.date === liveData.date) {
+    addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningDirect.fr, juwaiMorningDirect.sr);
   }
 
   for (const key of gameKeys) {
