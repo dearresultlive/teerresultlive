@@ -52,8 +52,21 @@ export default function SingleGameLiveCard({
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const todayFormattedDate = data.date ? data.date.split('-').reverse().join('/') : '';
 
-  // Default to 'today' so Googlebot and visitors always see Today Live with 100% SEO Title/H1 alignment
-  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>('today');
+  // Default to 'yesterday' before 9:00 AM IST (540 mins) so early visitors immediately see declared results;
+  // default to 'today' after 9:00 AM IST as focus shifts to upcoming live rounds.
+  const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (window.location.hash === '#yesterday' || params.get('tab') === 'yesterday' || params.get('view') === 'yesterday') {
+        return 'yesterday';
+      }
+      if (window.location.hash === '#today' || params.get('tab') === 'today' || params.get('view') === 'today') {
+        return 'today';
+      }
+    }
+    return getISTCurrentMinutes() < 9 * 60 ? 'yesterday' : 'today';
+  });
+  const [userHasManuallyToggled, setUserHasManuallyToggled] = useState(false);
 
   // Check URL hash/params on mount for direct tab navigation (e.g. /#yesterday)
   useEffect(() => {
@@ -61,11 +74,20 @@ export default function SingleGameLiveCard({
       const params = new URLSearchParams(window.location.search);
       if (window.location.hash === '#yesterday' || params.get('tab') === 'yesterday' || params.get('view') === 'yesterday') {
         setViewMode('yesterday');
+        setUserHasManuallyToggled(true);
       } else if (window.location.hash === '#today' || params.get('tab') === 'today' || params.get('view') === 'today') {
         setViewMode('today');
+        setUserHasManuallyToggled(true);
       }
     }
   }, []);
+
+  // When time reaches 9:00 AM IST, auto-transition from yesterday to today if user hasn't manually clicked
+  useEffect(() => {
+    if (!userHasManuallyToggled && currentISTMinutes >= 9 * 60 && viewMode === 'yesterday') {
+      setViewMode('today');
+    }
+  }, [currentISTMinutes, userHasManuallyToggled, viewMode]);
 
   // Ensure H1 Label & Date strictly remain "Today Live" for 100% SEO Title/H1 alignment (never overwritten to Yesterday)
   useEffect(() => {
@@ -283,7 +305,10 @@ export default function SingleGameLiveCard({
         <div className="inline-flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200/80 shadow-2xs shrink-0">
           <button
             type="button"
-            onClick={() => setViewMode('today')}
+            onClick={() => {
+              setUserHasManuallyToggled(true);
+              setViewMode('today');
+            }}
             className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
               viewMode === 'today'
                 ? 'bg-amber-500 text-white shadow-xs'
@@ -300,7 +325,10 @@ export default function SingleGameLiveCard({
 
           <button
             type="button"
-            onClick={() => setViewMode('yesterday')}
+            onClick={() => {
+              setUserHasManuallyToggled(true);
+              setViewMode('yesterday');
+            }}
             className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
               viewMode === 'yesterday'
                 ? 'bg-slate-900 text-white shadow-xs'
@@ -398,7 +426,10 @@ export default function SingleGameLiveCard({
           </div>
           <button
             type="button"
-            onClick={() => setViewMode('yesterday')}
+            onClick={() => {
+              setUserHasManuallyToggled(true);
+              setViewMode('yesterday');
+            }}
             className="bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
           >
             Yesterday ➔
@@ -417,7 +448,10 @@ export default function SingleGameLiveCard({
           </div>
           <button
             type="button"
-            onClick={() => setViewMode('today')}
+            onClick={() => {
+              setUserHasManuallyToggled(true);
+              setViewMode('today');
+            }}
             className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
           >
             Today's Board ➔
