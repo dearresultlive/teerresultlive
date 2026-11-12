@@ -58,10 +58,6 @@ export function getISTCurrentMinutes(d = new Date()) {
 // Strict time window validator to protect against stale upstream cache declaring rounds early
 export function isRoundWindowOpen(gameKey, round, now = new Date()) {
   const cur = getISTCurrentMinutes(now);
-  // Early morning guard (12:00 AM - 7:00 AM): Day draws not running; night teer concluded
-  if (cur < 7 * 60) {
-    return gameKey === 'night';
-  }
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES = {
     juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM
@@ -71,6 +67,10 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
   };
   const limits = EARLIEST_MINUTES[gameKey];
   if (!limits) return true;
+  // Between midnight (00:00) and 2:00 AM IST, night draw from the previous evening may still be concluding
+  if (cur < 2 * 60 && gameKey === 'night') {
+    return true;
+  }
   return cur >= limits[round];
 }
 
@@ -538,18 +538,18 @@ export async function runPoller() {
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
-  // Day rollover only occurs after 7:00 AM IST (morning rollover)
-  // This preserves Night Teer and yesterday's results through late-night hours (11 PM - 6:59 AM)
+  // Day rollover occurs after 2:00 AM IST on shooting days (Monday to Saturday)
+  // This preserves Night Teer and yesterday's results through late-night hours (11 PM - 1:59 AM)
   const currentISTHour = getISTHour();
   const istDateObj = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   const isSunday = istDateObj.getDay() === 0;
 
-  // Morning rollover occurs only at 9:00 AM IST on shooting days (Monday to Saturday)
+  // Rollover occurs after 2:00 AM IST on shooting days (Monday to Saturday)
   // On Sunday, archery grounds are closed under KHASA rules.
   // We keep Saturday's verified results active all day Sunday so visitors can see the latest numbers!
-  const isMorningRolloverTime = currentISTHour >= 9 && !isSunday;
+  const isRolloverTime = currentISTHour >= 2 && !isSunday;
 
-  if (liveData.date !== todayIST && isMorningRolloverTime) {
+  if (liveData.date !== todayIST && isRolloverTime) {
     console.log(`[Day Rollover] Current data date (${liveData.date}) is not today (${todayIST}). Archiving...`);
 
     // Check if yesterday's confirmed previous data is available from aggregator
@@ -566,20 +566,20 @@ export async function runPoller() {
     if (aggregatorData) {
       if (aggregatorData.shillong?.previous) {
         prevDate = aggregatorData.shillong.previous.date || prevDate;
-        if (aggregatorData.shillong.previous.fr !== 'xx') prevShillongFR = aggregatorData.shillong.previous.fr;
-        if (aggregatorData.shillong.previous.sr !== 'xx') prevShillongSR = aggregatorData.shillong.previous.sr;
+        if (prevShillongFR === 'xx' && aggregatorData.shillong.previous.fr !== 'xx') prevShillongFR = aggregatorData.shillong.previous.fr;
+        if (prevShillongSR === 'xx' && aggregatorData.shillong.previous.sr !== 'xx') prevShillongSR = aggregatorData.shillong.previous.sr;
       }
       if (aggregatorData.khanapara?.previous) {
-        if (aggregatorData.khanapara.previous.fr !== 'xx') prevKhanaparaFR = aggregatorData.khanapara.previous.fr;
-        if (aggregatorData.khanapara.previous.sr !== 'xx') prevKhanaparaSR = aggregatorData.khanapara.previous.sr;
+        if (prevKhanaparaFR === 'xx' && aggregatorData.khanapara.previous.fr !== 'xx') prevKhanaparaFR = aggregatorData.khanapara.previous.fr;
+        if (prevKhanaparaSR === 'xx' && aggregatorData.khanapara.previous.sr !== 'xx') prevKhanaparaSR = aggregatorData.khanapara.previous.sr;
       }
       if (aggregatorData.juwai?.previous) {
-        if (aggregatorData.juwai.previous.fr !== 'xx') prevJuwaiFR = aggregatorData.juwai.previous.fr;
-        if (aggregatorData.juwai.previous.sr !== 'xx') prevJuwaiSR = aggregatorData.juwai.previous.sr;
+        if (prevJuwaiFR === 'xx' && aggregatorData.juwai.previous.fr !== 'xx') prevJuwaiFR = aggregatorData.juwai.previous.fr;
+        if (prevJuwaiSR === 'xx' && aggregatorData.juwai.previous.sr !== 'xx') prevJuwaiSR = aggregatorData.juwai.previous.sr;
       }
       if (aggregatorData.night?.previous) {
-        if (aggregatorData.night.previous.fr !== 'xx') prevNightFR = aggregatorData.night.previous.fr;
-        if (aggregatorData.night.previous.sr !== 'xx') prevNightSR = aggregatorData.night.previous.sr;
+        if (prevNightFR === 'xx' && aggregatorData.night.previous.fr !== 'xx') prevNightFR = aggregatorData.night.previous.fr;
+        if (prevNightSR === 'xx' && aggregatorData.night.previous.sr !== 'xx') prevNightSR = aggregatorData.night.previous.sr;
       }
     }
 
@@ -611,8 +611,7 @@ export async function runPoller() {
     liveData.date = todayIST;
     const gameKeys = ['shillong', 'khanapara', 'juwai', 'night'];
 
-
-  for (const key of gameKeys) {
+    for (const key of gameKeys) {
       if (liveData.games[key]) {
         if (isSunday) {
           liveData.games[key].status = 'SUNDAY OFF';
@@ -620,6 +619,10 @@ export async function runPoller() {
           liveData.games[key].fr = 'xx';
           liveData.games[key].sr = 'xx';
           liveData.games[key].status = 'UPCOMING';
+          delete liveData.games[key].fr_verification;
+          delete liveData.games[key].sr_verification;
+          delete liveData.games[key].fr_sources;
+          delete liveData.games[key].sr_sources;
         }
       }
     }

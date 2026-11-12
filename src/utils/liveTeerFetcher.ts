@@ -20,10 +20,6 @@ export function getISTCurrentMinutes(d: Date = new Date()): number {
 // Strict time window validator to protect against stale upstream cache declaring rounds early
 export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date = new Date()): boolean {
   const cur = getISTCurrentMinutes(now);
-  // Early morning guard (12:00 AM - 7:00 AM): Day draws not running; night teer concluded
-  if (cur < 7 * 60) {
-    return gameKey === 'night';
-  }
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES: Record<string, { fr: number; sr: number }> = {
     juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM (Jowai timing)
@@ -33,6 +29,10 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
   };
   const limits = EARLIEST_MINUTES[gameKey];
   if (!limits) return true;
+  // Between midnight (00:00) and 2:00 AM IST, night draw from the previous evening may still be concluding
+  if (cur < 2 * 60 && gameKey === 'night') {
+    return true;
+  }
   return cur >= limits[round];
 }
 

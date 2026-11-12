@@ -64,12 +64,12 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   const currentISTHour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
 
-  // Morning rollover occurs only at 9:00 AM IST on shooting days (Monday to Saturday)
-  // This preserves Night Teer and yesterday's confirmed results through late-night & early-morning hours (11 PM - 8:59 AM)
+  // Rollover occurs after 2:00 AM IST on shooting days (Monday to Saturday)
+  // This preserves Night Teer and yesterday's confirmed results through late-night hours (11 PM - 1:59 AM)
   // On Sundays, archery is suspended; preserve Saturday's latest declared results
-  const isMorningRolloverTime = currentISTHour >= 9 && !isSunday;
+  const isRolloverTime = currentISTHour >= 2 && !isSunday;
 
-  if (result.date !== todayIST && isMorningRolloverTime) {
+  if (result.date !== todayIST && isRolloverTime) {
     const priorRecord = {
       date: result.date,
       shillong_fr: result.games.shillong?.fr || 'xx',
@@ -88,6 +88,10 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
         result.games[key].fr = 'xx';
         result.games[key].sr = 'xx';
         result.games[key].status = 'UPCOMING';
+        delete (result.games[key] as any).fr_verification;
+        delete (result.games[key] as any).sr_verification;
+        delete (result.games[key] as any).fr_sources;
+        delete (result.games[key] as any).sr_sources;
       }
     }
   } else {
@@ -103,13 +107,17 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   });
   const minsNow = currentISTHour * 60 + parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
   // Night draw takes place from 10:15 PM to 11:45 PM IST.
-  // From 10:00 PM (1320 mins) all through late-night and early morning until the 9:00 AM rollover (540 mins),
+  // In the late-night window between 10:00 PM (1320 mins) and 1:30 AM (90 mins),
   // Night Teer must be declared before short-circuiting.
-  const isNightTeerPeriod = minsNow >= (22 * 60) || minsNow < (9 * 60);
+  const isNightTeerPeriod = minsNow >= (22 * 60) || minsNow < 90;
   const nightDeclared = result.games.night?.fr !== 'xx' && result.games.night?.sr !== 'xx';
   const allCurrentGamesDeclared = isNightTeerPeriod ? (dayGamesDeclared && nightDeclared) : dayGamesDeclared;
 
-  if (allCurrentGamesDeclared && !forceRefresh && !isSunday) {
+  // Before the first draw window of the day (Juwai at 1:15 PM / 795 mins), all games are UPCOMING for today.
+  // Short-circuit immediately in <0.1ms to prevent unnecessary external network calls during early morning.
+  const isBeforeFirstDraw = minsNow >= (2 * 60) && minsNow < (13 * 60 + 15);
+
+  if ((allCurrentGamesDeclared || isBeforeFirstDraw) && !forceRefresh && !isSunday) {
     cachedData = result;
     lastFetchTime = now;
     return result;
