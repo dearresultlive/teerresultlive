@@ -144,7 +144,7 @@ export default function SingleGameLiveCard({
   const isSundayOff = isSunday && !isDeclared && !isFrDeclared;
 
   const isFrDrawing = checkIsDrawing(gameKey, 'fr', game.fr, currentISTMinutes, viewMode === 'today', isSunday);
-  const isSrDrawing = checkIsDrawing(gameKey, 'sr', game.sr, currentISTMinutes, viewMode === 'today', isSunday);
+  const isSrDrawing = checkIsDrawing(gameKey, 'sr', game.sr, currentISTMinutes, viewMode === 'today', isSunday, game.fr !== 'xx');
   const isAnyDrawing = (isFrDrawing || isSrDrawing) && viewMode === 'today' && !isSunday;
 
   const yestFr = yesterday ? (yesterday as any)[`${gameKey}_fr`] : null;

@@ -262,7 +262,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       const g = data.games[key];
       if (!g) return false;
       return checkIsDrawing(key, 'fr', g.fr, currentISTMinutes, viewMode === 'today', isSunday) ||
-             checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, viewMode === 'today', isSunday);
+             checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, viewMode === 'today', isSunday, g.fr !== 'xx');
     });
 
     const isAnyFastUpdate = games.some(({ key }) => {
@@ -477,7 +477,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   const g = displayedGames[key];
                   return g && (
                     checkIsDrawing(key, 'fr', g.fr, currentISTMinutes, true, isSunday) ||
-                    checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, true, isSunday)
+                    checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, true, isSunday, g.fr !== 'xx')
                   );
                 })
                   ? 'bg-rose-50 text-rose-700 border-rose-300 animate-pulse'
@@ -489,7 +489,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   const g = displayedGames[key];
                   return g && (
                     checkIsDrawing(key, 'fr', g.fr, currentISTMinutes, true, isSunday) ||
-                    checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, true, isSunday)
+                    checkIsDrawing(key, 'sr', g.sr, currentISTMinutes, true, isSunday, g.fr !== 'xx')
                   );
                 }) ? (
                   <>
@@ -612,7 +612,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           const isSundayOff = game.status === 'SUNDAY OFF' && !isDeclared && !isFrDeclared;
 
           const isFrDrawing = checkIsDrawing(key, 'fr', game.fr, currentISTMinutes, viewMode === 'today', isSunday);
-          const isSrDrawing = checkIsDrawing(key, 'sr', game.sr, currentISTMinutes, viewMode === 'today', isSunday);
+          const isSrDrawing = checkIsDrawing(key, 'sr', game.sr, currentISTMinutes, viewMode === 'today', isSunday, game.fr !== 'xx');
           const isAnyDrawing = (isFrDrawing || isSrDrawing) && viewMode === 'today' && !isSunday;
 
           return (
