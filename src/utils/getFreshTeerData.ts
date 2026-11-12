@@ -102,9 +102,12 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
     return g && g.fr !== 'xx' && g.sr !== 'xx';
   });
   const minsNow = currentISTHour * 60 + parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
-  const isNightWindow = minsNow >= (22 * 60) || minsNow <= 30;
+  // Night draw takes place from 10:15 PM to 11:45 PM IST.
+  // From 10:00 PM (1320 mins) all through late-night and early morning until the 9:00 AM rollover (540 mins),
+  // Night Teer must be declared before short-circuiting.
+  const isNightTeerPeriod = minsNow >= (22 * 60) || minsNow < (9 * 60);
   const nightDeclared = result.games.night?.fr !== 'xx' && result.games.night?.sr !== 'xx';
-  const allCurrentGamesDeclared = isNightWindow ? (dayGamesDeclared && nightDeclared) : dayGamesDeclared;
+  const allCurrentGamesDeclared = isNightTeerPeriod ? (dayGamesDeclared && nightDeclared) : dayGamesDeclared;
 
   if (allCurrentGamesDeclared && !forceRefresh && !isSunday) {
     cachedData = result;

@@ -49,7 +49,7 @@ jobs:
           git config --global user.email "support@teerresultlive.in"
           if [ -n "$(git status --porcelain src/data/)" ]; then
             git add src/data/
-            git commit -m "Auto-update Teer live numbers [skip ci]"
+            git commit -m "Auto-update Teer live numbers"
             for i in 1 2 3; do
               git pull --rebase -X ours origin main && git push origin main && break || sleep 2
             done
