@@ -39,7 +39,7 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
 
 export function cleanNumber(val: any): string {
   if (val === undefined || val === null) return 'xx';
-  const str = String(val).trim().toLowerCase();
+  const str = String(val).replace(/<[^>]+>/g, '').trim().toLowerCase();
   if (!str || str === '—' || str === '-' || str === '--' || str === '---' || str === 'xx' || str === '??' || str === 'null' || str === 'undefined' || str === 'nan') return 'xx';
   const match = str.match(/^(\d{1,2})$/);
   return match ? match[1].padStart(2, '0') : 'xx';
@@ -251,6 +251,99 @@ export async function fetchJuwaiMorningResultJson(): Promise<{ date: string; fr:
   return null;
 }
 
+// Source 4D: Dedicated ShillongTeerGrounds.in Feeder (Juwai Morning & Juwai Day)
+export async function fetchShillongTeerGrounds(): Promise<{
+  day?: { date: string | null; fr: string; sr: string } | null;
+  morning?: { date: string | null; fr: string; sr: string } | null;
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch('https://shillongteergrounds.in/juwai-teer-result-today/', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const tables = html.match(/<table[\s\S]*?<\/table>/gi) || [];
+
+    const parseTable = (tableHtml: string) => {
+      const rows = tableHtml.match(/<tr[\s\S]*?<\/tr>/gi) || [];
+      if (rows.length < 3) return null;
+      const dateMatch = rows[0].match(/(\d{1,2})[\.\/-](\d{1,2})[\.\/-](\d{2,4})/);
+      let date: string | null = null;
+      if (dateMatch) {
+        const day = dateMatch[1].padStart(2, '0');
+        const month = dateMatch[2].padStart(2, '0');
+        const year = dateMatch[3].length === 2 ? `20${dateMatch[3]}` : dateMatch[3];
+        date = `${year}-${month}-${day}`;
+      }
+      const cells = rows[2].match(/<td[\s\S]*?<\/td>/gi) || [];
+      if (cells.length < 2) return null;
+      return {
+        date,
+        fr: cleanNumber(cells[0]),
+        sr: cleanNumber(cells[1])
+      };
+    };
+
+    const day = tables[0] ? parseTable(tables[0]) : null;
+    const morning = tables[1] ? parseTable(tables[1]) : null;
+
+    return { day, morning };
+  } catch (err: any) {
+    // skip
+  }
+  return null;
+}
+
+// Source 4E: Dedicated GoodReturns.in Feeder (Juwai Morning & Juwai Day)
+export async function fetchGoodReturns(): Promise<{
+  day?: { date: string | null; fr: string; sr: string } | null;
+  morning?: { date: string | null; fr: string; sr: string } | null;
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch('https://www.goodreturns.in/juwai-teer-results.html', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const text = await res.text();
+
+    const parseEntry = (regex: RegExp) => {
+      const match = text.match(regex);
+      if (!match) return null;
+      const dateStr = match[1];
+      const dateObj = new Date(dateStr);
+      let date = '';
+      if (!isNaN(dateObj.getTime())) {
+        date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(dateObj);
+      }
+      return {
+        date,
+        fr: cleanNumber(match[2]),
+        sr: cleanNumber(match[3])
+      };
+    };
+
+    const morning = parseEntry(/Juwai\s+Morning\s+Teer\s*\(([^)]+)\):\s*FR\s*(\d{1,2}|xx),\s*SR\s*(\d{1,2}|xx)/i);
+    const day = parseEntry(/Juwai\s+Teer\s*\(([^)]+)\):\s*FR\s*(\d{1,2}|xx),\s*SR\s*(\d{1,2}|xx)/i);
+
+    return { morning, day };
+  } catch (err: any) {
+    // skip
+  }
+  return null;
+}
+
 
 // Source 5: Multi-Game Fallback Feed from teerresulttoday.org
 export async function fetchFromTeerResultToday(targetDate?: string): Promise<{
@@ -364,7 +457,7 @@ export async function fetchFromInstantTeerResults(): Promise<{
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 4000);
-    const res = await fetch('https://instantteerresults.in/results.json?_t=' + Date.now(), {
+    const res = await fetch('https://www.instantteerresults.in/results.json?_t=' + Date.now(), {
       signal: controller.signal,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -607,8 +700,9 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     fetchTeerTargetCom(targetDate),    // 8. TeerTarget.com (Tier 2)
     fetchFromGoogleAppsScript(),       // 9. Google Apps Script Proxy (Tier 2)
     fetchFromTeerResultsDotCom(targetDate), // 10. TeerResults.com Ultra-Fast Juwai/Multi-Game (Tier 2)
-    fetchJuwaiMorningDirect(),         // 11. JuwaiMorningTeer.com Official Direct Feed (Tier 1)
-    fetchJuwaiMorningResultJson()       // 12. JuwaiMorningResult.com Official JSON Feed (Tier 1)
+    fetchJuwaiMorningDirect(),         // 11. JuwaiMorningTeer.com Direct Feed (Tier 2)
+    fetchShillongTeerGrounds(),        // 12. ShillongTeerGrounds.in Feeder (Tier 1)
+    fetchGoodReturns()                 // 13. GoodReturns.in Feeder (Tier 1)
   ]);
 
   const [
@@ -624,7 +718,8 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     gasRes,
     teerResultsComRes,
     juwaiMorningRes,
-    juwaiMorningJsonRes
+    stgRes,
+    goodReturnsRes
   ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
@@ -730,14 +825,29 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
   }
 
-  // 12. JuwaiMorningTeer.com Official Direct Feed (Tier 1 Fast-Track)
+  // 12. JuwaiMorningTeer.com Direct Feed (Tier 2 Fallback)
   if (juwaiMorningRes && juwaiMorningRes.date === targetDate) {
-    addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningRes.fr, juwaiMorningRes.sr);
+    addReport('juwai_morning', 'juwaimorning_direct', 2, juwaiMorningRes.fr, juwaiMorningRes.sr);
   }
 
-  // 13. JuwaiMorningResult.com Official JSON Feed (Tier 1 Fast-Track)
-  if (juwaiMorningJsonRes && juwaiMorningJsonRes.date === targetDate) {
-    addReport('juwai_morning', 'juwaimorning_json', 1, juwaiMorningJsonRes.fr, juwaiMorningJsonRes.sr);
+  // 13. ShillongTeerGrounds.in Feeder (Tier 1 Authority for Juwai & Juwai Morning)
+  if (stgRes) {
+    if (stgRes.morning && stgRes.morning.date === targetDate) {
+      addReport('juwai_morning', 'shillongteergrounds', 1, stgRes.morning.fr, stgRes.morning.sr);
+    }
+    if (stgRes.day && stgRes.day.date === targetDate) {
+      addReport('juwai', 'shillongteergrounds', 1, stgRes.day.fr, stgRes.day.sr);
+    }
+  }
+
+  // 14. GoodReturns.in Feeder (Tier 1 Authority for Juwai & Juwai Morning)
+  if (goodReturnsRes) {
+    if (goodReturnsRes.morning && goodReturnsRes.morning.date === targetDate) {
+      addReport('juwai_morning', 'goodreturns', 1, goodReturnsRes.morning.fr, goodReturnsRes.morning.sr);
+    }
+    if (goodReturnsRes.day && goodReturnsRes.day.date === targetDate) {
+      addReport('juwai', 'goodreturns', 1, goodReturnsRes.day.fr, goodReturnsRes.day.sr);
+    }
   }
 
   return reports;

@@ -1,6 +1,6 @@
 {
   "date": "2026-11-12",
-  "updated_at": "2026-11-12T09:39:15.552Z",
+  "updated_at": "2026-11-12T10:02:44.002Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -95,8 +95,8 @@
       "status": "DECLARED",
       "fr_time": "10:30 AM",
       "sr_time": "11:30 AM",
-      "fr": "27",
-      "sr": "15",
+      "fr": "35",
+      "sr": "12",
       "common_numbers": {
         "direct": [
           "27",
@@ -118,13 +118,14 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "FAST_UPDATE",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
-        "juwaimorning_direct",
-        "juwaimorning_json"
+        "shillongteergrounds",
+        "goodreturns"
       ],
       "sr_sources": [
-        "juwaimorning_json"
+        "shillongteergrounds",
+        "goodreturns"
       ]
     },
     "night": {

@@ -116,17 +116,21 @@ export function checkIsDrawing(
 
   if (gameKey === 'night') {
     if (round === 'fr') {
-      return nowMin >= sched.frStart || nowMin < 1 * 60;
+      return nowMin >= sched.frStart && nowMin < sched.srStart;
     } else {
-      return nowMin >= sched.srStart || nowMin < 1 * 60 + 30;
+      return nowMin >= sched.srStart || nowMin <= 15;
     }
   }
 
-  // Daytime teer games (Juwai, Shillong, Khanapara)
+  // Daytime teer games (Juwai Morning, Juwai Day, Shillong, Khanapara)
+  // FR active window: from shooting start until SR begins or at most 35 mins
+  // SR active window: from shooting start until at most 40 mins
   if (round === 'fr') {
-    return nowMin >= sched.frStart && nowMin <= 18 * 60;
+    const frEnd = Math.min(sched.srStart, sched.frStart + 35);
+    return nowMin >= sched.frStart && nowMin <= frEnd;
   } else {
-    return nowMin >= sched.srStart && nowMin <= 18 * 60 + 30;
+    const srEnd = sched.srStart + 40;
+    return nowMin >= sched.srStart && nowMin <= srEnd;
   }
 }
 
