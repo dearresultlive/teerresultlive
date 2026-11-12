@@ -26,8 +26,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     return null;
   }, [data.date, data.yesterday]);
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
-  // Default to 'yesterday' before 9:00 AM IST (540 mins) so early visitors immediately see declared results;
-  // default to 'today' after 9:00 AM IST as focus shifts to upcoming live rounds.
+  // Default to 'yesterday' before 1:00 PM IST (13 * 60 = 780 mins) so morning visitors immediately see declared results;
+  // default to 'today' after 1:00 PM IST as focus shifts to upcoming live rounds (first draw at 1:45 PM).
   const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -38,7 +38,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         return 'today';
       }
     }
-    return getISTCurrentMinutes() < 9 * 60 ? 'yesterday' : 'today';
+    return getISTCurrentMinutes() < 13 * 60 ? 'yesterday' : 'today';
   });
   const [userHasManuallyToggled, setUserHasManuallyToggled] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -61,9 +61,9 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     }
   }, []);
 
-  // When time reaches 9:00 AM IST, auto-transition from yesterday to today if user hasn't manually clicked
+  // When time reaches 1:00 PM IST (13:00), auto-transition from yesterday to today if user hasn't manually clicked
   useEffect(() => {
-    if (!userHasManuallyToggled && currentISTMinutes >= 9 * 60 && viewMode === 'yesterday') {
+    if (!userHasManuallyToggled && currentISTMinutes >= 13 * 60 && viewMode === 'yesterday') {
       setViewMode('today');
     }
   }, [currentISTMinutes, userHasManuallyToggled, viewMode]);
