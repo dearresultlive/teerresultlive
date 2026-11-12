@@ -249,6 +249,31 @@ async function fetchJuwaiMorningDirect() {
   return null;
 }
 
+// Source 3C: Dedicated Juwai Morning Result JSON API (juwaimorningresult.com/index.json)
+async function fetchJuwaiMorningResultJson() {
+  try {
+    const res = await fetchWithTimeout('https://juwaimorningresult.com/index.json', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    }, 6000);
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.date) {
+      const parts = json.date.split('/');
+      const date = parts.length === 3 ? `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}` : '';
+      return {
+        date,
+        fr: cleanNumber(json.fr),
+        sr: cleanNumber(json.sr)
+      };
+    }
+  } catch (err) {
+    console.warn('[Juwai Morning JSON Poller] fetch failed:', err.message);
+  }
+  return null;
+}
+
 
 // Source 4: Multi-Game Fallback Feed from teerresulttoday.org
 async function fetchFromTeerResultToday(targetDate) {
@@ -550,7 +575,8 @@ export async function runPoller() {
     groundData,
     targetData,
     teerResultsComData,
-    juwaiMorningDirect
+    juwaiMorningDirect,
+    juwaiMorningJson
   ] = await Promise.all([
     fetchFromGoogleAppsScript(),
     fetchShillongCDN(),
@@ -563,7 +589,8 @@ export async function runPoller() {
     fetchTeerGroundCom(),
     fetchTeerTargetCom(liveData.date),
     fetchFromTeerResultsDotCom(liveData.date),
-    fetchJuwaiMorningDirect()
+    fetchJuwaiMorningDirect(),
+    fetchJuwaiMorningResultJson()
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -774,6 +801,11 @@ export async function runPoller() {
   // 12. JuwaiMorningTeer.com Official Direct Feed (Tier 1 Fast-Track)
   if (juwaiMorningDirect && juwaiMorningDirect.date === liveData.date) {
     addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningDirect.fr, juwaiMorningDirect.sr);
+  }
+
+  // 13. JuwaiMorningResult.com Official JSON Feed (Tier 1 Fast-Track)
+  if (juwaiMorningJson && juwaiMorningJson.date === liveData.date) {
+    addReport('juwai_morning', 'juwaimorning_json', 1, juwaiMorningJson.fr, juwaiMorningJson.sr);
   }
 
   for (const key of gameKeys) {

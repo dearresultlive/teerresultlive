@@ -222,6 +222,35 @@ export async function fetchJuwaiMorningDirect(): Promise<{ date: string; fr: str
   return null;
 }
 
+// Source 4C: Dedicated Juwai Morning Result JSON API (juwaimorningresult.com/index.json)
+export async function fetchJuwaiMorningResultJson(): Promise<{ date: string; fr: string; sr: string } | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch('https://juwaimorningresult.com/index.json', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.date) {
+      const parts = json.date.split('/');
+      const date = parts.length === 3 ? `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}` : '';
+      return {
+        date,
+        fr: cleanNumber(json.fr),
+        sr: cleanNumber(json.sr)
+      };
+    }
+  } catch (err: any) {
+    // skip
+  }
+  return null;
+}
+
 
 // Source 5: Multi-Game Fallback Feed from teerresulttoday.org
 export async function fetchFromTeerResultToday(targetDate?: string): Promise<{
@@ -578,7 +607,8 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     fetchTeerTargetCom(targetDate),    // 8. TeerTarget.com (Tier 2)
     fetchFromGoogleAppsScript(),       // 9. Google Apps Script Proxy (Tier 2)
     fetchFromTeerResultsDotCom(targetDate), // 10. TeerResults.com Ultra-Fast Juwai/Multi-Game (Tier 2)
-    fetchJuwaiMorningDirect()          // 11. JuwaiMorningTeer.com Official Direct Feed (Tier 1)
+    fetchJuwaiMorningDirect(),         // 11. JuwaiMorningTeer.com Official Direct Feed (Tier 1)
+    fetchJuwaiMorningResultJson()       // 12. JuwaiMorningResult.com Official JSON Feed (Tier 1)
   ]);
 
   const [
@@ -593,7 +623,8 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     targetRes,
     gasRes,
     teerResultsComRes,
-    juwaiMorningRes
+    juwaiMorningRes,
+    juwaiMorningJsonRes
   ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
 
   const todayIST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
@@ -702,6 +733,11 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
   // 12. JuwaiMorningTeer.com Official Direct Feed (Tier 1 Fast-Track)
   if (juwaiMorningRes && juwaiMorningRes.date === targetDate) {
     addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningRes.fr, juwaiMorningRes.sr);
+  }
+
+  // 13. JuwaiMorningResult.com Official JSON Feed (Tier 1 Fast-Track)
+  if (juwaiMorningJsonRes && juwaiMorningJsonRes.date === targetDate) {
+    addReport('juwai_morning', 'juwaimorning_json', 1, juwaiMorningJsonRes.fr, juwaiMorningJsonRes.sr);
   }
 
   return reports;
