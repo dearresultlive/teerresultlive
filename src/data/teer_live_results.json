@@ -1,15 +1,15 @@
 {
-  "date": "2026-11-12",
-  "updated_at": "2026-11-12T16:50:27.009Z",
+  "date": "2026-11-13",
+  "updated_at": "2026-11-12T21:29:58.365Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "63",
-      "sr": "96",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "03",
@@ -29,34 +29,16 @@
           8,
           2
         ]
-      },
-      "fr_verification": "VERIFIED",
-      "sr_verification": "VERIFIED",
-      "fr_sources": [
-        "instantteer_api",
-        "polo_ground_cdn",
-        "teerresulttoday",
-        "teerresult_agg",
-        "teertarget_com",
-        "gas_datacenter"
-      ],
-      "sr_sources": [
-        "instantteer_api",
-        "polo_ground_cdn",
-        "teerresulttoday",
-        "teerresult_agg",
-        "teertarget_com",
-        "gas_datacenter"
-      ]
+      }
     },
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "37",
-      "sr": "35",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "31",
@@ -76,29 +58,16 @@
           4,
           6
         ]
-      },
-      "fr_verification": "VERIFIED",
-      "sr_verification": "VERIFIED",
-      "fr_sources": [
-        "instantteer_api",
-        "teerresult_agg",
-        "khanaparateer_org",
-        "gas_datacenter"
-      ],
-      "sr_sources": [
-        "instantteer_api",
-        "teerresult_agg",
-        "gas_datacenter"
-      ]
+      }
     },
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
-      "fr": "23",
-      "sr": "53",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "40",
@@ -118,30 +87,16 @@
           2,
           7
         ]
-      },
-      "fr_verification": "VERIFIED",
-      "sr_verification": "VERIFIED",
-      "fr_sources": [
-        "instantteer_api",
-        "teerresult_agg",
-        "gas_datacenter",
-        "teerresults_com"
-      ],
-      "sr_sources": [
-        "instantteer_api",
-        "teerresult_agg",
-        "gas_datacenter",
-        "teerresults_com"
-      ]
+      }
     },
     "juwai_morning": {
       "name": "Juwai Morning Teer",
       "location": "Jowai Archery Ground",
-      "status": "DECLARED",
+      "status": "UPCOMING",
       "fr_time": "10:30 AM",
       "sr_time": "11:30 AM",
-      "fr": "35",
-      "sr": "12",
+      "fr": "xx",
+      "sr": "xx",
       "common_numbers": {
         "direct": [
           "27",
@@ -161,23 +116,15 @@
           1,
           8
         ]
-      },
-      "fr_verification": "FAST_UPDATE",
-      "sr_verification": "FAST_UPDATE",
-      "fr_sources": [
-        "goodreturns"
-      ],
-      "sr_sources": [
-        "goodreturns"
-      ]
+      }
     },
     "night": {
       "name": "Shillong Night Teer",
       "location": "Shillong Club Night Archery Ground",
-      "status": "FR DECLARED",
+      "status": "UPCOMING",
       "fr_time": "10:30 PM",
       "sr_time": "11:30 PM",
-      "fr": "44",
+      "fr": "xx",
       "sr": "xx",
       "common_numbers": {
         "direct": [
@@ -198,13 +145,7 @@
           5,
           9
         ]
-      },
-      "fr_verification": "FAST_UPDATE",
-      "sr_verification": "UNVERIFIED",
-      "fr_sources": [
-        "instantteer_api"
-      ],
-      "sr_sources": []
+      }
     }
   }
 }
