@@ -208,7 +208,7 @@ async function fetchNightTeerDirect() {
     if (dateMatch) {
       date = dateMatch[3] + '-' + dateMatch[2].padStart(2, '0') + '-' + dateMatch[1].padStart(2, '0');
     }
-    const rowMatch = text.match(/<tr style="[^"]*background-color:\s*cream[^"]*">\s*<td align="center">([\s\S]*?)<\/td>\s*<td align="center">([\s\S]*?)<\/td>/i);
+    const rowMatch = text.match(/<tr[^>]*background-color:\s*cream[^>]*>[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>/i);
     if (date && rowMatch) {
       const fr = cleanNumber(rowMatch[1].replace(/<[^>]+>/g, '').trim());
       const sr = cleanNumber(rowMatch[2].replace(/<[^>]+>/g, '').trim());
@@ -460,7 +460,7 @@ async function fetchFromTeerResultsDotCom(targetDate) {
       if (/Juwai\s*Teer/i.test(tableHtml)) gameKey = 'juwai';
       else if (/Shillong\s*Teer/i.test(tableHtml)) gameKey = 'shillong';
       else if (/Khanapara\s*Teer/i.test(tableHtml)) gameKey = 'khanapara';
-      else if (/Night\s*Teer/i.test(tableHtml)) gameKey = 'night';
+      // Note: Do NOT match teerresults.com 'Night Teer Result' because it is an 8:15 PM Bodoland game, not Shillong Night!
 
       if (!gameKey) continue;
 
@@ -528,13 +528,13 @@ export async function runPoller() {
     fetchShillongCDN(),
     fetchAggregatorData(),
     fetchNightTeerDirect(),
-    fetchFromTeerResultToday(todayIST),
+    fetchFromTeerResultToday(liveData.date),
     fetchKhanaparaOrg(),
     fetchFromInstantTeerResults(),
-    fetchTeerResultsNet(todayIST),
+    fetchTeerResultsNet(liveData.date),
     fetchTeerGroundCom(),
-    fetchTeerTargetCom(todayIST),
-    fetchFromTeerResultsDotCom(todayIST)
+    fetchTeerTargetCom(liveData.date),
+    fetchFromTeerResultsDotCom(liveData.date)
   ]);
 
   // 2. Day rollover check: Archive yesterday and reset for today
@@ -730,12 +730,11 @@ export async function runPoller() {
     }
   }
 
-  // 11. TeerResults.com Ultra-Fast Trusted VIP Feed (Juwai, Shillong, Khanapara, Night) - Tier 1 Fast-Track
+  // 11. TeerResults.com Ultra-Fast Trusted VIP Feed (Juwai, Shillong, Khanapara) - Tier 1 Fast-Track
   if (teerResultsComData) {
     if (teerResultsComData.juwai) addReport('juwai', 'teerresults_com', 1, teerResultsComData.juwai.fr, teerResultsComData.juwai.sr);
     if (teerResultsComData.shillong) addReport('shillong', 'teerresults_com', 1, teerResultsComData.shillong.fr, teerResultsComData.shillong.sr);
     if (teerResultsComData.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComData.khanapara.fr, teerResultsComData.khanapara.sr);
-    if (teerResultsComData.night) addReport('night', 'teerresults_com', 1, teerResultsComData.night.fr, teerResultsComData.night.sr);
   }
 
   for (const key of gameKeys) {

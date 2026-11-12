@@ -177,12 +177,12 @@ export async function fetchNightTeerDirect(): Promise<{ date: string; fr: string
     if (dateMatch) {
       date = dateMatch[3] + '-' + dateMatch[2].padStart(2, '0') + '-' + dateMatch[1].padStart(2, '0');
     }
-    const rowMatch = text.match(/<tr style="[^"]*background-color:\s*cream[^"]*">\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>\s*<td align="center">\s*(\d{1,2}|xx|\?\?)\s*<\/td>/i);
+    const rowMatch = text.match(/<tr[^>]*background-color:\s*cream[^>]*>[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>/i);
     if (date && rowMatch) {
       return {
         date,
-        fr: cleanNumber(rowMatch[1]),
-        sr: cleanNumber(rowMatch[2])
+        fr: cleanNumber(rowMatch[1].replace(/<[^>]+>/g, '').trim()),
+        sr: cleanNumber(rowMatch[2].replace(/<[^>]+>/g, '').trim())
       };
     }
   } catch (err: any) {
@@ -498,7 +498,7 @@ export async function fetchFromTeerResultsDotCom(targetDate?: string): Promise<{
       if (/Juwai\s*Teer/i.test(tableHtml)) gameKey = 'juwai';
       else if (/Shillong\s*Teer/i.test(tableHtml)) gameKey = 'shillong';
       else if (/Khanapara\s*Teer/i.test(tableHtml)) gameKey = 'khanapara';
-      else if (/Night\s*Teer/i.test(tableHtml)) gameKey = 'night';
+      // Note: Do NOT match teerresults.com 'Night Teer Result' because it is an 8:15 PM Bodoland game, not Shillong Night!
 
       if (!gameKey) continue;
 
@@ -658,12 +658,11 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
   }
 
   
-  // 11. TeerResults.com Ultra-Fast Trusted VIP Feed (Juwai, Shillong, Khanapara, Night) - Tier 1 Fast-Track
+  // 11. TeerResults.com Ultra-Fast Trusted VIP Feed (Juwai, Shillong, Khanapara) - Tier 1 Fast-Track
   if (teerResultsComRes) {
     if (teerResultsComRes.juwai) addReport('juwai', 'teerresults_com', 1, teerResultsComRes.juwai.fr, teerResultsComRes.juwai.sr);
     if (teerResultsComRes.shillong) addReport('shillong', 'teerresults_com', 1, teerResultsComRes.shillong.fr, teerResultsComRes.shillong.sr);
     if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
-    if (teerResultsComRes.night) addReport('night', 'teerresults_com', 1, teerResultsComRes.night.fr, teerResultsComRes.night.sr);
   }
 
   return reports;
