@@ -1,6 +1,6 @@
 {
   "date": "2026-11-12",
-  "updated_at": "2026-11-12T10:47:26.043Z",
+  "updated_at": "2026-11-12T11:00:27.420Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -151,14 +151,12 @@
           8
         ]
       },
-      "fr_verification": "VERIFIED",
-      "sr_verification": "VERIFIED",
+      "fr_verification": "FAST_UPDATE",
+      "sr_verification": "FAST_UPDATE",
       "fr_sources": [
-        "shillongteergrounds",
         "goodreturns"
       ],
       "sr_sources": [
-        "shillongteergrounds",
         "goodreturns"
       ]
     },
