@@ -1,6 +1,6 @@
 {
   "date": "2026-11-13",
-  "updated_at": "2026-11-12T21:29:58.365Z",
+  "updated_at": "2026-11-13T05:53:41.464Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -116,7 +116,11 @@
           1,
           8
         ]
-      }
+      },
+      "fr_verification": "UNVERIFIED",
+      "fr_sources": [
+        "juwaimorning_direct"
+      ]
     },
     "night": {
       "name": "Shillong Night Teer",
