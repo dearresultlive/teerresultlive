@@ -8,7 +8,16 @@ import TeerPrizeCalculator from '../components/TeerPrizeCalculator';
 import DreamNumberSearch from '../components/DreamNumberSearch';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import LoanBannerCard from '../components/LoanBannerCard.astro';
-import { getFreshTeerData } from '../utils/getFreshTeerData';
+import { getFreshTeerData, isArcheryShootingHour } from '../utils/getFreshTeerData';
+
+const isLiveWindow = isArcheryShootingHour();
+if (isLiveWindow) {
+  // During live draw windows: edge micro-cache for 2s (protects Cloudflare from traffic bursts),
+  // but forces browser to revalidate immediately (max-age=0) so visitor never sees stale arrows.
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=2, must-revalidate');
+} else {
+  Astro.response.headers.set('Cache-Control', 'public, max-age=5, s-maxage=15, stale-while-revalidate=30');
+}
 
 const liveData = await getFreshTeerData();
 
@@ -33,7 +42,7 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 
     <!-- 1. Real-Time Zero-Refresh Teer Live Results Board -->
     <section id="live-results">
-      <TeerLiveBoard client:idle initialData={liveData} />
+      <TeerLiveBoard client:load initialData={liveData} />
     </section>
 
     <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->

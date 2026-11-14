@@ -47,7 +47,7 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   const ttl = forceRefresh ? 2000 : (isLiveWindow ? 4000 : 15000);
 
   // 1. Fast in-memory edge cache return (< 0.1ms)
-  if (cachedData && (now - lastFetchTime < ttl)) {
+  if (!forceRefresh && cachedData && (now - lastFetchTime < ttl)) {
     return cachedData;
   }
 
@@ -130,7 +130,7 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   // 3. Fast multi-source consensus evaluation across top 10 fleet with 1500ms timeout
   try {
     const fetchPromise = collectAllSourceReports(result.date, result.yesterday);
-    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1800));
     const allReports = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (allReports) {

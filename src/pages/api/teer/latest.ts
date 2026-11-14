@@ -29,8 +29,8 @@ export const GET: APIRoute = async ({ request }) => {
   const cacheHeader = isForceRefresh
     ? 'no-store, no-cache, must-revalidate, max-age=0'
     : (isActivelyDrawing
-      ? 'public, max-age=2, s-maxage=3, stale-while-revalidate=5'
-      : 'public, max-age=15, s-maxage=30, stale-while-revalidate=60');
+      ? 'public, max-age=0, s-maxage=2, must-revalidate'
+      : 'public, max-age=10, s-maxage=20, stale-while-revalidate=30');
 
   return new Response(JSON.stringify(data), {
     status: 200,

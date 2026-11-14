@@ -162,11 +162,11 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     }
   }, [data.date, isSunday]);
 
-  const fetchLatest = async (isManual = false) => {
+  const fetchLatest = async (isManual = false, forceServerRefresh = false) => {
     setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      const url = `/api/teer/latest?refresh=${isManual ? '1' : '0'}&_t=${Date.now()}`;
+      const url = `/api/teer/latest?refresh=${(isManual || forceServerRefresh) ? '1' : '0'}&_t=${Date.now()}`;
       const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const fresh: TeerData = await res.json();
@@ -244,7 +244,17 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
       }
     } catch (e) {}
 
-    fetchLatest(false);
+    // If initial SSR data rendered 'xx' for an active drawing game, immediately bypass cache
+    // so any newly declared number displays without requiring manual user refresh.
+    const isAnyPendingActive = ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'].some((k) => {
+      const g = initialData.games[k];
+      return g && (
+        checkIsDrawing(k, 'fr', g.fr, currentISTMinutes, viewMode === 'today', isSunday) ||
+        checkIsDrawing(k, 'sr', g.sr, currentISTMinutes, viewMode === 'today', isSunday, g.fr !== 'xx')
+      );
+    });
+
+    fetchLatest(false, isAnyPendingActive);
   }, []);
 
   // 2. Intelligent Zero-Refresh Live Poller

@@ -3,9 +3,8 @@
  * Ensures offline shell caching and fast response times
  */
 
-const CACHE_NAME = 'teer-cache-v1';
+const CACHE_NAME = 'teer-cache-v2';
 const STATIC_ASSETS = [
-  '/',
   '/manifest.json',
   '/favicon.svg',
   '/icon-192.png',
@@ -50,7 +49,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 1. Static Assets (_astro, icons, fonts): Cache-first
+  // 1. Live Teer API requests: strictly network only with no-store (never cached)
+  if (url.pathname.startsWith('/api/teer/')) {
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    return;
+  }
+
+  // 2. Static Assets (_astro, icons, fonts): Cache-first
   if (url.pathname.startsWith('/_astro/') || url.pathname.endsWith('.png') || url.pathname.endsWith('.svg') || url.pathname.endsWith('.woff2')) {
     event.respondWith(
       caches.match(event.request).then((cached) => {
