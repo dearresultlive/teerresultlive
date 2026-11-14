@@ -45,7 +45,7 @@ const websiteSchema = {
 
 // Determine page category for contextual schemas
 const isSportsPage = ['/', '/shillong-teer', '/khanapara-teer', '/juwai-teer', '/juwai-morning-teer', '/shillong-night-teer'].includes(cleanPath);
-const isNewsArticle = isSportsPage || ['/previous-results', '/dream-numbers'].includes(cleanPath);
+const isNewsArticle = isSportsPage || cleanPath === '/previous-results';
 const isAboutPage = cleanPath === '/about';
 const isContactPage = cleanPath === '/contact';
 
