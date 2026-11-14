@@ -1,15 +1,15 @@
 {
   "date": "2026-11-14",
-  "updated_at": "2026-11-14T10:43:02.187Z",
+  "updated_at": "2026-11-14T11:58:09.632Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
       "fr": "82",
-      "sr": "xx",
+      "sr": "12",
       "common_numbers": {
         "direct": [
           "03",
@@ -31,24 +31,32 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "UNVERIFIED",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
         "instantteer_api",
         "polo_ground_cdn",
         "teerresulttoday",
         "teerresult_agg",
+        "teertarget_com",
         "gas_datacenter"
       ],
-      "sr_sources": []
+      "sr_sources": [
+        "instantteer_api",
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "teertarget_com",
+        "gas_datacenter"
+      ]
     },
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
       "fr": "23",
-      "sr": "xx",
+      "sr": "26",
       "common_numbers": {
         "direct": [
           "31",
@@ -70,13 +78,18 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "UNVERIFIED",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
         "instantteer_api",
         "teerresult_agg",
+        "khanaparateer_org",
         "gas_datacenter"
       ],
-      "sr_sources": []
+      "sr_sources": [
+        "instantteer_api",
+        "teerresult_agg",
+        "gas_datacenter"
+      ]
     },
     "juwai": {
       "name": "Juwai Teer",
