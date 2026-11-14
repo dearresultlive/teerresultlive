@@ -25,8 +25,8 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
 ---
 
 <Layout
-  title={`Teer Result Today Live • Shillong, Khanapara Result (${todayDateStr}) | Welcome Teer`}
-  description={`Fastest 0-second Teer Result Today Live (${todayDateStr}) for Shillong (3:45 PM & 4:45 PM), Khanapara Guwahati (4:00 PM & 4:30 PM), Juwai & Night Teer. Verified FR/SR hit numbers, house ending & dream numbers.`}
+  title="Teer Result Today Live • Shillong, Khanapara Result | Welcome Teer"
+  description="Fastest official Teer Result Today Live for Shillong (3:45 PM & 4:45 PM), Khanapara Guwahati (4:00 PM & 4:30 PM), Juwai & Night Teer. Verified FR/SR hit numbers, house ending & dream numbers."
 >
   <div class="space-y-6">
 
@@ -43,11 +43,6 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
     <!-- 1. Real-Time Zero-Refresh Teer Live Results Board -->
     <section id="live-results">
       <TeerLiveBoard client:load initialData={liveData} />
-    </section>
-
-    <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->
-    <section id="instant-loan" aria-label="Personal Loan Assistance">
-      <LoanBannerCard />
     </section>
 
     <!-- Cross-Game & Dream Number Quick Navigation Hub -->
@@ -254,6 +249,11 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
           </details>
         </div>
       </div>
+    </section>
+
+    <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->
+    <section id="instant-loan" aria-label="Personal Loan Assistance">
+      <LoanBannerCard />
     </section>
   </div>
 </Layout>

@@ -14,33 +14,33 @@ interface CommonData {
 
 const DEFAULT_TARGETS: Record<string, { title: string; color: string; badge: string; common: CommonData }> = {
   shillong: {
-    title: 'Shillong Teer Targets',
+    title: 'Shillong Teer Common Numbers & House Ending',
     color: 'amber',
-    badge: 'Polo Ground Formula',
+    badge: 'Polo Ground Formula Targets',
     common: { direct: ['03', '58', '72', '27', '85', '30'], house: [0, 5, 7], ending: [3, 8, 2] }
   },
   khanapara: {
-    title: 'Khanapara Teer Targets',
+    title: 'Khanapara Teer Common Numbers & Hit Numbers',
     color: 'emerald',
-    badge: 'Assam Border Formula',
+    badge: 'Assam Border Formula Targets',
     common: { direct: ['31', '84', '96', '49', '13', '68'], house: [3, 8, 9], ending: [1, 4, 6] }
   },
   juwai: {
-    title: 'Juwai Teer Targets',
+    title: 'Juwai Teer Common Numbers & House Ending',
     color: 'blue',
-    badge: 'West Jaintia Formula',
+    badge: 'West Jaintia Formula Targets',
     common: { direct: ['40', '92', '57', '05', '29', '74'], house: [4, 9, 5], ending: [0, 2, 7] }
   },
   juwai_morning: {
-    title: 'Juwai Morning Targets',
+    title: 'Juwai Morning Teer Common Numbers',
     color: 'teal',
-    badge: 'Morning Archery Formula',
+    badge: 'Morning Archery Targets',
     common: { direct: ['27', '41', '68', '19', '53', '80'], house: [2, 4, 6], ending: [7, 1, 8] }
   },
   night: {
-    title: 'Night Teer Targets',
+    title: 'Shillong Night Teer Common Numbers & Hit Numbers',
     color: 'purple',
-    badge: 'Night Archery Formula',
+    badge: 'Night Archery Formula Targets',
     common: { direct: ['21', '45', '89', '12', '54', '98'], house: [2, 4, 8], ending: [1, 5, 9] }
   }
 };
@@ -83,12 +83,12 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
             <span>🎯</span>
             <span>
               {isSinglePage
-                ? `${DEFAULT_TARGETS[filterGame]?.title || 'Teer'} Today`
-                : "Today's Teer Common Numbers"}
+                ? `${DEFAULT_TARGETS[filterGame]?.title || 'Teer Common Numbers'} Today`
+                : "Shillong & Khanapara Teer Common Numbers Today"}
             </span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Mathematical target numbers derived from previous hit formula (Direct, House, Ending).
+            Daily verified Teer Common Numbers, Hit Numbers, House and Ending targets derived from official formulas.
           </p>
         </div>
 

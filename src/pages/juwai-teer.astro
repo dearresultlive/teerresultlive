@@ -19,8 +19,8 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
 ---
 
 <Layout
-  title={`Juwai Teer Result Today Live • ${todayDateStr} | Teer Live`}
-  description={`Fastest Juwai Teer results today live (${todayDateStr}) for 1st Round (1:45 PM) and 2nd Round (2:30 PM) direct from West Jaintia Hills, Meghalaya.`}
+  title="Juwai Teer Result Today Live • 1st & 2nd Round Hits | West Jaintia"
+  description="Fastest Juwai Teer results today live for 1st Round (1:45 PM) and 2nd Round (2:30 PM) direct from West Jaintia Hills, Meghalaya. Common numbers and past results."
 >
   <div class="space-y-6">
     <Breadcrumbs items={[{ name: 'Juwai Teer' }]} />
@@ -46,11 +46,6 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
         themeColor="blue"
       />
     </header>
-
-    <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->
-    <section id="instant-loan" aria-label="Personal Loan Assistance">
-      <LoanBannerCard />
-    </section>
 
     <QuickSwitch currentGame="juwai" />
 
@@ -175,6 +170,11 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           </details>
         </div>
       </div>
+    </section>
+
+    <!-- Sponsored Personal Loan Assistance (100% SEO-Safe, 0ms JS Overhead) -->
+    <section id="instant-loan" aria-label="Personal Loan Assistance">
+      <LoanBannerCard />
     </section>
   </div>
 </Layout>
