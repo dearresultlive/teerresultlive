@@ -62,10 +62,10 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
   // Earliest allowable draw times in IST (matches official grounds with 5-min buffer)
   const EARLIEST_MINUTES = {
     juwai_morning: { fr: 10 * 60 + 20, sr: 11 * 60 + 20 }, // 10:20 AM / 11:20 AM
-    juwai: { fr: 13 * 60 + 15, sr: 14 * 60 + 0 },    // 1:35 PM / 2:20 PM
-    shillong: { fr: 15 * 60 + 30, sr: 16 * 60 + 30 }, // 3:30 PM / 4:30 PM
-    khanapara: { fr: 15 * 60 + 45, sr: 16 * 60 + 15 },// 3:45 PM / 4:15 PM
-    night: { fr: 22 * 60 + 15, sr: 23 * 60 + 15 }     // 10:15 PM / 11:15 PM
+    juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },         // 1:35 PM / 2:20 PM (Draw at 1:45 PM / 2:30 PM)
+    shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 },      // 3:40 PM / 4:40 PM (Polo Ground draw at 3:48 PM / 4:48 PM)
+    khanapara: { fr: 16 * 60 + 0, sr: 16 * 60 + 28 },       // 4:00 PM / 4:28 PM (Khanapara archery ends at 4:00 PM / 4:30 PM)
+    night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }          // 10:20 PM / 11:20 PM (Night Archery draw at 10:30 PM / 11:30 PM)
   };
   const limits = EARLIEST_MINUTES[gameKey];
   if (!limits) return true;
@@ -907,12 +907,18 @@ export async function runPoller() {
     }
   }
 
+  const shillongFR = liveData.games?.shillong?.fr;
+  const shillongSR = liveData.games?.shillong?.sr;
+
   for (const key of gameKeys) {
     const game = liveData.games[key];
     if (!game) continue;
 
-    const cFR = resolveRoundConsensus(key, 'fr', game.fr, allReports[key]);
-    const cSR = resolveRoundConsensus(key, 'sr', game.sr, allReports[key]);
+    const suspiciousEchosFR = (key === 'khanapara' && shillongFR && shillongFR !== 'xx') ? [shillongFR] : [];
+    const suspiciousEchosSR = (key === 'khanapara' && shillongSR && shillongSR !== 'xx') ? [shillongSR] : [];
+
+    const cFR = resolveRoundConsensus(key, 'fr', game.fr, allReports[key], suspiciousEchosFR);
+    const cSR = resolveRoundConsensus(key, 'sr', game.sr, allReports[key], suspiciousEchosSR);
 
     let targetFR = cFR.declaredNumber;
     let targetSR = cSR.declaredNumber;

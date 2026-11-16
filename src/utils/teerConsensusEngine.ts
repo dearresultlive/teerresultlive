@@ -46,7 +46,8 @@ export function resolveRoundConsensus(
   gameKey: string,
   round: 'fr' | 'sr',
   currentVal: string,
-  reports: SourceReport[]
+  reports: SourceReport[],
+  suspiciousEchos: string[] = []
 ): RoundConsensusResult {
   const voteMap: Record<string, { count: number; sources: string[]; hasTier1: boolean }> = {};
 
@@ -109,6 +110,16 @@ export function resolveRoundConsensus(
 
   // Case 1: Nothing declared yet for today's round
   if (!currentVal || currentVal === 'xx') {
+    // Cross-game echo guard: If candidate matches another game's result that just declared (e.g. Khanapara echoing Shillong)
+    const isSuspiciousEcho = suspiciousEchos.includes(topCandidate);
+    if (isSuspiciousEcho) {
+      // Must have official Tier-1 feed OR >= 3 independent sources to be declared
+      const isQuorumMet = voteMap[topCandidate].hasTier1 || topSources.length >= 3;
+      if (!isQuorumMet) {
+        return buildResult('xx', topVotes, topSources, 'WAITING_FOR_2ND_SOURCE');
+      }
+    }
+
     // Requires at least 2 votes (either 2 Tier 2 scrapers OR 1 Tier 1 direct API)
     if (topVotes >= 2) {
       return buildResult(topCandidate, topVotes, topSources, 'CONSENSUS_REACHED');
@@ -153,14 +164,21 @@ export function evaluateMultiSourceConsensus(
 ): Record<string, GameConsensusResult> {
   const result: Record<string, GameConsensusResult> = {};
 
+  const shillongFR = currentGames.shillong?.fr;
+  const shillongSR = currentGames.shillong?.sr;
+
   for (const gameKey of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
     const curFR = currentGames[gameKey]?.fr || 'xx';
     const curSR = currentGames[gameKey]?.sr || 'xx';
     const reps = allReports[gameKey] || [];
 
+    // Khanapara draws right after Shillong. Guard against 3rd-party aggregators mistakenly echoing Shillong results into Khanapara
+    const suspiciousEchosFR = (gameKey === 'khanapara' && shillongFR && shillongFR !== 'xx') ? [shillongFR] : [];
+    const suspiciousEchosSR = (gameKey === 'khanapara' && shillongSR && shillongSR !== 'xx') ? [shillongSR] : [];
+
     result[gameKey] = {
-      fr: resolveRoundConsensus(gameKey, 'fr', curFR, reps),
-      sr: resolveRoundConsensus(gameKey, 'sr', curSR, reps)
+      fr: resolveRoundConsensus(gameKey, 'fr', curFR, reps, suspiciousEchosFR),
+      sr: resolveRoundConsensus(gameKey, 'sr', curSR, reps, suspiciousEchosSR)
     };
   }
 
