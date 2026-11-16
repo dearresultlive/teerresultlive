@@ -43,10 +43,12 @@ jobs:
             echo "TELEGRAM_BOT_TOKEN is configured."
           fi
 
-      - name: Run Teer Poller & Telegram Broadcaster
+      - name: Run Teer Poller, Telegram & Facebook Broadcaster
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID || '@teerresultlive_in' }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID || '1386286871244175' }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN || 'EAAZCIOwzqo1cBTJMXTe6IaSsEdYVRjR2bao6OpenrTZA8j5mH0zBOtc9zFoVEVf8uNgijbrcyKwEVuksGZBhZCZA7iV52nncriuZCZA4oTsIFDkmGQeFRfNhpnRHKhWmbc6MCFZAyRDS7vjs0Ixc5V9GR6aalkMAklCZAJVBdxzdIhOBSDZCLt2RxZCgTuDA9sTZCuPYzhG5QD9UrymH2peqXgs5kO9mvMs7Ta2KKIgljtZB8LIhI9g0wJIUGfXAN' }}
         run: npm run poll
 
       - name: Commit & Push If Changed
