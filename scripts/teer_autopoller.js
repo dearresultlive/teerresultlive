@@ -15,6 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dns from 'node:dns';
 import { broadcastTeerResult } from './telegram_bot.js';
+import { broadcastFacebookTeerResult } from './facebook_publisher.js';
 import { resolveRoundConsensus, evaluateMultiSourceConsensus } from '../src/utils/teerConsensusEngine.js';
 
 // Force IPv4 first to avoid IPv6 connect timeouts on Node 18+
@@ -985,6 +986,20 @@ export async function runPoller() {
         } catch (e) {
           console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
         }
+        try {
+          await broadcastFacebookTeerResult({
+            gameKey: key,
+            gameName: game.name,
+            date: liveData.date || todayIST,
+            fr: targetFR,
+            sr: targetSR,
+            frTime: game.fr_time,
+            srTime: game.sr_time,
+            roundType: targetFR !== 'xx' ? 'FULL' : 'SR_ONLY'
+          });
+        } catch (e) {
+          console.warn(`[Facebook] Broadcast failed for ${key}: ${e.message}`);
+        }
       } else if (frJustDeclared) {
         try {
           await broadcastTeerResult({
@@ -999,6 +1014,20 @@ export async function runPoller() {
           });
         } catch (e) {
           console.warn(`[Telegram] Broadcast failed for ${key}: ${e.message}`);
+        }
+        try {
+          await broadcastFacebookTeerResult({
+            gameKey: key,
+            gameName: game.name,
+            date: liveData.date || todayIST,
+            fr: targetFR,
+            sr: targetSR,
+            frTime: game.fr_time,
+            srTime: game.sr_time,
+            roundType: 'FR_ONLY'
+          });
+        } catch (e) {
+          console.warn(`[Facebook] Broadcast failed for ${key}: ${e.message}`);
         }
       }
     } else {
