@@ -14,7 +14,37 @@ import {
 } from '../utils/teerShared';
 
 export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
-  const [data, setData] = useState<TeerData>(initialData);
+  const [data, setData] = useState<TeerData>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('teer_latest_live_cache');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.date === initialData.date && parsed.games) {
+            const merged = JSON.parse(JSON.stringify(initialData));
+            for (const k of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
+              const initG = merged.games[k];
+              const cacheG = parsed.games[k];
+              if (initG && cacheG) {
+                if (initG.fr === 'xx' && cacheG.fr && cacheG.fr !== 'xx') {
+                  initG.fr = cacheG.fr;
+                  initG.fr_verification = cacheG.fr_verification;
+                  initG.fr_sources = cacheG.fr_sources;
+                }
+                if (initG.sr === 'xx' && cacheG.sr && cacheG.sr !== 'xx') {
+                  initG.sr = cacheG.sr;
+                  initG.sr_verification = cacheG.sr_verification;
+                  initG.sr_sources = cacheG.sr_sources;
+                }
+              }
+            }
+            return merged;
+          }
+        }
+      } catch (e) {}
+    }
+    return initialData;
+  });
   const yesterday = useMemo(() => {
     if (data.yesterday && data.yesterday.date !== data.date) {
       return data.yesterday;
@@ -183,6 +213,18 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   } else if (oldG.sr !== 'xx' && newG.sr !== 'xx' && oldG.sr !== newG.sr) {
                     setRevisionNotice(`Official Update: ${gameTitle} 2nd Round revised from ${oldG.sr} to ${newG.sr}`);
                   }
+
+                  // IMMUTABILITY RULE: Never downgrade an already declared result back to 'xx'
+                  if (oldG.fr !== 'xx' && newG.fr === 'xx') {
+                    newG.fr = oldG.fr;
+                    newG.fr_verification = oldG.fr_verification;
+                    newG.fr_sources = oldG.fr_sources;
+                  }
+                  if (oldG.sr !== 'xx' && newG.sr === 'xx') {
+                    newG.sr = oldG.sr;
+                    newG.sr_verification = oldG.sr_verification;
+                    newG.sr_sources = oldG.sr_sources;
+                  }
                 }
               }
             }
@@ -304,7 +346,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
     const handleVisibility = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-        fetchLatest(false);
+        fetchLatest(false, true);
         startTimer();
       } else {
         stopTimer();

@@ -21,7 +21,35 @@ export default function SingleGameLiveCard({
   initialData,
   themeColor = 'emerald'
 }: SingleGameLiveCardProps) {
-  const [data, setData] = useState<TeerData>(initialData);
+  const [data, setData] = useState<TeerData>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('teer_latest_live_cache');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.date === initialData.date && parsed.games) {
+            const merged = JSON.parse(JSON.stringify(initialData));
+            const initG = merged.games?.[gameKey];
+            const cacheG = parsed.games?.[gameKey];
+            if (initG && cacheG) {
+              if (initG.fr === 'xx' && cacheG.fr && cacheG.fr !== 'xx') {
+                initG.fr = cacheG.fr;
+                initG.fr_verification = cacheG.fr_verification;
+                initG.fr_sources = cacheG.fr_sources;
+              }
+              if (initG.sr === 'xx' && cacheG.sr && cacheG.sr !== 'xx') {
+                initG.sr = cacheG.sr;
+                initG.sr_verification = cacheG.sr_verification;
+                initG.sr_sources = cacheG.sr_sources;
+              }
+            }
+            return merged;
+          }
+        }
+      } catch (e) {}
+    }
+    return initialData;
+  });
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string>('');
   const [currentISTMinutes, setCurrentISTMinutes] = useState<number>(() => getISTCurrentMinutes());
@@ -151,11 +179,11 @@ export default function SingleGameLiveCard({
   const yestSr = yesterday ? (yesterday as any)[`${gameKey}_sr`] : null;
 
   // Real-time zero-refresh polling fetcher
-  const fetchLatest = async (isManual = false) => {
+  const fetchLatest = async (isManual = false, forceServerRefresh = false) => {
     setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      const url = `/api/teer/latest?refresh=${isManual ? '1' : '0'}&_t=${Date.now()}`;
+      const url = `/api/teer/latest?refresh=${(isManual || forceServerRefresh) ? '1' : '0'}&_t=${Date.now()}`;
       const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const fresh: TeerData = await res.json();
@@ -169,6 +197,18 @@ export default function SingleGameLiveCard({
                 setRevisionNotice(`Official Update: ${gameTitle} 1st Round revised from ${oldG.fr} to ${newG.fr}`);
               } else if (oldG.sr !== 'xx' && newG.sr !== 'xx' && oldG.sr !== newG.sr) {
                 setRevisionNotice(`Official Update: ${gameTitle} 2nd Round revised from ${oldG.sr} to ${newG.sr}`);
+              }
+
+              // IMMUTABILITY RULE: Never downgrade an already declared result back to 'xx'
+              if (oldG.fr !== 'xx' && newG.fr === 'xx') {
+                newG.fr = oldG.fr;
+                newG.fr_verification = oldG.fr_verification;
+                newG.fr_sources = oldG.fr_sources;
+              }
+              if (oldG.sr !== 'xx' && newG.sr === 'xx') {
+                newG.sr = oldG.sr;
+                newG.sr_verification = oldG.sr_verification;
+                newG.sr_sources = oldG.sr_sources;
               }
             }
             return fresh;
@@ -242,7 +282,7 @@ export default function SingleGameLiveCard({
 
     const handleVisibility = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-        fetchLatest(false);
+        fetchLatest(false, true);
         startTimer();
       } else {
         stopTimer();

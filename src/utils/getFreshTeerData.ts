@@ -144,19 +144,40 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
         allReports
       );
 
-      for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+      for (const key of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
         const c = consensus[key];
-        if (c && result.games[key]) {
-          result.games[key].fr = c.fr.declaredNumber;
-          result.games[key].sr = c.sr.declaredNumber;
-          if (c.fr.sources.length > 0) {
-            result.games[key].fr_verification = c.fr.verification_level;
-            result.games[key].fr_sources = c.fr.sources;
+        const g = result.games[key];
+        const prevCachedG = (cachedData && cachedData.date === result.date) ? cachedData.games[key] : null;
+
+        if (c && g) {
+          // FR: Never downgrade a declared number to 'xx'
+          if (c.fr.declaredNumber !== 'xx') {
+            g.fr = c.fr.declaredNumber;
+            if (c.fr.sources.length > 0) {
+              g.fr_verification = c.fr.verification_level;
+              g.fr_sources = c.fr.sources;
+            }
+          } else if (prevCachedG && prevCachedG.fr && prevCachedG.fr !== 'xx') {
+            g.fr = prevCachedG.fr;
+            g.fr_verification = prevCachedG.fr_verification;
+            g.fr_sources = prevCachedG.fr_sources;
           }
-          if (c.sr.sources.length > 0) {
-            result.games[key].sr_verification = c.sr.verification_level;
-            result.games[key].sr_sources = c.sr.sources;
+
+          // SR: Never downgrade a declared number to 'xx'
+          if (c.sr.declaredNumber !== 'xx') {
+            g.sr = c.sr.declaredNumber;
+            if (c.sr.sources.length > 0) {
+              g.sr_verification = c.sr.verification_level;
+              g.sr_sources = c.sr.sources;
+            }
+          } else if (prevCachedG && prevCachedG.sr && prevCachedG.sr !== 'xx') {
+            g.sr = prevCachedG.sr;
+            g.sr_verification = prevCachedG.sr_verification;
+            g.sr_sources = prevCachedG.sr_sources;
           }
+        } else if (g && prevCachedG) {
+          if (g.fr === 'xx' && prevCachedG.fr !== 'xx') g.fr = prevCachedG.fr;
+          if (g.sr === 'xx' && prevCachedG.sr !== 'xx') g.sr = prevCachedG.sr;
         }
       }
 
@@ -187,6 +208,16 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
   }
 
   if (cachedData) {
+    if (cachedData.date === result.date) {
+      for (const key of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
+        const cg = cachedData.games[key];
+        const rg = result.games[key];
+        if (cg && rg) {
+          if (cg.fr === 'xx' && rg.fr !== 'xx') cg.fr = rg.fr;
+          if (cg.sr === 'xx' && rg.sr !== 'xx') cg.sr = rg.sr;
+        }
+      }
+    }
     return cachedData;
   }
 
