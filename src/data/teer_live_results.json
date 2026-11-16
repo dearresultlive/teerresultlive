@@ -5,10 +5,10 @@
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "xx",
+      "fr": "19",
       "sr": "xx",
       "common_numbers": {
         "direct": [
@@ -29,15 +29,24 @@
           8,
           2
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "fr_sources": [
+        "instantteer_api",
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teertarget_com",
+        "gas_datacenter",
+        "teerresults_com"
+      ]
     },
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "UPCOMING",
+      "status": "FR DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "xx",
+      "fr": "27",
       "sr": "xx",
       "common_numbers": {
         "direct": [
@@ -58,16 +67,21 @@
           4,
           6
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "fr_sources": [
+        "instantteer_api",
+        "teerresults_com"
+      ]
     },
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "FR DECLARED",
+      "status": "DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
       "fr": "29",
-      "sr": "xx",
+      "sr": "74",
       "common_numbers": {
         "direct": [
           "40",
@@ -89,13 +103,24 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "UNVERIFIED",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
         "instantteer_api",
-        "teerresult_agg"
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "teerresults_com",
+        "shillongteergrounds",
+        "goodreturns"
       ],
       "sr_sources": [
-        "teerresult_agg"
+        "instantteer_api",
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "teerresults_com",
+        "shillongteergrounds",
+        "goodreturns"
       ]
     },
     "juwai_morning": {

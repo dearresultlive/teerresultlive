@@ -10,41 +10,13 @@ import {
   getDynamicGameOrder,
   getISTCurrentMinutes,
   isSundayInIST,
-  WhatsAppIcon
+  WhatsAppIcon,
+  mergeWithoutDowngrade,
+  getInitialTeerDataWithCache
 } from '../utils/teerShared';
 
 export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
-  const [data, setData] = useState<TeerData>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('teer_latest_live_cache');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed && parsed.date === initialData.date && parsed.games) {
-            const merged = JSON.parse(JSON.stringify(initialData));
-            for (const k of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
-              const initG = merged.games[k];
-              const cacheG = parsed.games[k];
-              if (initG && cacheG) {
-                if (initG.fr === 'xx' && cacheG.fr && cacheG.fr !== 'xx') {
-                  initG.fr = cacheG.fr;
-                  initG.fr_verification = cacheG.fr_verification;
-                  initG.fr_sources = cacheG.fr_sources;
-                }
-                if (initG.sr === 'xx' && cacheG.sr && cacheG.sr !== 'xx') {
-                  initG.sr = cacheG.sr;
-                  initG.sr_verification = cacheG.sr_verification;
-                  initG.sr_sources = cacheG.sr_sources;
-                }
-              }
-            }
-            return merged;
-          }
-        }
-      } catch (e) {}
-    }
-    return initialData;
-  });
+  const [data, setData] = useState<TeerData>(() => getInitialTeerDataWithCache(initialData));
   const yesterday = useMemo(() => {
     if (data.yesterday && data.yesterday.date !== data.date) {
       return data.yesterday;
@@ -213,26 +185,15 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
                   } else if (oldG.sr !== 'xx' && newG.sr !== 'xx' && oldG.sr !== newG.sr) {
                     setRevisionNotice(`Official Update: ${gameTitle} 2nd Round revised from ${oldG.sr} to ${newG.sr}`);
                   }
-
-                  // IMMUTABILITY RULE: Never downgrade an already declared result back to 'xx'
-                  if (oldG.fr !== 'xx' && newG.fr === 'xx') {
-                    newG.fr = oldG.fr;
-                    newG.fr_verification = oldG.fr_verification;
-                    newG.fr_sources = oldG.fr_sources;
-                  }
-                  if (oldG.sr !== 'xx' && newG.sr === 'xx') {
-                    newG.sr = oldG.sr;
-                    newG.sr_verification = oldG.sr_verification;
-                    newG.sr_sources = oldG.sr_sources;
-                  }
                 }
               }
             }
-            return fresh;
+            const updated = mergeWithoutDowngrade(prev, fresh);
+            try {
+              localStorage.setItem('teer_latest_live_cache', JSON.stringify(updated));
+            } catch (e) {}
+            return updated;
           });
-          try {
-            localStorage.setItem('teer_latest_live_cache', JSON.stringify(fresh));
-          } catch (e) {}
         }
       }
     } catch (e) {
@@ -260,31 +221,30 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     }));
   }, [currentISTMinutes, viewMode, isSunday]);
 
-  // 1. Initial Mount: Restore from localStorage cache & trigger immediate live sync
+  // 1. Initial Mount: Restore from localStorage cache, sync across tabs & trigger live sync
   useEffect(() => {
     try {
       const saved = localStorage.getItem('teer_latest_live_cache');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.date === initialData.date && parsed.games) {
-          // Verify cache does not downgrade any already declared initial numbers
-          let hasNewerNumber = false;
-          for (const k of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
-            const initG = initialData.games[k];
-            const cacheG = parsed.games[k];
-            if (initG && cacheG) {
-              if ((initG.fr === 'xx' && cacheG.fr !== 'xx') || (initG.sr === 'xx' && cacheG.sr !== 'xx')) {
-                hasNewerNumber = true;
-                break;
-              }
-            }
-          }
-          if (hasNewerNumber) {
-            setData(parsed);
-          }
+          setData(prev => mergeWithoutDowngrade(prev, parsed));
         }
       }
     } catch (e) {}
+
+    // Cross-tab synchronization
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'teer_latest_live_cache' && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed && parsed.date === initialData.date && parsed.games) {
+            setData(prev => mergeWithoutDowngrade(prev, parsed));
+          }
+        } catch (err) {}
+      }
+    };
+    window.addEventListener('storage', handleStorage);
 
     // If initial SSR data rendered 'xx' for an active drawing game, immediately bypass cache
     // so any newly declared number displays without requiring manual user refresh.
@@ -297,6 +257,10 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     });
 
     fetchLatest(false, isAnyPendingActive);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
   }, []);
 
   // 2. Intelligent Zero-Refresh Live Poller

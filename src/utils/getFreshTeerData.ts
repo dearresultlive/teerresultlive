@@ -185,16 +185,18 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
       const istDay = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date());
       const isSun = istDay === 'Sun';
 
-      for (const key of ['shillong', 'khanapara', 'juwai', 'night']) {
+      for (const key of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
         const g = result.games[key];
-        if (g.fr !== 'xx' && g.sr !== 'xx') {
-          g.status = 'DECLARED';
-        } else if (g.fr !== 'xx') {
-          g.status = 'FR DECLARED';
-        } else if (isSun) {
-          g.status = 'SUNDAY OFF';
-        } else {
-          g.status = 'UPCOMING';
+        if (g) {
+          if (g.fr !== 'xx' && g.sr !== 'xx') {
+            g.status = 'DECLARED';
+          } else if (g.fr !== 'xx') {
+            g.status = 'FR DECLARED';
+          } else if (isSun) {
+            g.status = 'SUNDAY OFF';
+          } else {
+            g.status = 'UPCOMING';
+          }
         }
       }
 
