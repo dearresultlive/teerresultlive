@@ -437,28 +437,6 @@ export default function SingleGameLiveCard({
         )}
       </div>
 
-      {/* Morning Helper: In Today mode before game's draw, allow 1-tap toggle to yesterday */}
-      {viewMode === 'today' && game.fr === 'xx' && !isSunday && yesterday && (
-        <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-base shrink-0">🏹</span>
-            <span className="font-bold truncate text-[11px] sm:text-xs">
-              Today's live draw begins at {meta.defaultFrTime} • View yesterday's declared result ({yesterdayFormattedDate})
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setUserHasManuallyToggled(true);
-              setViewMode('yesterday');
-            }}
-            className="bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
-          >
-            Yesterday ➔
-          </button>
-        </div>
-      )}
-
       {/* When user toggles to yesterday: Banner to easily return to Today */}
       {viewMode === 'yesterday' && !isSunday && (
         <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">

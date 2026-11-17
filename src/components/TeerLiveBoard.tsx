@@ -534,30 +534,6 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         </div>
       </div>
 
-      {/* Morning Helper: In Today mode before day draws begin (1:45 PM), allow 1-tap toggle to yesterday */}
-      {viewMode === 'today' && currentISTMinutes < 13 * 60 + 45 && !isSunday && yesterday && (
-        <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-base shrink-0">🏹</span>
-            <span className="font-bold truncate text-[11px] sm:text-xs">
-              {currentISTMinutes < 10 * 60 + 30
-                ? `Today's morning draws begin at 10:30 AM • View yesterday's declared numbers (${yesterdayFormattedDate})`
-                : `Day draws begin at 1:45 PM • View yesterday's declared numbers (${yesterdayFormattedDate})`}
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setUserHasManuallyToggled(true);
-              setViewMode('yesterday');
-            }}
-            className="bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap cursor-pointer transition-all shrink-0 shadow-xs"
-          >
-            Yesterday ➔
-          </button>
-        </div>
-      )}
-
       {/* When user toggles to yesterday: Banner to easily return to Today */}
       {viewMode === 'yesterday' && !isSunday && (
         <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
