@@ -95,8 +95,8 @@
       "status": "DECLARED",
       "fr_time": "10:30 AM",
       "sr_time": "11:30 AM",
-      "fr": "99",
-      "sr": "35",
+      "fr": "24",
+      "sr": "93",
       "common_numbers": {
         "direct": [
           "27",
@@ -117,13 +117,14 @@
           8
         ]
       },
-      "fr_verification": "FAST_UPDATE",
-      "sr_verification": "FAST_UPDATE",
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
-        "goodreturns"
+        "juwaimorning_api",
+        "juwaimorning_direct"
       ],
       "sr_sources": [
-        "goodreturns"
+        "juwaimorning_api"
       ]
     },
     "night": {

@@ -882,28 +882,33 @@ export async function runPoller() {
     if (teerResultsComData.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComData.khanapara.fr, teerResultsComData.khanapara.sr);
   }
 
-  // 12. JuwaiMorningTeer.com Direct Feed (Tier 2 Fallback)
+  // 12. JuwaiMorningTeer.com Direct Feed (Tier 1 Ground Authority)
   if (juwaiMorningDirect && juwaiMorningDirect.date === liveData.date) {
-    addReport('juwai_morning', 'juwaimorning_direct', 2, juwaiMorningDirect.fr, juwaiMorningDirect.sr);
+    addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningDirect.fr, juwaiMorningDirect.sr);
   }
 
-  // 13. ShillongTeerGrounds.in Feeder (Tier 1 Authority for Juwai & Juwai Morning)
+  // 13. JuwaiMorningResult.com Official API (Tier 1 Ground Authority)
+  if (juwaiMorningJson && juwaiMorningJson.date === liveData.date) {
+    addReport('juwai_morning', 'juwaimorning_api', 1, juwaiMorningJson.fr, juwaiMorningJson.sr);
+  }
+
+  // 14. ShillongTeerGrounds.in Feeder (Tier 2 Scraper)
   if (stgData) {
     if (stgData.morning && stgData.morning.date === liveData.date) {
-      addReport('juwai_morning', 'shillongteergrounds', 1, stgData.morning.fr, stgData.morning.sr);
+      addReport('juwai_morning', 'shillongteergrounds', 2, stgData.morning.fr, stgData.morning.sr);
     }
     if (stgData.day && stgData.day.date === liveData.date) {
-      addReport('juwai', 'shillongteergrounds', 1, stgData.day.fr, stgData.day.sr);
+      addReport('juwai', 'shillongteergrounds', 2, stgData.day.fr, stgData.day.sr);
     }
   }
 
-  // 14. GoodReturns.in Feeder (Tier 1 Authority for Juwai & Juwai Morning)
+  // 15. GoodReturns.in Feeder (Tier 2 Scraper)
   if (goodReturnsData) {
     if (goodReturnsData.morning && goodReturnsData.morning.date === liveData.date) {
-      addReport('juwai_morning', 'goodreturns', 1, goodReturnsData.morning.fr, goodReturnsData.morning.sr);
+      addReport('juwai_morning', 'goodreturns', 2, goodReturnsData.morning.fr, goodReturnsData.morning.sr);
     }
     if (goodReturnsData.day && goodReturnsData.day.date === liveData.date) {
-      addReport('juwai', 'goodreturns', 1, goodReturnsData.day.fr, goodReturnsData.day.sr);
+      addReport('juwai', 'goodreturns', 2, goodReturnsData.day.fr, goodReturnsData.day.sr);
     }
   }
 

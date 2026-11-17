@@ -272,7 +272,7 @@ export async function fetchShillongTeerGrounds(): Promise<{
 
     const parseTable = (tableHtml: string) => {
       const rows = tableHtml.match(/<tr[\s\S]*?<\/tr>/gi) || [];
-      if (rows.length < 3) return null;
+      if (rows.length < 3 || !rows[0] || !rows[2]) return null;
       const dateMatch = rows[0].match(/(\d{1,2})[\.\/-](\d{1,2})[\.\/-](\d{2,4})/);
       let date: string | null = null;
       if (dateMatch) {
@@ -700,9 +700,10 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     fetchTeerTargetCom(targetDate),    // 8. TeerTarget.com (Tier 2)
     fetchFromGoogleAppsScript(),       // 9. Google Apps Script Proxy (Tier 2)
     fetchFromTeerResultsDotCom(targetDate), // 10. TeerResults.com Ultra-Fast Juwai/Multi-Game (Tier 2)
-    fetchJuwaiMorningDirect(),         // 11. JuwaiMorningTeer.com Direct Feed (Tier 2)
-    fetchShillongTeerGrounds(),        // 12. ShillongTeerGrounds.in Feeder (Tier 1)
-    fetchGoodReturns()                 // 13. GoodReturns.in Feeder (Tier 1)
+    fetchJuwaiMorningDirect(),         // 11. JuwaiMorningTeer.com Direct Feed (Tier 1 Ground Authority)
+    fetchJuwaiMorningResultJson(),     // 12. JuwaiMorningResult.com Official API (Tier 1 Ground Authority)
+    fetchShillongTeerGrounds(),        // 13. ShillongTeerGrounds.in Feeder (Tier 2 Scraper)
+    fetchGoodReturns()                 // 14. GoodReturns.in Feeder (Tier 2 Scraper)
   ]);
 
   const [
@@ -718,6 +719,7 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     gasRes,
     teerResultsComRes,
     juwaiMorningRes,
+    juwaiMorningJsonRes,
     stgRes,
     goodReturnsRes
   ] = results.map(r => r.status === 'fulfilled' ? r.value : null);
@@ -825,28 +827,33 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     if (teerResultsComRes.khanapara) addReport('khanapara', 'teerresults_com', 1, teerResultsComRes.khanapara.fr, teerResultsComRes.khanapara.sr);
   }
 
-  // 12. JuwaiMorningTeer.com Direct Feed (Tier 2 Fallback)
+  // 12. JuwaiMorningTeer.com Direct Feed (Tier 1 Ground Authority)
   if (juwaiMorningRes && juwaiMorningRes.date === targetDate) {
-    addReport('juwai_morning', 'juwaimorning_direct', 2, juwaiMorningRes.fr, juwaiMorningRes.sr);
+    addReport('juwai_morning', 'juwaimorning_direct', 1, juwaiMorningRes.fr, juwaiMorningRes.sr);
   }
 
-  // 13. ShillongTeerGrounds.in Feeder (Tier 1 Authority for Juwai & Juwai Morning)
+  // 13. JuwaiMorningResult.com Official API (Tier 1 Ground Authority)
+  if (juwaiMorningJsonRes && juwaiMorningJsonRes.date === targetDate) {
+    addReport('juwai_morning', 'juwaimorning_api', 1, juwaiMorningJsonRes.fr, juwaiMorningJsonRes.sr);
+  }
+
+  // 14. ShillongTeerGrounds.in Feeder (Tier 2 Scraper)
   if (stgRes) {
     if (stgRes.morning && stgRes.morning.date === targetDate) {
-      addReport('juwai_morning', 'shillongteergrounds', 1, stgRes.morning.fr, stgRes.morning.sr);
+      addReport('juwai_morning', 'shillongteergrounds', 2, stgRes.morning.fr, stgRes.morning.sr);
     }
     if (stgRes.day && stgRes.day.date === targetDate) {
-      addReport('juwai', 'shillongteergrounds', 1, stgRes.day.fr, stgRes.day.sr);
+      addReport('juwai', 'shillongteergrounds', 2, stgRes.day.fr, stgRes.day.sr);
     }
   }
 
-  // 14. GoodReturns.in Feeder (Tier 1 Authority for Juwai & Juwai Morning)
+  // 15. GoodReturns.in Feeder (Tier 2 Scraper)
   if (goodReturnsRes) {
     if (goodReturnsRes.morning && goodReturnsRes.morning.date === targetDate) {
-      addReport('juwai_morning', 'goodreturns', 1, goodReturnsRes.morning.fr, goodReturnsRes.morning.sr);
+      addReport('juwai_morning', 'goodreturns', 2, goodReturnsRes.morning.fr, goodReturnsRes.morning.sr);
     }
     if (goodReturnsRes.day && goodReturnsRes.day.date === targetDate) {
-      addReport('juwai', 'goodreturns', 1, goodReturnsRes.day.fr, goodReturnsRes.day.sr);
+      addReport('juwai', 'goodreturns', 2, goodReturnsRes.day.fr, goodReturnsRes.day.sr);
     }
   }
 

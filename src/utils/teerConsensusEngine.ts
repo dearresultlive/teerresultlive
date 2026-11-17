@@ -16,6 +16,14 @@ export interface SourceReport {
   date?: string;
 }
 
+// Known SEO Scraper / Aggregator Syndicate (They echo/scrape each other's tables)
+export const ECHO_CLUSTERS: Record<string, string> = {
+  'goodreturns': 'seo_scraper_syndicate',
+  'shillongteergrounds': 'seo_scraper_syndicate',
+  'teerresulttoday': 'seo_scraper_syndicate',
+  'teerground_com': 'seo_scraper_syndicate'
+};
+
 export interface RoundConsensusResult {
   declaredNumber: string;
   voteCount: number;
@@ -50,6 +58,7 @@ export function resolveRoundConsensus(
   suspiciousEchos: string[] = []
 ): RoundConsensusResult {
   const voteMap: Record<string, { count: number; sources: string[]; hasTier1: boolean }> = {};
+  const seenClustersForCandidate: Record<string, Set<string>> = {};
 
   for (const rep of reports) {
     const raw = rep[round];
@@ -58,14 +67,28 @@ export function resolveRoundConsensus(
 
     if (!voteMap[num]) {
       voteMap[num] = { count: 0, sources: [], hasTier1: false };
+      seenClustersForCandidate[num] = new Set<string>();
     }
     voteMap[num].sources.push(rep.source);
+
+    const cluster = ECHO_CLUSTERS[rep.source];
+    let weight = rep.tier === 1 ? 2 : 1;
+
+    // Echo Chamber / Sybil Guard:
+    // If multiple scrapers from the same echo syndicate report the exact same number,
+    // subsequent echo scrapers do NOT get a full independent vote!
+    if (cluster) {
+      if (seenClustersForCandidate[num].has(cluster)) {
+        weight = 0; // Echo duplicate: 0 additional voting power to prevent false quorums!
+      } else {
+        seenClustersForCandidate[num].add(cluster);
+      }
+    }
+
     if (rep.tier === 1) {
       voteMap[num].hasTier1 = true;
-      voteMap[num].count += 2; // Tier 1 verified feed carries double weight
-    } else {
-      voteMap[num].count += 1;
     }
+    voteMap[num].count += weight;
   }
 
   // Rank candidate numbers by total votes descending, with Tier 1 and stability tie-breakers
@@ -166,15 +189,33 @@ export function evaluateMultiSourceConsensus(
 
   const shillongFR = currentGames.shillong?.fr;
   const shillongSR = currentGames.shillong?.sr;
+  const juwaiFR = currentGames.juwai?.fr;
+  const juwaiSR = currentGames.juwai?.sr;
+  const juwaiMorningFR = currentGames.juwai_morning?.fr;
+  const juwaiMorningSR = currentGames.juwai_morning?.sr;
 
   for (const gameKey of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
     const curFR = currentGames[gameKey]?.fr || 'xx';
     const curSR = currentGames[gameKey]?.sr || 'xx';
     const reps = allReports[gameKey] || [];
 
-    // Khanapara draws right after Shillong. Guard against 3rd-party aggregators mistakenly echoing Shillong results into Khanapara
-    const suspiciousEchosFR = (gameKey === 'khanapara' && shillongFR && shillongFR !== 'xx') ? [shillongFR] : [];
-    const suspiciousEchosSR = (gameKey === 'khanapara' && shillongSR && shillongSR !== 'xx') ? [shillongSR] : [];
+    // Guard against cross-game scraping contamination:
+    // 1. Khanapara echoing Shillong
+    // 2. Juwai Morning echoing Juwai Day (e.g. Day SR 35 mistakenly bleeding into Morning SR)
+    // 3. Juwai Day echoing Juwai Morning
+    const suspiciousEchosFR: string[] = [];
+    const suspiciousEchosSR: string[] = [];
+
+    if (gameKey === 'khanapara') {
+      if (shillongFR && shillongFR !== 'xx') suspiciousEchosFR.push(shillongFR);
+      if (shillongSR && shillongSR !== 'xx') suspiciousEchosSR.push(shillongSR);
+    } else if (gameKey === 'juwai_morning') {
+      if (juwaiFR && juwaiFR !== 'xx') suspiciousEchosFR.push(juwaiFR);
+      if (juwaiSR && juwaiSR !== 'xx') suspiciousEchosSR.push(juwaiSR);
+    } else if (gameKey === 'juwai') {
+      if (juwaiMorningFR && juwaiMorningFR !== 'xx') suspiciousEchosFR.push(juwaiMorningFR);
+      if (juwaiMorningSR && juwaiMorningSR !== 'xx') suspiciousEchosSR.push(juwaiMorningSR);
+    }
 
     result[gameKey] = {
       fr: resolveRoundConsensus(gameKey, 'fr', curFR, reps, suspiciousEchosFR),
