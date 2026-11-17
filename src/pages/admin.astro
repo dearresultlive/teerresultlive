@@ -3,11 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import AdminPanel from '../components/AdminPanel';
 
 export const prerender = false;
+
+// Set HTTP response header to strictly block indexing across all search engine spiders
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
 ---
 
 <Layout
   title="Admin Control Panel | Teer Result Live"
   description="Secure Manual Override & Live Result Management Console."
+  noindex={true}
 >
   <AdminPanel client:load />
 </Layout>

@@ -4,7 +4,9 @@
 User-agent: *
 Allow: /
 
-# Disallow internal API endpoints from appearing as standalone search pages
+# Disallow private admin panel & internal API endpoints from search index
+Disallow: /admin
+Disallow: /admin/
 Disallow: /api/
 
 # Official XML Sitemap index

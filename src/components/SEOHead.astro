@@ -4,13 +4,15 @@ interface Props {
   description?: string;
   canonicalUrl?: string;
   publishDate?: string;
+  noindex?: boolean;
 }
 
 const {
   title = "Shillong Teer Result Today Live • Khanapara, Juwai Teer Hit Numbers | Teer Result Live",
   description = "Get today's fastest Shillong Teer result live, Khanapara Teer, Juwai Teer, previous hit numbers, target common numbers (House & Ending), and complete dream number list.",
   canonicalUrl,
-  publishDate = new Date().toISOString()
+  publishDate = new Date().toISOString(),
+  noindex = false
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -487,10 +489,16 @@ const contactPageSchema = isContactPage ? {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <!-- Search Engine Robots: Fully Enabled for Indexing, Discover & Rich Snippets -->
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <!-- Search Engine Robots: Strict Noindex for Admin/Private Routes, Fully Enabled for Public Pages -->
+  {(noindex || cleanPath === '/admin' || cleanPath.startsWith('/admin')) ? (
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
+    <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet" />
+  ) : (
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  )}
 
   <!-- Google Search Console Verification Meta Tag (If provided via ENV) -->
   {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && (

@@ -9,9 +9,10 @@ interface Props {
   description?: string;
   canonicalUrl?: string;
   publishDate?: string;
+  noindex?: boolean;
 }
 
-const { title, description, canonicalUrl, publishDate } = Astro.props;
+const { title, description, canonicalUrl, publishDate, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,6 +22,7 @@ const { title, description, canonicalUrl, publishDate } = Astro.props;
     description={description}
     canonicalUrl={canonicalUrl}
     publishDate={publishDate}
+    noindex={noindex}
   />
   <body class="min-h-screen flex flex-col bg-slate-100 font-sans selection:bg-amber-100 selection:text-amber-900 text-slate-900">
     <Header />
