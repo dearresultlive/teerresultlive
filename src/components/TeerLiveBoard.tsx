@@ -820,17 +820,29 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
 
               </div>
 
-              {/* Layout B: Single horizontal yesterday reference strip (auto-hides when live draws start or when results declare) */}
+              {/* Layout B: High-Impact Yesterday Winning Numbers Strip (Prevents User Bounce-Back) */}
               {viewMode === 'today' && game.fr === 'xx' && game.sr === 'xx' && !isAnyDrawing && !isSunday && yestGameFr && yestGameSr && yestGameFr !== 'xx' && (
-                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600 bg-slate-50/80 px-2.5 py-1.5 rounded-xl border border-slate-200/60 flex-wrap gap-1">
-                  <span className="font-semibold text-slate-500 flex items-center gap-1">
-                    <span>🏛️</span>
-                    <span>Yesterday:</span>
-                  </span>
-                  <div className="flex items-center gap-2 font-mono font-bold text-slate-800">
-                    <span>1st <span className="text-amber-700 bg-amber-100/70 px-1.5 py-0.5 rounded border border-amber-200/60">{yestGameFr}</span></span>
-                    <span className="text-slate-300">•</span>
-                    <span>2nd <span className="text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded border border-emerald-200/60">{yestGameSr}</span></span>
+                <div className="mt-3 pt-2.5 border-t border-amber-200/80 flex items-center justify-between bg-gradient-to-r from-amber-50/90 via-slate-50 to-emerald-50/90 px-3 py-2 rounded-xl border border-amber-200/90 shadow-2xs flex-wrap gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-base shrink-0">🏛️</span>
+                    <div className="flex flex-col text-left">
+                      <span className="font-black text-slate-900 text-xs leading-tight">
+                        Yesterday Result
+                      </span>
+                      <span className="text-[10px] text-slate-600 font-semibold">
+                        Official Winning
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 bg-amber-100 border-2 border-amber-400 text-amber-950 px-2.5 py-1 rounded-lg shadow-2xs">
+                      <span className="text-[10px] text-amber-800 font-extrabold uppercase">1st:</span>
+                      <span className="font-mono font-black text-sm sm:text-base text-amber-950 leading-none">{yestGameFr}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-emerald-100 border-2 border-emerald-400 text-emerald-950 px-2.5 py-1 rounded-lg shadow-2xs">
+                      <span className="text-[10px] text-emerald-800 font-extrabold uppercase">2nd:</span>
+                      <span className="font-mono font-black text-sm sm:text-base text-emerald-950 leading-none">{yestGameSr}</span>
+                    </div>
                   </div>
                 </div>
               )}

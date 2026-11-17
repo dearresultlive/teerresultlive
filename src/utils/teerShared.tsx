@@ -179,13 +179,15 @@ export function getDynamicGameOrder(nowMin: number, viewMode: 'today' | 'yesterd
     return ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night'];
   }
 
-  // 10:15 AM to 12:00 PM: Juwai Morning Teer Live Window (Draws at 10:30 AM & 11:30 AM)
-  if (nowMin >= 10 * 60 + 15 && nowMin < 12 * 60) {
-    return ['juwai_morning', 'shillong', 'khanapara', 'juwai', 'night'];
+  // 10:15 AM to 1:20 PM: Juwai Morning Teer Live Window & Result Spotlight
+  // Juwai Morning draws at 10:30 AM & 11:30 AM. It remains #1 at the top of the board
+  // until 1:20 PM when Juwai Day (1:45 PM) live archery shooting begins.
+  if (nowMin >= 10 * 60 + 15 && nowMin < 13 * 60 + 20) {
+    return ['juwai_morning', 'juwai', 'shillong', 'khanapara', 'night'];
   }
 
-  // 1:15 PM to 3:15 PM: Juwai Teer Live Window (Draws at 1:45 PM & 2:30 PM)
-  if (nowMin >= 13 * 60 + 15 && nowMin < 15 * 60 + 15) {
+  // 1:20 PM to 3:15 PM: Juwai Teer Live Window (Draws at 1:45 PM & 2:30 PM)
+  if (nowMin >= 13 * 60 + 20 && nowMin < 15 * 60 + 15) {
     return ['juwai', 'shillong', 'khanapara', 'juwai_morning', 'night'];
   }
 
