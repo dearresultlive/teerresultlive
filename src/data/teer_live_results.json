@@ -1,15 +1,15 @@
 {
   "date": "2026-11-17",
-  "updated_at": "2026-11-17T09:26:58.929Z",
+  "updated_at": "2026-11-17T12:09:35.581Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "02",
+      "sr": "22",
       "common_numbers": {
         "direct": [
           "03",
@@ -29,16 +29,34 @@
           8,
           2
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "instantteer_api",
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "teertarget_com",
+        "gas_datacenter"
+      ],
+      "sr_sources": [
+        "instantteer_api",
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "teertarget_com",
+        "gas_datacenter"
+      ]
     },
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "70",
+      "sr": "54",
       "common_numbers": {
         "direct": [
           "31",
@@ -58,16 +76,29 @@
           4,
           6
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "instantteer_api",
+        "teerresult_agg",
+        "khanaparateer_org",
+        "gas_datacenter"
+      ],
+      "sr_sources": [
+        "instantteer_api",
+        "teerresult_agg",
+        "gas_datacenter"
+      ]
     },
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "89",
+      "sr": "35",
       "common_numbers": {
         "direct": [
           "40",
@@ -87,7 +118,23 @@
           2,
           7
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "instantteer_api",
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "goodreturns"
+      ],
+      "sr_sources": [
+        "instantteer_api",
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter",
+        "goodreturns"
+      ]
     },
     "juwai_morning": {
       "name": "Juwai Morning Teer",
@@ -118,7 +165,7 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "VERIFIED",
+      "sr_verification": "FAST_UPDATE",
       "fr_sources": [
         "juwaimorning_api",
         "juwaimorning_direct"
