@@ -918,6 +918,10 @@ export async function runPoller() {
   for (const key of gameKeys) {
     const game = liveData.games[key];
     if (!game) continue;
+    if (game.locked || game.manual_override) {
+      console.log(`[Poller] ${key} is locked by Admin manual override. Skipping.`);
+      continue;
+    }
 
     const suspiciousEchosFR = (key === 'khanapara' && shillongFR && shillongFR !== 'xx') ? [shillongFR] : [];
     const suspiciousEchosSR = (key === 'khanapara' && shillongSR && shillongSR !== 'xx') ? [shillongSR] : [];

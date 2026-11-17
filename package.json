@@ -9,6 +9,7 @@
     "check": "astro check",
     "preview": "astro preview",
     "poll": "node scripts/teer_autopoller.js",
+    "override": "node scripts/admin_override.js",
     "telegram:test": "node scripts/test_telegram.js"
   },
   "dependencies": {

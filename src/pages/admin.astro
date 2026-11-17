@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AdminPanel from '../components/AdminPanel';
+
+export const prerender = false;
+---
+
+<Layout
+  title="Admin Control Panel | Teer Result Live"
+  description="Secure Manual Override & Live Result Management Console."
+>
+  <AdminPanel client:load />
+</Layout>

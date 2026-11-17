@@ -10,6 +10,29 @@ import { evaluateMultiSourceConsensus } from './teerConsensusEngine';
 let cachedData: TeerData | null = null;
 let lastFetchTime = 0;
 
+export interface OverrideInfo {
+  fr: string;
+  sr: string;
+  status: string;
+  locked: boolean;
+}
+
+const activeOverrides: Record<string, OverrideInfo> = {};
+
+export function setManualOverride(gameKey: string, override: OverrideInfo) {
+  activeOverrides[gameKey] = override;
+  if (cachedData && cachedData.games && cachedData.games[gameKey]) {
+    const g = cachedData.games[gameKey];
+    g.fr = override.fr;
+    g.sr = override.sr;
+    g.status = override.status as any;
+    (g as any).locked = override.locked;
+    (g as any).manual_override = true;
+    (g as any).fr_verification = 'VERIFIED';
+    (g as any).sr_verification = 'VERIFIED';
+  }
+}
+
 export function isArcheryShootingHour(): boolean {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Asia/Kolkata',
@@ -148,6 +171,11 @@ export async function getFreshTeerData(forceRefresh = false): Promise<TeerData> 
         const c = consensus[key];
         const g = result.games[key];
         const prevCachedG = (cachedData && cachedData.date === result.date) ? cachedData.games[key] : null;
+
+        if (g && ((g as any).locked || (g as any).manual_override || activeOverrides[key]?.locked)) {
+          // Manual Admin Override active: Retain admin's exact chosen numbers!
+          continue;
+        }
 
         if (c && g) {
           // FR: Never downgrade a declared number to 'xx'
