@@ -1,16 +1,13 @@
 /**
- * Teer Consensus & Byzantine Fault Tolerant Voting Engine
+ * Teer Consensus & Byzantine Fault Tolerant Voting Engine (Node.js ES Module)
  * 
  * Rules:
  * 1. Tier 1 (Official Polo Ground Direct JSON / Verified Machine API): Weight = 2 (Consensus reached instantly).
  * 2. Tier 2 (General 3rd-Party Web Scrapers): Weight = 1. A candidate number requires >= 2 independent votes to be declared.
  * 3. Majority Override: If a round was previously declared with N votes, but another candidate subsequently achieves >= 3 votes AND strictly more votes (higher majority), the new number overrides the old number!
- * 4. Source Self-Correction: If original voting sources change their declared numbers (e.g. fixing typos), the old number loses quorum (<2 votes), and our site self-heals immediately.
+ * 4. Source Self-Correction: If original voting sources change their declared numbers, votes are dynamically recalculated and our site self-heals immediately.
  */
 
-/**
- * Strictly validate and clean 2-digit numbers (00-99 only)
- */
 export function cleanNumber(val) {
   if (val === undefined || val === null) return 'xx';
   const str = String(val).trim().toLowerCase();
@@ -23,14 +20,14 @@ export function cleanNumber(val) {
 
 /**
  * Resolves consensus for a single round (FR or SR).
- * 
- * @param {string} gameKey - 'shillong' | 'khanapara' | 'juwai' | 'night'
- * @param {'fr' | 'sr'} round - 'fr' | 'sr'
- * @param {string} currentVal - Current declared number or 'xx'
- * @param {Array<{source: string, tier: 1|2, fr: string, sr: string}>} reports - Reports collected from sources
- * @returns {{declaredNumber: string, voteCount: number, sources: string[], status: string}}
  */
-export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
+export function resolveRoundConsensus(
+  gameKey,
+  round,
+  currentVal,
+  reports,
+  suspiciousEchos = []
+) {
   const voteMap = {};
 
   for (const rep of reports) {
@@ -87,6 +84,16 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
 
   // Case 1: Nothing declared yet for today's round
   if (!currentVal || currentVal === 'xx') {
+    // Cross-game echo guard: If candidate matches another game's result that just declared (e.g. Khanapara echoing Shillong)
+    const isSuspiciousEcho = suspiciousEchos.includes(topCandidate);
+    if (isSuspiciousEcho) {
+      // Must have official Tier-1 feed OR >= 3 independent sources to be declared
+      const isQuorumMet = voteMap[topCandidate].hasTier1 || topSources.length >= 3;
+      if (!isQuorumMet) {
+        return buildResult('xx', topVotes, topSources, 'WAITING_FOR_2ND_SOURCE');
+      }
+    }
+
     // Requires at least 2 votes (either 2 Tier 2 scrapers OR 1 Tier 1 direct API)
     if (topVotes >= 2) {
       return buildResult(topCandidate, topVotes, topSources, 'CONSENSUS_REACHED');
@@ -108,7 +115,7 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
       );
     }
 
-    // Rule 2b: Stronger Majority Override (Top candidate has >= 3 votes and strictly beats current candidate)
+    // Rule 2b: Stronger Majority Override (Top candidate has >= 3 votes and beats current candidate)
     if (topVotes >= 3 && topVotes > currentVotes) {
       return buildResult(topCandidate, topVotes, topSources, 'OVERRIDDEN_BY_MAJORITY');
     }
@@ -123,22 +130,26 @@ export function resolveRoundConsensus(gameKey, round, currentVal, reports) {
 }
 
 /**
- * Resolves consensus across all 4 games.
- * 
- * @param {Record<string, {fr: string, sr: string}>} currentGames
- * @param {Record<string, Array<{source: string, tier: 1|2, fr: string, sr: string}>>} allReports
+ * Resolves consensus across all games.
  */
 export function evaluateMultiSourceConsensus(currentGames, allReports) {
   const result = {};
+
+  const shillongFR = currentGames.shillong?.fr;
+  const shillongSR = currentGames.shillong?.sr;
 
   for (const gameKey of ['shillong', 'khanapara', 'juwai', 'juwai_morning', 'night']) {
     const curFR = currentGames[gameKey]?.fr || 'xx';
     const curSR = currentGames[gameKey]?.sr || 'xx';
     const reps = allReports[gameKey] || [];
 
+    // Khanapara draws right after Shillong. Guard against 3rd-party aggregators mistakenly echoing Shillong results into Khanapara
+    const suspiciousEchosFR = (gameKey === 'khanapara' && shillongFR && shillongFR !== 'xx') ? [shillongFR] : [];
+    const suspiciousEchosSR = (gameKey === 'khanapara' && shillongSR && shillongSR !== 'xx') ? [shillongSR] : [];
+
     result[gameKey] = {
-      fr: resolveRoundConsensus(gameKey, 'fr', curFR, reps),
-      sr: resolveRoundConsensus(gameKey, 'sr', curSR, reps)
+      fr: resolveRoundConsensus(gameKey, 'fr', curFR, reps, suspiciousEchosFR),
+      sr: resolveRoundConsensus(gameKey, 'sr', curSR, reps, suspiciousEchosSR)
     };
   }
 
