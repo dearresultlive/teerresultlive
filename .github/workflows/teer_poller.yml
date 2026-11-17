@@ -48,7 +48,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID || '@teerresultlive_in' }}
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID || '1386286871244175' }}
-          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN || 'EAAZCIOwzqo1cBTJMXTe6IaSsEdYVRjR2bao6OpenrTZA8j5mH0zBOtc9zFoVEVf8uNgijbrcyKwEVuksGZBhZCZA7iV52nncriuZCZA4oTsIFDkmGQeFRfNhpnRHKhWmbc6MCFZAyRDS7vjs0Ixc5V9GR6aalkMAklCZAJVBdxzdIhOBSDZCLt2RxZCgTuDA9sTZCuPYzhG5QD9UrymH2peqXgs5kO9mvMs7Ta2KKIgljtZB8LIhI9g0wJIUGfXAN' }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN || 'EAAZCIOwzqo1cBTIZC4Dhe3m5pssZB3C3ZByPIoXeU5V2whD0RnwvDjZBv2l1NqPWuVsHFINfJUxGJbNrcJbCnA9z3MJ282wnpXhMJlRZC1sK1mwx0JbuCx1jZChbKC1LIVTtK3XoOIaSxwd0k29O5zdz0ntpLDKVQjplAevg55515yVFTarOsb3IaVl8wFVveAnYQ8nk9Fn0ZCLT6qbk0ScU7wDc' }}
         run: npm run poll
 
       - name: Commit & Push If Changed
