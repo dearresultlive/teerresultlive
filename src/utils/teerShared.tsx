@@ -100,6 +100,46 @@ export function isSundayInIST(d: Date = new Date()): boolean {
   }
 }
 
+/**
+ * Determines whether the board should default to 'today' or 'yesterday'.
+ * 
+ * Rules:
+ * 1. If any game on today's board already has a declared number (FR or SR is not 'xx'), default to 'today'.
+ * 2. If current IST time is >= 10:15 AM (when today's first live draw, Juwai Morning, begins shooting/countdown), default to 'today'.
+ * 3. Before 10:15 AM (when today has zero live activity and all numbers are empty), default to 'yesterday' so early morning visitors see declared numbers immediately.
+ */
+export function getDefaultViewMode(
+  data?: TeerData | null,
+  gameKey?: string,
+  currentMinutes: number = getISTCurrentMinutes()
+): 'today' | 'yesterday' {
+  // 1. If a specific game is queried and it already has a declared result today:
+  if (gameKey && data?.games?.[gameKey]) {
+    const g = data.games[gameKey];
+    if ((g.fr && g.fr !== 'xx') || (g.sr && g.sr !== 'xx')) {
+      return 'today';
+    }
+  }
+
+  // 2. If ANY game on the board has a declared result today:
+  if (data?.games) {
+    const hasAnyDeclaredToday = Object.values(data.games).some(
+      (g) => (g.fr && g.fr !== 'xx') || (g.sr && g.sr !== 'xx')
+    );
+    if (hasAnyDeclaredToday) {
+      return 'today';
+    }
+  }
+
+  // 3. From 10:15 AM onwards, today's live draws commence (Juwai Morning starts at 10:15 AM):
+  if (currentMinutes >= 10 * 60 + 15) {
+    return 'today';
+  }
+
+  // 4. Early morning before 10:15 AM: Default to 'yesterday' to show declared results
+  return 'yesterday';
+}
+
 export function checkIsDrawing(
   gameKey: string,
   round: 'fr' | 'sr',

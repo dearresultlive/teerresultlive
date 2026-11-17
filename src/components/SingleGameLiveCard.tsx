@@ -9,7 +9,8 @@ import {
   ALL_GAMES_METADATA,
   WhatsAppIcon,
   mergeWithoutDowngrade,
-  getInitialTeerDataWithCache
+  getInitialTeerDataWithCache,
+  getDefaultViewMode
 } from '../utils/teerShared';
 
 interface SingleGameLiveCardProps {
@@ -54,8 +55,8 @@ export default function SingleGameLiveCard({
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
   const todayFormattedDate = data.date ? data.date.split('-').reverse().join('/') : '';
 
-  // Default to 'yesterday' before 1:00 PM IST (13 * 60 = 780 mins) so morning visitors immediately see declared results;
-  // default to 'today' after 1:00 PM IST as focus shifts to upcoming live rounds (first draw at 1:45 PM).
+  // Default to 'today' once live draws start (>= 10:15 AM) or if game declares today;
+  // default to 'yesterday' before 10:15 AM so early morning visitors see declared results immediately.
   const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -66,7 +67,7 @@ export default function SingleGameLiveCard({
         return 'today';
       }
     }
-    return getISTCurrentMinutes() < 13 * 60 ? 'yesterday' : 'today';
+    return getDefaultViewMode(initialData, gameKey);
   });
   const [userHasManuallyToggled, setUserHasManuallyToggled] = useState(false);
 
@@ -84,12 +85,14 @@ export default function SingleGameLiveCard({
     }
   }, []);
 
-  // When time reaches 1:00 PM IST (13:00), auto-transition from yesterday to today if user hasn't manually clicked
+  // When live action begins or when today receives any declared result, auto-transition from yesterday to today if user hasn't manually clicked
   useEffect(() => {
-    if (!userHasManuallyToggled && currentISTMinutes >= 13 * 60 && viewMode === 'yesterday') {
-      setViewMode('today');
+    if (!userHasManuallyToggled && viewMode === 'yesterday') {
+      if (getDefaultViewMode(data, gameKey, currentISTMinutes) === 'today') {
+        setViewMode('today');
+      }
     }
-  }, [currentISTMinutes, userHasManuallyToggled, viewMode]);
+  }, [currentISTMinutes, userHasManuallyToggled, viewMode, data, gameKey]);
 
   // Ensure H1 Label & Date strictly remain "Today Live" for 100% SEO Title/H1 alignment (never overwritten to Yesterday)
   useEffect(() => {

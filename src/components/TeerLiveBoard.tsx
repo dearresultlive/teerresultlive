@@ -12,7 +12,8 @@ import {
   isSundayInIST,
   WhatsAppIcon,
   mergeWithoutDowngrade,
-  getInitialTeerDataWithCache
+  getInitialTeerDataWithCache,
+  getDefaultViewMode
 } from '../utils/teerShared';
 
 export default function TeerLiveBoard({ initialData }: { initialData: TeerData }) {
@@ -28,8 +29,8 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     return null;
   }, [data.date, data.yesterday]);
   const yesterdayFormattedDate = yesterday?.date ? yesterday.date.split('-').reverse().join('/') : '';
-  // Default to 'yesterday' before 1:00 PM IST (13 * 60 = 780 mins) so morning visitors immediately see declared results;
-  // default to 'today' after 1:00 PM IST as focus shifts to upcoming live rounds (first draw at 1:45 PM).
+  // Default to 'today' once live morning draws start (>= 10:15 AM) or if any game declares today;
+  // default to 'yesterday' before 10:15 AM so early morning visitors see declared results immediately.
   const [viewMode, setViewMode] = useState<'today' | 'yesterday'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -40,7 +41,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         return 'today';
       }
     }
-    return getISTCurrentMinutes() < 13 * 60 ? 'yesterday' : 'today';
+    return getDefaultViewMode(initialData);
   });
   const [userHasManuallyToggled, setUserHasManuallyToggled] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -63,12 +64,14 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
     }
   }, []);
 
-  // When time reaches 1:00 PM IST (13:00), auto-transition from yesterday to today if user hasn't manually clicked
+  // When live action begins (>= 10:15 AM) or when today receives any declared result, auto-transition from yesterday to today if user hasn't manually clicked
   useEffect(() => {
-    if (!userHasManuallyToggled && currentISTMinutes >= 13 * 60 && viewMode === 'yesterday') {
-      setViewMode('today');
+    if (!userHasManuallyToggled && viewMode === 'yesterday') {
+      if (getDefaultViewMode(data, undefined, currentISTMinutes) === 'today') {
+        setViewMode('today');
+      }
     }
-  }, [currentISTMinutes, userHasManuallyToggled, viewMode]);
+  }, [currentISTMinutes, userHasManuallyToggled, viewMode, data]);
 
   // Auto-dismiss revision notice after 12 seconds
   useEffect(() => {
@@ -531,13 +534,15 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
         </div>
       </div>
 
-      {/* Morning Helper: In Today mode before 1:45 PM draws, allow 1-tap toggle to yesterday */}
+      {/* Morning Helper: In Today mode before day draws begin (1:45 PM), allow 1-tap toggle to yesterday */}
       {viewMode === 'today' && currentISTMinutes < 13 * 60 + 45 && !isSunday && yesterday && (
         <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 text-xs text-amber-950 shadow-2xs">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-base shrink-0">🏹</span>
             <span className="font-bold truncate text-[11px] sm:text-xs">
-              Today's live draws begin at 1:45 PM • View yesterday's declared numbers ({yesterdayFormattedDate})
+              {currentISTMinutes < 10 * 60 + 30
+                ? `Today's morning draws begin at 10:30 AM • View yesterday's declared numbers (${yesterdayFormattedDate})`
+                : `Day draws begin at 1:45 PM • View yesterday's declared numbers (${yesterdayFormattedDate})`}
             </span>
           </div>
           <button
@@ -559,7 +564,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-base shrink-0">⏮️</span>
             <span className="font-bold truncate text-[11px] sm:text-xs">
-              Showing Yesterday's Results ({yesterdayFormattedDate}) • Today's Live Draws Begin at 1:45 PM
+              Showing Yesterday's Results ({yesterdayFormattedDate}) • Tap to view Today's Live Board
             </span>
           </div>
           <button
