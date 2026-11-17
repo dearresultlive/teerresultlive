@@ -64,7 +64,7 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
     juwai_morning: { fr: 10 * 60 + 20, sr: 11 * 60 + 20 }, // 10:20 AM / 11:20 AM
     juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },         // 1:35 PM / 2:20 PM (Draw at 1:45 PM / 2:30 PM)
     shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 },      // 3:40 PM / 4:40 PM (Polo Ground draw at 3:48 PM / 4:48 PM)
-    khanapara: { fr: 16 * 60 + 0, sr: 16 * 60 + 28 },       // 4:00 PM / 4:28 PM (Khanapara archery ends at 4:00 PM / 4:30 PM)
+    khanapara: { fr: 15 * 60 + 55, sr: 16 * 60 + 25 },     // 3:55 PM / 4:25 PM (Early fast-draw buffer; draw officially 4:00 PM / 4:30 PM)
     night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }          // 10:20 PM / 11:20 PM (Night Archery draw at 10:30 PM / 11:30 PM)
   };
   const limits = EARLIEST_MINUTES[gameKey];
