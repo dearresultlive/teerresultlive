@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-17",
+    "shillong_fr": "02",
+    "shillong_sr": "22",
+    "khanapara_fr": "70",
+    "khanapara_sr": "54",
+    "juwai_fr": "89",
+    "juwai_sr": "35",
+    "juwai_morning_fr": "24",
+    "juwai_morning_sr": "93",
+    "night_fr": "05",
+    "night_sr": "82"
+  },
+  {
     "date": "2026-11-16",
     "shillong_fr": "19",
     "shillong_sr": "45",
@@ -375,18 +388,5 @@
     "night_sr": "47",
     "juwai_morning_fr": "36",
     "juwai_morning_sr": "00"
-  },
-  {
-    "date": "2026-10-13",
-    "shillong_fr": "04",
-    "shillong_sr": "76",
-    "khanapara_fr": "27",
-    "khanapara_sr": "59",
-    "juwai_fr": "86",
-    "juwai_sr": "32",
-    "night_fr": "65",
-    "night_sr": "01",
-    "juwai_morning_fr": "xx",
-    "juwai_morning_sr": "xx"
   }
 ]
