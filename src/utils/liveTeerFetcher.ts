@@ -26,7 +26,7 @@ export function isRoundWindowOpen(gameKey: string, round: 'fr' | 'sr', now: Date
     juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },         // 1:35 PM / 2:20 PM (Draw at 1:45 PM / 2:30 PM)
     shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 },      // 3:40 PM / 4:40 PM (Polo Ground draw at 3:48 PM / 4:48 PM)
     khanapara: { fr: 15 * 60 + 55, sr: 16 * 60 + 25 },     // 3:55 PM / 4:25 PM (Early fast-draw buffer; draw officially 4:00 PM / 4:30 PM)
-    night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }          // 10:20 PM / 11:20 PM (Night Archery draw at 10:30 PM / 11:30 PM)
+    night: { fr: 22 * 60 + 50, sr: 23 * 60 + 50 }          // 10:50 PM / 11:50 PM (Shillong Night Archery draw officially 11:10 PM / 12:10 AM)
   };
   const limits = EARLIEST_MINUTES[gameKey];
   if (!limits) return true;
@@ -751,12 +751,12 @@ export async function collectAllSourceReports(targetDate: string, yesterdayRecor
     }
   };
 
-  // 1. InstantTeer (Tier 1 verified machine feed)
+  // 1. InstantTeer (Tier 1 verified machine feed for day games)
   if (instantRes && instantRes.date === targetDate) {
     if (instantRes.shillong) addReport('shillong', 'instantteer_api', 1, instantRes.shillong.fr, instantRes.shillong.sr);
     if (instantRes.khanapara) addReport('khanapara', 'instantteer_api', 1, instantRes.khanapara.fr, instantRes.khanapara.sr);
     if (instantRes.juwai) addReport('juwai', 'instantteer_api', 1, instantRes.juwai.fr, instantRes.juwai.sr);
-    if (instantRes.night) addReport('night', 'instantteer_api', 1, instantRes.night.fr, instantRes.night.sr);
+    // Note: instantRes.night deliberately excluded to prevent 8:30 PM Bodoland/Assam night cross-bleed into Shillong Night (11:10 PM)
   }
 
   // 2. Polo Ground CDN (Tier 1 direct machine feed)

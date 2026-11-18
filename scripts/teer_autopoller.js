@@ -65,7 +65,7 @@ export function isRoundWindowOpen(gameKey, round, now = new Date()) {
     juwai: { fr: 13 * 60 + 35, sr: 14 * 60 + 20 },         // 1:35 PM / 2:20 PM (Draw at 1:45 PM / 2:30 PM)
     shillong: { fr: 15 * 60 + 40, sr: 16 * 60 + 40 },      // 3:40 PM / 4:40 PM (Polo Ground draw at 3:48 PM / 4:48 PM)
     khanapara: { fr: 15 * 60 + 55, sr: 16 * 60 + 25 },     // 3:55 PM / 4:25 PM (Early fast-draw buffer; draw officially 4:00 PM / 4:30 PM)
-    night: { fr: 22 * 60 + 20, sr: 23 * 60 + 20 }          // 10:20 PM / 11:20 PM (Night Archery draw at 10:30 PM / 11:30 PM)
+    night: { fr: 22 * 60 + 50, sr: 23 * 60 + 50 }          // 10:50 PM / 11:50 PM (Shillong Night Archery draw officially 11:10 PM / 12:10 AM)
   };
   const limits = EARLIEST_MINUTES[gameKey];
   if (!limits) return true;
@@ -725,6 +725,19 @@ export async function runPoller() {
       }
     }
 
+    // Direct Tier 1 Ground Authority override for rollover archival:
+    // Prioritize official night ground feed (nightteer.com) for Shillong Night archive
+    if (nightDirect && (nightDirect.date === prevDate || nightDirect.date === liveData.date)) {
+      if (nightDirect.fr && nightDirect.fr !== 'xx') prevNightFR = nightDirect.fr;
+      if (nightDirect.sr && nightDirect.sr !== 'xx') prevNightSR = nightDirect.sr;
+    }
+
+    // Prioritize official juwai morning ground feed for morning archive
+    if (juwaiMorningJson && (juwaiMorningJson.date === prevDate || juwaiMorningJson.date === liveData.date)) {
+      if (juwaiMorningJson.fr && juwaiMorningJson.fr !== 'xx') prevJuwaiMorningFR = juwaiMorningJson.fr;
+      if (juwaiMorningJson.sr && juwaiMorningJson.sr !== 'xx') prevJuwaiMorningSR = juwaiMorningJson.sr;
+    }
+
     // Upsert into archive using FLAT schema
     const existingIndex = archive.findIndex((item) => item.date === prevDate);
     const archiveRow = {
@@ -807,12 +820,12 @@ export async function runPoller() {
     }
   };
 
-  // 1. InstantTeer API (Tier 1 verified machine feed)
+  // 1. InstantTeer API (Tier 1 verified machine feed for day games)
   if (instantData && instantData.date === liveData.date) {
     if (instantData.shillong) addReport('shillong', 'instantteer_api', 1, instantData.shillong.fr, instantData.shillong.sr);
     if (instantData.khanapara) addReport('khanapara', 'instantteer_api', 1, instantData.khanapara.fr, instantData.khanapara.sr);
     if (instantData.juwai) addReport('juwai', 'instantteer_api', 1, instantData.juwai.fr, instantData.juwai.sr);
-    if (instantData.night) addReport('night', 'instantteer_api', 1, instantData.night.fr, instantData.night.sr);
+    // Note: instantData.night deliberately excluded to prevent 8:30 PM Bodoland/Assam night cross-bleed into Shillong Night (11:10 PM)
   }
 
   // 2. Polo Ground CDN (Tier 1 direct machine feed)
