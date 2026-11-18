@@ -1,6 +1,6 @@
 {
   "date": "2026-11-18",
-  "updated_at": "2026-11-18T11:59:39.439Z",
+  "updated_at": "2026-11-18T13:41:53.885Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -163,12 +163,13 @@
         ]
       },
       "fr_verification": "VERIFIED",
-      "sr_verification": "FAST_UPDATE",
+      "sr_verification": "VERIFIED",
       "fr_sources": [
         "juwaimorning_direct",
         "juwaimorning_api"
       ],
       "sr_sources": [
+        "juwaimorning_direct",
         "juwaimorning_api"
       ]
     },
