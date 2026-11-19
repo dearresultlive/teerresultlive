@@ -67,14 +67,46 @@ export async function sendFacebookPhotoPost(imageBuffer, caption) {
 
     const data = await res.json();
     if (data.id || data.post_id) {
-      console.log(`[Facebook Photo Post] Successfully published graphics! ID: ${data.post_id || data.id}`);
-      return true;
+      const postId = data.post_id || data.id;
+      console.log(`[Facebook Photo Post] Successfully published graphics! ID: ${postId}`);
+      return postId;
     } else {
       console.error('[Facebook Photo Post] API returned error:', data.error ? data.error.message : data);
       return false;
     }
   } catch (err) {
     console.error('[Facebook Photo Post] Network error during photo upload:', err.message);
+    return false;
+  }
+}
+
+/**
+ * Automatically publishes the high-converting First Comment with website and WhatsApp links.
+ * Keeping links out of the main photo caption prevents Meta's algorithm reach penalty!
+ */
+export async function postFacebookFirstComment(targetId, commentText) {
+  if (!PAGE_ACCESS_TOKEN || !targetId || !commentText) return false;
+  const endpoint = `https://graph.facebook.com/v19.0/${targetId}/comments`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: commentText,
+        access_token: PAGE_ACCESS_TOKEN
+      })
+    });
+    const data = await res.json();
+    if (data.id) {
+      console.log(`[Facebook First Comment] Successfully published first comment with links! ID: ${data.id}`);
+      return true;
+    } else {
+      console.warn(`[Facebook First Comment] Automated comment notice: ${data.error?.message || 'Permission needed in Meta Developer App'}`);
+      return false;
+    }
+  } catch (err) {
+    console.warn('[Facebook First Comment] Network error during comment post:', err.message);
     return false;
   }
 }
@@ -129,6 +161,7 @@ export async function broadcastFacebookTeerResult({
   const targetUrl = GAME_URLS[gameKey] || 'https://teerresultlive.in';
 
   let caption = '';
+  let firstComment = '';
 
   if (roundType === 'FR_ONLY') {
     caption = `🎯 ${gName} 1st Round Result Declared!
@@ -137,10 +170,19 @@ export async function broadcastFacebookTeerResult({
 🏹 1st Round (FR): ${fr}
 ⏳ 2nd Round (SR): Awaiting (${srTime || 'Soon'})
 
-⚡ Check 2nd Round real-time live refresh on:
-👉 ${targetUrl}
+⚡ 2nd Round live results & target formulas on teerresultlive.in
+👉 Direct link in First Comment below!
 
 #${gameKey}teer #${gameKey}result #teerresultlive #shillongteer #khanaparateer`;
+
+    firstComment = `🎯 Check 2nd Round live refresh, common numbers & formulas:
+👉 ${targetUrl}
+
+💬 Join Official WhatsApp Channel for 0-second live alerts:
+👉 https://whatsapp.com/channel/0029Vb9M4Ba90x2pwejTOF3r
+
+✈️ Official Telegram Channel:
+👉 https://t.me/teerresultlive_in`;
   } else {
     caption = `🎯 ${gName} Official Result Declared!
 
@@ -148,10 +190,19 @@ export async function broadcastFacebookTeerResult({
 🏹 1st Round (FR): ${fr}
 🏹 2nd Round (SR): ${sr}
 
-⚡ Previous results, common numbers & target formulas on:
-👉 ${targetUrl}
+⚡ Previous results, common numbers & target formulas on teerresultlive.in
+👉 Direct link in First Comment below!
 
 #${gameKey}teer #${gameKey}result #teerresultlive #shillongteer #khanaparateer`;
+
+    firstComment = `🎯 Check full result archive, common numbers & target formulas:
+👉 ${targetUrl}
+
+💬 Join Official WhatsApp Channel for 0-second live alerts:
+👉 https://whatsapp.com/channel/0029Vb9M4Ba90x2pwejTOF3r
+
+✈️ Official Telegram Channel:
+👉 https://t.me/teerresultlive_in`;
   }
 
   // Generate dynamic 1080x1080 graphics card
@@ -164,8 +215,12 @@ export async function broadcastFacebookTeerResult({
       statusText: roundType === 'FR_ONLY' ? '1ST ROUND DECLARED' : 'OFFICIAL RESULT DECLARED'
     });
 
-    const success = await sendFacebookPhotoPost(cardBuffer, caption);
-    if (success) return true;
+    const postId = await sendFacebookPhotoPost(cardBuffer, caption);
+    if (postId) {
+      // Automatically post the First Comment with direct website & WhatsApp links
+      await postFacebookFirstComment(postId, firstComment);
+      return true;
+    }
   } catch (err) {
     console.warn('[Facebook Publisher] Graphics generation failed, falling back to text:', err.message);
   }
