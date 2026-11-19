@@ -836,13 +836,13 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             </div>
             <div>
               <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5 flex-wrap">
-                <span>🔥 আজকের কনফার্ম কমন নাম্বার ও লাইভ রেজাল্ট সরাসরি ফোনে চান?</span>
+                <span>🔥 Want Confirmed Common Numbers &amp; 0-Second Live Alerts on Your Phone?</span>
                 <span className="bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
                   FREE
                 </span>
               </h3>
               <p className="text-[11px] text-slate-600 font-medium">
-                ০-সেকেন্ড লাইভ রেজাল্ট নোটিফিকেশন ও আজকের ডেইলি কমন নাম্বার পেতে যুক্ত হন।
+                ০-সেকেন্ড লাইভ রেজাল্ট নোটিফিকেশন ও আজকের ডেইলি কমন নাম্বার পেতে যুক্ত হন (১০০% ফ্রি)।
               </p>
             </div>
           </div>

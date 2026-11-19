@@ -254,10 +254,10 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
                 </div>
                 <div>
                   <span className="block font-black text-xs sm:text-sm text-amber-300 leading-tight">
-                    🔥 আজকের ৩টি স্পেশাল VIP ডিরেক্ট হিট নাম্বার চান?
+                    🔥 Want Today's 3 Special VIP Direct Hit Numbers?
                   </span>
                   <span className="block text-[11px] text-slate-300 font-medium mt-0.5">
-                    প্রতিদিন লাইভ ড্র-এর আগে ফ্রি-তে আমাদের চ্যানেলে পোস্ট করা হয়
+                    আজকের কনফার্ম ডিরেক্ট হিট ও হাউস-এন্ডিং লাইভ ড্র-এর আগে ফ্রিতে দেওয়া হয়
                   </span>
                 </div>
               </div>
