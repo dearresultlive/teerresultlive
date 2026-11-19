@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import liveData from '../data/teer_live_results.json';
+import { COMMUNITY_LINKS } from '../config/community';
 
 interface CommonNumbersCardProps {
   filterGame?: 'all' | 'shillong' | 'khanapara' | 'juwai' | 'juwai_morning' | 'night';
@@ -243,6 +244,41 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
               <p className="leading-relaxed">
                 Combine the predicted <strong>House</strong> digits with <strong>Ending</strong> digits to form high-probability target pairs. For example, pairing House {data.house[0]} with Ending {data.ending[0]} creates target number <strong>{data.house[0]}{data.ending[0]}</strong>.
               </p>
+            </div>
+
+            {/* High-Converting VIP Channel Hook */}
+            <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border-2 border-emerald-400/50 rounded-2xl p-3.5 sm:p-4 text-white shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-xl shrink-0 font-black shadow-xs">
+                  🎯
+                </div>
+                <div>
+                  <span className="block font-black text-xs sm:text-sm text-amber-300 leading-tight">
+                    🔥 আজকের ৩টি স্পেশাল VIP ডিরেক্ট হিট নাম্বার চান?
+                  </span>
+                  <span className="block text-[11px] text-slate-300 font-medium mt-0.5">
+                    প্রতিদিন লাইভ ড্র-এর আগে ফ্রি-তে আমাদের চ্যানেলে পোস্ট করা হয়
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                <a
+                  href={COMMUNITY_LINKS.whatsappChannel}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white font-black text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all"
+                >
+                  <span>💬</span> WhatsApp
+                </a>
+                <a
+                  href={COMMUNITY_LINKS.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 bg-[#229ED9] hover:bg-[#1b8bc2] active:scale-95 text-white font-black text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all"
+                >
+                  <span>✈️</span> Telegram
+                </a>
+              </div>
             </div>
           </div>
         );

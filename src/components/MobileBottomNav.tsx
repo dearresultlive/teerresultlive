@@ -448,6 +448,39 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
                 </span>
               </div>
 
+              {/* Card 6: Community Alerts Channel Card */}
+              <div className="p-3.5 rounded-2xl border-2 border-emerald-400/80 bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 shadow-2xs space-y-2.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">🎯</span>
+                  <div>
+                    <span className="font-black text-slate-900 text-xs sm:text-sm block leading-tight">
+                      Free VIP Hits &amp; 0-Sec Live Alerts
+                    </span>
+                    <span className="text-[11px] text-slate-600 font-medium block mt-0.5">
+                      সরাসরি ফোনে লাইভ রেজাল্ট ও কমন নাম্বার পান
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-0.5">
+                  <a
+                    href={COMMUNITY_LINKS.whatsappChannel}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-black text-xs shadow-xs active:scale-95 transition-all"
+                  >
+                    <span>💬</span> WhatsApp
+                  </a>
+                  <a
+                    href={COMMUNITY_LINKS.telegram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#229ED9] hover:bg-[#1b8bc2] text-white font-black text-xs shadow-xs active:scale-95 transition-all"
+                  >
+                    <span>✈️</span> Telegram
+                  </a>
+                </div>
+              </div>
+
             </div>
 
             {/* Bottom Footer Links Row */}

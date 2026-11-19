@@ -1,0 +1,103 @@
+---
+import { COMMUNITY_LINKS } from '../config/community';
+
+interface Props {
+  className?: string;
+  gameTitle?: string;
+}
+
+const { className = '', gameTitle = 'Shillong & Khanapara' } = Astro.props;
+---
+
+<aside 
+  class={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white p-4 sm:p-6 shadow-md border-2 border-emerald-400/40 ring-4 ring-emerald-500/10 ${className}`}
+  aria-label="Official WhatsApp and Telegram Community Alerts"
+>
+  <!-- Ambient glow accents -->
+  <div class="absolute -right-10 -top-10 w-44 h-44 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -left-10 -bottom-10 w-44 h-44 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-5 relative z-10">
+    
+    <!-- Left Section: High-Impact Hook & Trust Badges -->
+    <div class="space-y-2.5 flex-1">
+      
+      <!-- Top Trust Badges -->
+      <div class="flex items-center gap-2 flex-wrap text-[11px]">
+        <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-400/30 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          ⚡ 0-Second Live Alerts
+        </span>
+        <span class="inline-flex items-center gap-1 bg-amber-400/20 text-amber-300 font-black px-2.5 py-0.5 rounded-full border border-amber-400/30 shadow-2xs">
+          🎯 Daily VIP Target Formulas
+        </span>
+        <span class="text-slate-300 font-bold text-[10px] sm:text-[11px]">
+          🛡️ 100% Free Official Desk
+        </span>
+      </div>
+
+      <!-- Main Headline in Bengali & English -->
+      <div>
+        <h3 class="text-base sm:text-lg md:text-xl font-black text-white tracking-tight leading-snug">
+          🔥 আজকের <span class="text-amber-400">{gameTitle}</span> কনফার্ম কমন নাম্বার ও হাউস-এন্ডিং চার্ট চান?
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-medium mt-1 leading-relaxed">
+          তীর আর্চারি ড্র হওয়ার সাথে সাথে ১ম ও ২য় রাউন্ডের লাইভ রেজাল্ট সরাসরি আপনার ফোনে নোটিফিকেশন পান। কোনো ফেক চার্জ নেই, সম্পূর্ণ ফ্রি!
+        </p>
+      </div>
+
+      <!-- 3 Visual Benefits -->
+      <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 text-[11px] pt-0.5 text-slate-200">
+        <span class="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg font-bold">
+          <span>🏹</span> ৩:৪৫ ও ৪:৪৫ লাইভ হিট
+        </span>
+        <span class="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg font-bold">
+          <span>🔢</span> ডিরেক্ট কমন ও এন্ডিং
+        </span>
+        <span class="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg font-bold">
+          <span>📲</span> কোনো বিজ্ঞাপন নেই
+        </span>
+      </div>
+    </div>
+
+    <!-- Right Section: Dual High-CTR Action Buttons -->
+    <div class="w-full lg:w-auto shrink-0 flex flex-col sm:flex-row lg:flex-col items-stretch gap-2.5 pt-1 lg:pt-0">
+      
+      <!-- Primary: WhatsApp Channel Button (Highest conversion in Northeast/Bengal) -->
+      <a
+        href={COMMUNITY_LINKS.whatsappChannel}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group relative inline-flex items-center justify-between gap-3 bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0e7468] active:scale-95 text-white font-black text-xs sm:text-sm px-5 py-3 rounded-xl shadow-lg shadow-emerald-950/40 transition-all text-center border border-emerald-300/40 cursor-pointer"
+      >
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">💬</span>
+          <div class="text-left">
+            <span class="block leading-tight font-black">WhatsApp চ্যানেলে যুক্ত হন</span>
+            <span class="block text-[10px] text-emerald-100 font-medium">১ ক্লিকে জয়েন (সবার ফোনে চলে)</span>
+          </div>
+        </div>
+        <span class="text-base font-black group-hover:translate-x-1 transition-transform">➔</span>
+      </a>
+
+      <!-- Secondary: Telegram Channel Button -->
+      <a
+        href={COMMUNITY_LINKS.telegram}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group relative inline-flex items-center justify-between gap-3 bg-gradient-to-r from-[#229ED9] to-[#0088cc] hover:from-[#1b8bc2] hover:to-[#0077b3] active:scale-95 text-white font-black text-xs sm:text-sm px-5 py-3 rounded-xl shadow-md transition-all text-center border border-sky-300/30 cursor-pointer"
+      >
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">✈️</span>
+          <div class="text-left">
+            <span class="block leading-tight font-black">Telegram চ্যানেলে যুক্ত হন</span>
+            <span class="block text-[10px] text-sky-100 font-medium">০-সেকেন্ড দ্রুত নোটিফিকেশন</span>
+          </div>
+        </div>
+        <span class="text-base font-black group-hover:translate-x-1 transition-transform">➔</span>
+      </a>
+
+    </div>
+
+  </div>
+</aside>
