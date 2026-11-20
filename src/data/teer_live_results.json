@@ -1,15 +1,15 @@
 {
   "date": "2026-11-20",
-  "updated_at": "2026-11-20T08:46:39.522Z",
+  "updated_at": "2026-11-20T11:57:29.116Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
       "location": "Polo Ground, East Khasi Hills (KHASA Official)",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "3:45 PM",
       "sr_time": "4:45 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "44",
+      "sr": "75",
       "common_numbers": {
         "direct": [
           "03",
@@ -29,16 +29,32 @@
           8,
           2
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "teertarget_com",
+        "gas_datacenter"
+      ],
+      "sr_sources": [
+        "polo_ground_cdn",
+        "teerresulttoday",
+        "teerresult_agg",
+        "teertarget_com",
+        "gas_datacenter"
+      ]
     },
     "khanapara": {
       "name": "Khanapara Teer",
       "location": "Khanapara (Assam-Meghalaya Border / Guwahati Gate)",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "64",
+      "sr": "51",
       "common_numbers": {
         "direct": [
           "31",
@@ -58,16 +74,27 @@
           4,
           6
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "teerresult_agg",
+        "khanaparateer_org",
+        "gas_datacenter"
+      ],
+      "sr_sources": [
+        "teerresult_agg",
+        "gas_datacenter"
+      ]
     },
     "juwai": {
       "name": "Juwai Teer",
       "location": "Juwai, West Jaintia Hills Traditional Ground",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "1:45 PM",
       "sr_time": "2:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "53",
+      "sr": "94",
       "common_numbers": {
         "direct": [
           "40",
@@ -88,9 +115,16 @@
           7
         ]
       },
-      "fr_verification": "UNVERIFIED",
+      "fr_verification": "VERIFIED",
       "fr_sources": [
-        "teerresulttoday"
+        "teerresult_agg",
+        "gas_datacenter"
+      ],
+      "sr_verification": "VERIFIED",
+      "sr_sources": [
+        "teerresulttoday",
+        "teerresult_agg",
+        "gas_datacenter"
       ]
     },
     "juwai_morning": {
