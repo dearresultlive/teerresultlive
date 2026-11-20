@@ -3,7 +3,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
 import MobileBottomNav from '../components/MobileBottomNav';
-import TopAlertTicker from '../components/TopAlertTicker.astro';
 
 interface Props {
   title?: string;
@@ -27,7 +26,6 @@ const { title, description, canonicalUrl, publishDate, noindex = false } = Astro
   />
   <body class="min-h-screen flex flex-col bg-slate-100 font-sans selection:bg-amber-100 selection:text-amber-900 text-slate-900">
     <Header />
-    <TopAlertTicker />
     <main class="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-24 md:pb-8">
       <slot />
     </main>

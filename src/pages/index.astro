@@ -7,7 +7,6 @@ import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import TeerPrizeCalculator from '../components/TeerPrizeCalculator';
 import DreamNumberSearch from '../components/DreamNumberSearch';
 import PreviousResultsTable from '../components/PreviousResultsTable';
-import CommunityBannerCard from '../components/CommunityBannerCard.astro';
 import { getFreshTeerData, isArcheryShootingHour } from '../utils/getFreshTeerData';
 
 const isLiveWindow = isArcheryShootingHour();
@@ -249,11 +248,6 @@ const todayDateStr = liveData.date.split('-').reverse().join('/');
           </details>
         </div>
       </div>
-    </section>
-
-    <!-- Official WhatsApp & Telegram Community Alerts -->
-    <section id="instant-alerts" aria-label="Official Community Alerts">
-      <CommunityBannerCard />
     </section>
   </div>
 </Layout>

@@ -10,7 +10,6 @@ import CommonNumbersCard from '../components/CommonNumbersCard';
 import PreviousResultsTable from '../components/PreviousResultsTable';
 import TeerFormulaCalculator from '../components/TeerFormulaCalculator';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import CommunityBannerCard from '../components/CommunityBannerCard.astro';
 
 const game = liveData.games.shillong;
 const todayDateStr = liveData.date.split('-').reverse().join('/');
@@ -164,11 +163,6 @@ const yesterdayDateStr = yesterday ? yesterday.date.split('-').reverse().join('/
           </details>
         </div>
       </div>
-    </section>
-
-    <!-- Official WhatsApp & Telegram Community Alerts -->
-    <section id="community-alerts" aria-label="Official Community Alerts">
-      <CommunityBannerCard gameTitle="Shillong Teer" />
     </section>
   </div>
 </Layout>
