@@ -280,7 +280,7 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
               <a
                 href={COMMUNITY_LINKS.telegram}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="nofollow noopener noreferrer"
                 onClick={() => setDrawerOpen(false)}
                 className="group flex items-center justify-between p-3 rounded-2xl border border-sky-200 bg-sky-50/70 hover:bg-sky-100 transition-all shadow-2xs active:scale-[0.99]"
               >
@@ -454,7 +454,7 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
                   <span className="text-2xl">🎯</span>
                   <div>
                     <span className="font-black text-slate-900 text-xs sm:text-sm block leading-tight">
-                      Free VIP Hits &amp; 0-Sec Live Alerts
+                      Official 0-Sec Live Alerts &amp; Targets
                     </span>
                     <span className="text-[11px] text-slate-600 font-medium block mt-0.5">
                       সরাসরি ফোনে লাইভ রেজাল্ট ও কমন নাম্বার পান
@@ -465,7 +465,7 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
                   <a
                     href={COMMUNITY_LINKS.whatsappChannel}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="nofollow noopener noreferrer"
                     className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-black text-xs shadow-xs active:scale-95 transition-all"
                   >
                     <span>💬</span> WhatsApp
@@ -473,7 +473,7 @@ export default function MobileBottomNav({ currentPath = '/' }: Props) {
                   <a
                     href={COMMUNITY_LINKS.telegram}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="nofollow noopener noreferrer"
                     className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#229ED9] hover:bg-[#1b8bc2] text-white font-black text-xs shadow-xs active:scale-95 transition-all"
                   >
                     <span>✈️</span> Telegram

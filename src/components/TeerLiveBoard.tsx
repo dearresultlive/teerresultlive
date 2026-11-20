@@ -836,7 +836,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
             </div>
             <div>
               <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5 flex-wrap">
-                <span>🔥 Want Confirmed Common Numbers &amp; 0-Second Live Alerts on Your Phone?</span>
+                <span>🎯 Official Community: 0-Second Live Result Alerts &amp; Daily Target Numbers</span>
                 <span className="bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">
                   FREE
                 </span>
@@ -853,7 +853,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           <a
             href={COMMUNITY_LINKS.whatsappChannel}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow noopener noreferrer"
             className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0e7468] text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98] group"
           >
             <div className="flex items-center gap-2.5">
@@ -870,14 +870,14 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           <a
             href={COMMUNITY_LINKS.telegram}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow noopener noreferrer"
             className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-[#229ED9] to-[#0088cc] hover:from-[#1b8bc2] hover:to-[#0077b3] text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98] group"
           >
             <div className="flex items-center gap-2.5">
               <span className="text-xl shrink-0">✈️</span>
               <div className="text-left min-w-0">
                 <span className="block font-black text-xs sm:text-sm leading-tight truncate">Telegram Channel</span>
-                <span className="block text-[10px] text-sky-100 font-medium leading-tight mt-0.5">VIP হিট নাম্বার চার্ট</span>
+                <span className="block text-[10px] text-sky-100 font-medium leading-tight mt-0.5">কমন চার্ট ও রেজাল্ট</span>
               </div>
             </div>
             <span className="text-white text-base font-black pl-1 group-hover:translate-x-1 transition-transform">➔</span>
@@ -887,7 +887,7 @@ export default function TeerLiveBoard({ initialData }: { initialData: TeerData }
           <a
             href={COMMUNITY_LINKS.facebook}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow noopener noreferrer"
             className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-[#1877F2] to-[#1464cc] hover:from-[#166fe5] hover:to-[#1157b3] text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98] group"
           >
             <div className="flex items-center gap-2.5">

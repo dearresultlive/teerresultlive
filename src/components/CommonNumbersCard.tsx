@@ -246,7 +246,7 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
               </p>
             </div>
 
-            {/* High-Converting VIP Channel Hook */}
+            {/* High-Converting Official Channel Hook */}
             <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border-2 border-emerald-400/50 rounded-2xl p-3.5 sm:p-4 text-white shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-xl shrink-0 font-black shadow-xs">
@@ -254,10 +254,10 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
                 </div>
                 <div>
                   <span className="block font-black text-xs sm:text-sm text-amber-300 leading-tight">
-                    🔥 Want Today's 3 Special VIP Direct Hit Numbers?
+                    🎯 Want Today's Target Numbers &amp; 0-Second Live Alerts?
                   </span>
                   <span className="block text-[11px] text-slate-300 font-medium mt-0.5">
-                    আজকের কনফার্ম ডিরেক্ট হিট ও হাউস-এন্ডিং লাইভ ড্র-এর আগে ফ্রিতে দেওয়া হয়
+                    আজকের টার্গেট কমন নাম্বার, হাউস-এন্ডিং ও দ্রুততম লাইভ নোটিফিকেশন ফ্রিতে পান
                   </span>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
                 <a
                   href={COMMUNITY_LINKS.whatsappChannel}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="nofollow noopener noreferrer"
                   className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white font-black text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all"
                 >
                   <span>💬</span> WhatsApp
@@ -273,7 +273,7 @@ export default function CommonNumbersCard({ filterGame = 'all' }: CommonNumbersC
                 <a
                   href={COMMUNITY_LINKS.telegram}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="nofollow noopener noreferrer"
                   className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 bg-[#229ED9] hover:bg-[#1b8bc2] active:scale-95 text-white font-black text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all"
                 >
                   <span>✈️</span> Telegram
