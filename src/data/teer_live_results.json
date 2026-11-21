@@ -1,6 +1,6 @@
 {
   "date": "2026-11-21",
-  "updated_at": "2026-11-21T11:29:11.764Z",
+  "updated_at": "2026-11-21T13:16:13.879Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -56,7 +56,7 @@
       "fr_time": "4:00 PM",
       "sr_time": "4:30 PM",
       "fr": "60",
-      "sr": "39",
+      "sr": "11",
       "common_numbers": {
         "direct": [
           "31",
@@ -86,8 +86,8 @@
         "gas_datacenter"
       ],
       "sr_sources": [
-        "instantteer_api",
         "teerresult_agg",
+        "khanaparateer_org",
         "gas_datacenter"
       ]
     },
