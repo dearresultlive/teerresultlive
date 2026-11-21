@@ -1,6 +1,6 @@
 {
   "date": "2026-11-21",
-  "updated_at": "2026-11-20T22:28:22.862Z",
+  "updated_at": "2026-11-21T08:29:08.813Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -92,11 +92,11 @@
     "juwai_morning": {
       "name": "Juwai Morning Teer",
       "location": "Jowai Archery Ground",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "10:30 AM",
       "sr_time": "11:30 AM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "32",
+      "sr": "34",
       "common_numbers": {
         "direct": [
           "27",
@@ -116,7 +116,15 @@
           1,
           8
         ]
-      }
+      },
+      "fr_verification": "FAST_UPDATE",
+      "sr_verification": "FAST_UPDATE",
+      "fr_sources": [
+        "juwaimorning_direct"
+      ],
+      "sr_sources": [
+        "juwaimorning_direct"
+      ]
     },
     "night": {
       "name": "Shillong Night Teer",
