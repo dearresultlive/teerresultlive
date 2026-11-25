@@ -1,6 +1,6 @@
 {
   "date": "2026-11-25",
-  "updated_at": "2026-11-25T13:15:12.851Z",
+  "updated_at": "2026-11-25T18:35:49.061Z",
   "games": {
     "shillong": {
       "name": "Shillong Teer",
@@ -163,25 +163,23 @@
           8
         ]
       },
-      "fr_verification": "VERIFIED",
-      "sr_verification": "VERIFIED",
+      "fr_verification": "FAST_UPDATE",
+      "sr_verification": "FAST_UPDATE",
       "fr_sources": [
-        "juwaimorning_direct",
         "juwaimorning_api"
       ],
       "sr_sources": [
-        "juwaimorning_direct",
         "juwaimorning_api"
       ]
     },
     "night": {
       "name": "Shillong Night Teer",
       "location": "Shillong Club Night Archery Ground",
-      "status": "UPCOMING",
+      "status": "DECLARED",
       "fr_time": "10:30 PM",
       "sr_time": "11:30 PM",
-      "fr": "xx",
-      "sr": "xx",
+      "fr": "91",
+      "sr": "27",
       "common_numbers": {
         "direct": [
           "21",
@@ -201,7 +199,17 @@
           5,
           9
         ]
-      }
+      },
+      "fr_verification": "VERIFIED",
+      "sr_verification": "VERIFIED",
+      "fr_sources": [
+        "nightteer_direct",
+        "gas_datacenter"
+      ],
+      "sr_sources": [
+        "teerresult_agg",
+        "gas_datacenter"
+      ]
     }
   }
 }
